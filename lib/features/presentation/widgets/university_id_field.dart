@@ -7,10 +7,12 @@ class UniversityIdField extends StatelessWidget {
     super.key,
     required this.controller,
     this.onChanged,
+    this.validator,
   });
 
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
+  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class UniversityIdField extends StatelessWidget {
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.next,
       onChanged: onChanged,
+      validator: validator,
     );
   }
 }

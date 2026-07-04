@@ -58,6 +58,7 @@
 //   }
 // }
 
+import 'package:academic_dental_clinic/core/utils/app_validator.dart';
 import 'package:academic_dental_clinic/features/presentation/widgets/forgot_password_button.dart';
 import 'package:flutter/material.dart';
 
@@ -69,6 +70,7 @@ import 'university_id_field.dart';
 class LoginFormCard extends StatelessWidget {
   const LoginFormCard({
     super.key,
+    required this.formKey,
     required this.universityIdController,
     required this.passwordController,
     required this.obscurePassword,
@@ -78,6 +80,7 @@ class LoginFormCard extends StatelessWidget {
     required this.onContactAdmin,
   });
 
+  final GlobalKey<FormState> formKey;
   final TextEditingController universityIdController;
   final TextEditingController passwordController;
   final bool obscurePassword;
@@ -102,22 +105,29 @@ class LoginFormCard extends StatelessWidget {
            ),
          ],
         ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          UniversityIdField(controller: universityIdController),
-          const SizedBox(height: AppDimensions.xl),
-          PasswordField(
-            controller: passwordController,
-            obscureText: obscurePassword,
-            onToggleObscure: onTogglePassword,
-          ),
-          const SizedBox(height: AppDimensions.md),
-          ForgotPasswordButton(onPressed: onForgotPassword),
-          const SizedBox(height: AppDimensions.xl),
-          SignInButton(onPressed: onSignIn),
-          const SizedBox(height: AppDimensions.xl),
-        ],
+      child: Form(
+        key: formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            UniversityIdField(
+              controller: universityIdController,
+              validator: AppValidator.validateStudentNumber,
+            ),
+            const SizedBox(height: AppDimensions.xl),
+            PasswordField(
+              controller: passwordController,
+              obscureText: obscurePassword,
+              onToggleObscure: onTogglePassword,
+              validator: AppValidator.validatePassword,
+            ),
+            const SizedBox(height: AppDimensions.md),
+            ForgotPasswordButton(onPressed: onForgotPassword),
+            const SizedBox(height: AppDimensions.xl),
+            SignInButton(onPressed: onSignIn),
+            const SizedBox(height: AppDimensions.xl),
+          ],
+        ),
       ),
     );
   }

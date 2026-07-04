@@ -17,6 +17,7 @@ class StaffLogin extends StatefulWidget {
 }
 
 class _StaffLoginState extends State<StaffLogin> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _universityIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -28,7 +29,11 @@ class _StaffLoginState extends State<StaffLogin> {
   }
 
 
-  void _onSignIn() {}
+  void _onSignIn() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+  }
   void _onForgotPassword() {}
   void _onContactAdmin() {}
 
@@ -60,6 +65,7 @@ class _StaffLoginState extends State<StaffLogin> {
                     builder: (context, state) {
                       final cubit = context.read<PasswordCubit>();
                       return LoginFormCard(
+                        formKey: _formKey,
                         universityIdController: _universityIdController,
                         passwordController: _passwordController,
                         obscurePassword: state.obscurePassword,

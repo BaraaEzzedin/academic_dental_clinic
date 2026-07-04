@@ -58,6 +58,12 @@ class AppTextStyles {
     color: AppColors.textHint,
   );
 
+  static const TextStyle error = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w400,
+    color: AppColors.error,
+  );
+
   static const TextStyle button = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600,

@@ -25,6 +25,8 @@ class AppColors {
   static const Color textSecondary = Color(0xFF5B6B76);
   static const Color textHint = Color(0xFF9AA7B0);
 
+  static const Color error = Color(0xFFD32F2F);
+
   static const Color dividerLine = Color(0xFFDDE3E8);
   static const Color indicatorInactive = Color(0xFFCBD5DB);
   static const Color white = Color(0xFFFFFFFF);

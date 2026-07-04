@@ -4,12 +4,6 @@ import '../constants/app_colors.dart';
 import '../constants/app_dimensions.dart';
 import '../theme/app_text_style.dart';
 
-
-/// Generic text field primitive: optional label above a filled, bordered input
-/// with optional prefix icon and suffix widget.
-///
-/// Fully controlled — it owns no state and carries no feature logic, so it can
-/// back any form field in the app.
 class AppTextField extends StatelessWidget {
   const AppTextField({
     super.key,
@@ -23,6 +17,7 @@ class AppTextField extends StatelessWidget {
     this.textInputAction,
     this.onChanged,
     this.onSubmitted,
+    this.validator,
   });
 
   final String? label;
@@ -35,6 +30,7 @@ class AppTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
+  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +41,15 @@ class AppTextField extends StatelessWidget {
           Text(label!, style: AppTextStyles.fieldLabel),
           const SizedBox(height: AppDimensions.sm),
         ],
-        TextField(
+        TextFormField(
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           onChanged: onChanged,
-          onSubmitted: onSubmitted,
+          onFieldSubmitted: onSubmitted,
+          validator: validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           style: AppTextStyles.input,
           cursorColor: AppColors.primary,
           decoration: InputDecoration(
@@ -72,9 +70,12 @@ class AppTextField extends StatelessWidget {
               horizontal: AppDimensions.lg,
               vertical: AppDimensions.lg,
             ),
+            errorStyle: AppTextStyles.error,
             border: _border(AppColors.fieldBorder),
             enabledBorder: _border(AppColors.fieldBorder),
             focusedBorder: _border(AppColors.primary),
+            errorBorder: _border(AppColors.error),
+            focusedErrorBorder: _border(AppColors.error),
           ),
         ),
       ],

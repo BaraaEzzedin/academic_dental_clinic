@@ -11,6 +11,7 @@ class PasswordField extends StatelessWidget {
     required this.onToggleObscure,
     this.onChanged,
     this.onSubmitted,
+    this.validator,
   });
 
   final TextEditingController controller;
@@ -18,6 +19,7 @@ class PasswordField extends StatelessWidget {
   final VoidCallback onToggleObscure;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
+  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class PasswordField extends StatelessWidget {
       textInputAction: TextInputAction.done,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
+      validator: validator,
       suffix: IconButton(
         onPressed: onToggleObscure,
         icon: Icon(
