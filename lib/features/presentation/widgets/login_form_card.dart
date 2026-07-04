@@ -58,6 +58,7 @@
 //   }
 // }
 
+import 'package:academic_dental_clinic/features/presentation/widgets/forgot_password_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_dimensions.dart';
@@ -112,7 +113,7 @@ class LoginFormCard extends StatelessWidget {
             onToggleObscure: onTogglePassword,
           ),
           const SizedBox(height: AppDimensions.md),
-          //ForgotPasswordLink(onPressed: onForgotPassword),
+          ForgotPasswordButton(onPressed: onForgotPassword),
           const SizedBox(height: AppDimensions.xl),
           SignInButton(onPressed: onSignIn),
           const SizedBox(height: AppDimensions.xl),

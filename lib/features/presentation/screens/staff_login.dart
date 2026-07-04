@@ -1,8 +1,8 @@
 import 'package:academic_dental_clinic/core/constants/app_colors.dart';
+import 'package:academic_dental_clinic/core/theme/app_text_style.dart';
 import 'package:academic_dental_clinic/features/presentation/widgets/logo_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../manager/password cubit/password_cubit.dart';
 import '../manager/password cubit/password_state.dart';
@@ -46,21 +46,15 @@ class _StaffLoginState extends State<StaffLogin> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(
-                    height: AppDimensions.xl,
+                    height: AppDimensions.xxl,
                   ),
                   const LogoSection(),
                   const SizedBox(height: AppDimensions.xl),
-                  Text("Welcome Back" , style:GoogleFonts.caveat(
-           fontSize: 38,
-           fontWeight: FontWeight.bold,
-           color: Color(0xff024D65)
-                       )),
+                  Text("Welcome Back" , style: AppTextStyles.welcome),
                   SizedBox(height: 5,),
-                  Text("Sign in to access your academic and clinical dashboard " , textAlign: TextAlign.center, style:GoogleFonts.manrope(
-             fontSize: 18,
-             fontWeight: FontWeight.normal,
-             color: Color(0xff024D65)
-                       )),
+                  Text("Sign in to access your academic and clinical dashboard " , textAlign: TextAlign.center,
+                      style: AppTextStyles.loginText
+                  ),
                   const SizedBox(height: AppDimensions.xxl),
                   BlocBuilder<PasswordCubit, PasswordState>(
                     builder: (context, state) {

@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_colors.dart';
 
 class AppTextStyles {
   AppTextStyles._();
+
+  static TextStyle caveat(TextStyle style) => GoogleFonts.caveat(textStyle: style);
+  static TextStyle manrope(TextStyle style) => GoogleFonts.manrope(textStyle: style);
+
+  static TextStyle welcome = caveat(const TextStyle(
+      fontSize: 32 ,
+      fontWeight: FontWeight.bold,
+      color: AppColors.secondary
+  ));
+
+
+  static TextStyle loginText = manrope(const TextStyle(
+    fontSize: 18 ,
+    fontWeight: FontWeight.normal,
+    color: AppColors.textDark,
+  ));
 
   static const TextStyle topBarTitle = TextStyle(
     fontSize: 24,
@@ -26,7 +43,7 @@ class AppTextStyles {
   static const TextStyle fieldLabel = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppColors.textDark,
   );
 
   static const TextStyle input = TextStyle(

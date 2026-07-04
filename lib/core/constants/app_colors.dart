@@ -6,6 +6,7 @@ class AppColors {
 
   static const Color primary = Color(0xFF0E6E6E);
   static const Color primaryDark = Color(0xFF0A5B5B);
+  static const Color secondary = Color(0xff024D65);
 
   static const Color scaffoldBackground = Color(0xFFDCF1FF);
 
@@ -20,6 +21,7 @@ class AppColors {
   static const Color logoBorder = Color(0xFFBFE0EC);
 
   static const Color textPrimary = Color(0xFF0F2231);
+  static const Color textDark = Color(0xff024D65);
   static const Color textSecondary = Color(0xFF5B6B76);
   static const Color textHint = Color(0xFF9AA7B0);
 
