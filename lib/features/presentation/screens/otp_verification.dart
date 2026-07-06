@@ -1,22 +1,3 @@
-/*import 'package:flutter/material.dart';
-
-import '../../../core/constants/app_colors.dart';
-
-class OtpVerification extends StatelessWidget {
-  const OtpVerification({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
-      body: Center(
-        child: Text("OTP"),
-      ),
-    );
-  }
-}*/
-
-
 import 'package:academic_dental_clinic/core/utils/app_validator.dart';
 import 'package:academic_dental_clinic/features/presentation/widgets/resend_button.dart';
 import 'package:flutter/material.dart';
@@ -30,12 +11,7 @@ import '../manager/otp cubit/otp_cubit.dart';
 import '../manager/otp cubit/otp_state.dart';
 import '../widgets/otp_field.dart';
 
-/// OTP verification screen — entered after the patient requests a code.
-///
-/// The resend countdown is owned by [OtpCubit] (a ticking timer = real state).
-/// The entered code lives in a controller owned here and is validated through a
-/// [Form]; the pinput-backed [OtpField] renders its own error state when the
-/// code is incomplete. The code is verified against the backend in a later phase.
+
 class OtpVerification extends StatefulWidget {
   const OtpVerification({
     super.key,
@@ -91,61 +67,58 @@ class _OtpVerificationState extends State<OtpVerification> {
                     horizontal: AppDimensions.screenHorizontalPadding,
                     vertical: AppDimensions.xxl,
                   ),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight - (AppDimensions.xxl * 2),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                       /* const IconBadge(
-                          icon: Icons.verified_user,
-                          background: AppColors.roleIconMuted,
-                        ),*/
-                        const SizedBox(height: AppDimensions.xl),
-                        const Text( 'Verify Your Phone Number'),
-                        const SizedBox(height: AppDimensions.md),
-                        Text.rich(
-                          TextSpan(
-                            style: AppTextStyles.subtitle,
-                            children: [
-                              TextSpan(
-                                text: 'Enter the ${widget.codeLength}-digit '
-                                    'code sent to ',
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                     /* const IconBadge(
+                        icon: Icons.verified_user,
+                        background: AppColors.roleIconMuted,
+                      ),*/
+                      SizedBox(height: 100,),
+                      Icon(Icons.verified_user_outlined , color: AppColors.primary, size: 80,),
+                      const SizedBox(height: AppDimensions.xxl),
+                      const Text( 'Verify Your Phone Number'),
+                      const SizedBox(height: AppDimensions.md),
+                      Text.rich(
+                        TextSpan(
+                          style: AppTextStyles.subtitle,
+                          children: [
+                            TextSpan(
+                              text: 'Enter the ${widget.codeLength}-digit '
+                                  'code sent to ',
+                            ),
+                            TextSpan(
+                              text: widget.phoneNumber,
+                              style: AppTextStyles.subtitle.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textPrimary,
                               ),
-                              TextSpan(
-                                text: widget.phoneNumber,
-                                style: AppTextStyles.subtitle.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: AppDimensions.xxl),
-                        Form(
-                          key: _formKey,
-                          child: OtpField(
-                            length: widget.codeLength,
-                            controller: _codeController,
-                            focusNode: _codeFocusNode,
-                            autofocus: true,
-                            validator: AppValidator.validateOtp,
-                            onCompleted: (_) => _onVerify(),
-                          ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: AppDimensions.xxl),
+                      Form(
+                        key: _formKey,
+                        child: OtpField(
+                          length: widget.codeLength,
+                          controller: _codeController,
+                          focusNode: _codeFocusNode,
+                          autofocus: true,
+                          validator: AppValidator.validateOtp,
+                          onCompleted: (_) => _onVerify(),
                         ),
-                        const SizedBox(height: AppDimensions.xl),
-                        ResendButton(formatTime: _formatTime),
-                        const SizedBox(height: AppDimensions.xl),
-                        AppPrimaryButton(
-                          label: 'Verify & Continue',
-                          trailingIcon: Icons.arrow_forward,
-                          onPressed: _onVerify,
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: AppDimensions.xxl),
+                      ResendButton(formatTime: _formatTime),
+                      const SizedBox(height: AppDimensions.xxl),
+                      AppPrimaryButton(
+                        label: 'Verify & Continue',
+                        trailingIcon: Icons.arrow_forward,
+                        onPressed: _onVerify,
+                      ),
+                    ],
                   ),
                 );
               },
@@ -156,5 +129,3 @@ class _OtpVerificationState extends State<OtpVerification> {
   }
 }
 
-/// Shows "Resend in mm:ss" while counting down, and a tappable "Resend code"
-/// once the timer reaches zero. Reads the countdown from [OtpCubit].
