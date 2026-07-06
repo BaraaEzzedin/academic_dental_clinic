@@ -7,6 +7,7 @@ class AppTextStyles {
 
   static TextStyle caveat(TextStyle style) => GoogleFonts.caveat(textStyle: style);
   static TextStyle manrope(TextStyle style) => GoogleFonts.manrope(textStyle: style);
+  static TextStyle outFit(TextStyle style) => GoogleFonts.playfairDisplay(textStyle: style);
 
   static TextStyle welcome = caveat(const TextStyle(
       fontSize: 32 ,
@@ -21,8 +22,15 @@ class AppTextStyles {
     color: AppColors.textDark,
   ));
 
-  static const TextStyle topBarTitle = TextStyle(
+  static TextStyle appDefinition = outFit( TextStyle(
     fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: AppColors.primary,
+  ));
+
+
+  static const TextStyle topBarTitle = TextStyle(
+    fontSize: 20,
     fontWeight: FontWeight.w700,
     color: AppColors.primary,
   );

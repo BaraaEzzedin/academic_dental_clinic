@@ -1,3 +1,4 @@
+import 'package:academic_dental_clinic/features/presentation/screens/select_role.dart';
 import 'package:academic_dental_clinic/features/presentation/screens/staff_login.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StaffLogin(),
+      home: SelectRole(),
     );
   }
 }

@@ -42,43 +42,45 @@ class _StaffLoginState extends State<StaffLogin> {
     return BlocProvider<PasswordCubit>(
       create: (_) => PasswordCubit(),
       child: Scaffold(backgroundColor: AppColors.scaffoldBackground,
-        body: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.screenHorizontalPadding,
-              vertical: AppDimensions.xxl,
-            ),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: AppDimensions.xxl,
-                  ),
-                  const LogoSection(),
-                  const SizedBox(height: AppDimensions.xl),
-                  Text("Welcome Back" , style: AppTextStyles.welcome),
-                  SizedBox(height: 5,),
-                  Text("Sign in to access your academic and clinical dashboard " , textAlign: TextAlign.center,
-                      style: AppTextStyles.loginText
-                  ),
-                  const SizedBox(height: AppDimensions.xxl),
-                  BlocBuilder<PasswordCubit, PasswordState>(
-                    builder: (context, state) {
-                      final cubit = context.read<PasswordCubit>();
-                      return LoginFormCard(
-                        formKey: _formKey,
-                        universityIdController: _universityIdController,
-                        passwordController: _passwordController,
-                        obscurePassword: state.obscurePassword,
-                        onTogglePassword: cubit.togglePasswordVisibility,
-                        onForgotPassword: _onForgotPassword,
-                        onSignIn: _onSignIn,
-                        onContactAdmin: _onContactAdmin,
-                      );
-                    },
-                  ),
-                ],
+        body: SafeArea(
+          child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppDimensions.screenHorizontalPadding,
+                vertical: AppDimensions.xxl,
               ),
-            ),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: AppDimensions.lg,
+                    ),
+                    const LogoSection(),
+                    const SizedBox(height: AppDimensions.xl),
+                    Text("Welcome Back" , style: AppTextStyles.welcome),
+                    SizedBox(height: 5,),
+                    Text("Sign in to access your academic and clinical dashboard " , textAlign: TextAlign.center,
+                        style: AppTextStyles.loginText
+                    ),
+                    const SizedBox(height: AppDimensions.xxl),
+                    BlocBuilder<PasswordCubit, PasswordState>(
+                      builder: (context, state) {
+                        final cubit = context.read<PasswordCubit>();
+                        return LoginFormCard(
+                          formKey: _formKey,
+                          universityIdController: _universityIdController,
+                          passwordController: _passwordController,
+                          obscurePassword: state.obscurePassword,
+                          onTogglePassword: cubit.togglePasswordVisibility,
+                          onForgotPassword: _onForgotPassword,
+                          onSignIn: _onSignIn,
+                          onContactAdmin: _onContactAdmin,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+        ),
           ),
      );
   }
