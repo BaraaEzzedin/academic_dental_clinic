@@ -1,6 +1,7 @@
 import 'package:academic_dental_clinic/core/constants/app_colors.dart';
 import 'package:academic_dental_clinic/core/constants/app_dimensions.dart';
 import 'package:academic_dental_clinic/core/theme/app_text_style.dart';
+import 'package:academic_dental_clinic/features/presentation/screens/Patient_login.dart';
 import 'package:academic_dental_clinic/features/presentation/screens/staff_login.dart';
 import 'package:academic_dental_clinic/features/presentation/widgets/logo_section.dart';
 import 'package:academic_dental_clinic/features/presentation/widgets/role_card.dart';
@@ -48,7 +49,7 @@ class SelectRole extends StatelessWidget {
           ),
             RoleCard(icon: Icons.local_hospital_outlined, title: "Patient", description: "View your appointments and records", onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const StaffLogin()),
+                MaterialPageRoute(builder: (context) => const PatientLogin()),
               );
             }
             ),
