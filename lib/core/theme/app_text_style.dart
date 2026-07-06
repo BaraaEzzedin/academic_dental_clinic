@@ -30,8 +30,8 @@ class AppTextStyles {
 
 
   static const TextStyle topBarTitle = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.w700,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
     color: AppColors.primary,
   );
 
@@ -42,7 +42,7 @@ class AppTextStyles {
   );
 
   static const TextStyle subtitle = TextStyle(
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: FontWeight.w400,
     color: AppColors.textSecondary,
     height: 1.4,

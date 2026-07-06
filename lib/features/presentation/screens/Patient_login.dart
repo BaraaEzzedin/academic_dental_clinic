@@ -1,10 +1,15 @@
 import 'package:academic_dental_clinic/core/utils/app_validator.dart';
+import 'package:academic_dental_clinic/core/widgets/app_primary_button.dart';
+import 'package:academic_dental_clinic/features/presentation/screens/otp_verification.dart';
+import 'package:academic_dental_clinic/features/presentation/screens/patient_register.dart';
+import 'package:academic_dental_clinic/features/presentation/widgets/or_divider.dart';
 import 'package:academic_dental_clinic/features/presentation/widgets/phone_number_field.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_dimensions.dart';
 import '../../../core/theme/app_text_style.dart';
+import '../../../core/widgets/app_text_button.dart';
 import '../widgets/logo_section.dart';
 
 class PatientLogin extends StatefulWidget {
@@ -27,10 +32,16 @@ class _PatientLoginState extends State<PatientLogin> {
   }
 
 
-  void _onSignIn() {
+  void _onSendVerificationCode() {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+  }
+
+  void _onRegister() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => PatientRegister()),
+    );
   }
 
   @override
@@ -60,7 +71,22 @@ class _PatientLoginState extends State<PatientLogin> {
                     ),
                     const SizedBox(height: AppDimensions.xxl),
                     const SizedBox(height: AppDimensions.xl),
-                    PhoneNumberField(controller: _phoneNumberController , validator: AppValidator.validatePatientNumber,)
+                    PhoneNumberField(controller: _phoneNumberController , validator: AppValidator.validatePatientNumber,),
+                    SizedBox(height: AppDimensions.xxl,),
+                    AppPrimaryButton(label: "SEND VERIFICATION CODE", trailingIcon:  Icons.chevron_right ,onPressed: (){
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => OtpVerification()),
+                      );
+                    }),
+                    SizedBox(height: AppDimensions.xxl,),
+                    OrDivider(),
+                    SizedBox(height: AppDimensions.md,),
+                    Center(
+                      child: AppTextButton(
+                        label: 'Register as a new patient ?',
+                        onPressed: _onRegister,
+                  ),
+                    ),
                   ],
                 ),
               ),
