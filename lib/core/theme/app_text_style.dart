@@ -102,4 +102,10 @@ class AppTextStyles {
     color: AppColors.textSecondary,
     letterSpacing: 1,
   );
+
+  static const TextStyle otpDigit = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+  );
 }
