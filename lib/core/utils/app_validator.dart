@@ -28,4 +28,23 @@ class AppValidator {
 
     return null;
   }
+
+
+  static String? validatePatientNumber(
+      String? value,
+      ) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Phone number is required';
+    }
+
+    if (!value.startsWith("+963")) {
+      return "Phone number must start with +963";
+    }
+
+    if (value.length != 13) {
+      return "Phone number must be +963 followed by 9 digits";
+    }
+
+    return null;
+  }
 }
