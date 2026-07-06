@@ -36,6 +36,11 @@ class _PatientLoginState extends State<PatientLogin> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => OtpVerification()),
+    );
+
   }
 
   void _onRegister() {
@@ -73,11 +78,7 @@ class _PatientLoginState extends State<PatientLogin> {
                     const SizedBox(height: AppDimensions.xl),
                     PhoneNumberField(controller: _phoneNumberController , validator: AppValidator.validatePatientNumber,),
                     SizedBox(height: AppDimensions.xxl,),
-                    AppPrimaryButton(label: "SEND VERIFICATION CODE", trailingIcon:  Icons.chevron_right ,onPressed: (){
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => OtpVerification()),
-                      );
-                    }),
+                    AppPrimaryButton(label: "SEND VERIFICATION CODE", trailingIcon:  Icons.chevron_right ,onPressed: _onSendVerificationCode),
                     SizedBox(height: AppDimensions.xxl,),
                     OrDivider(),
                     SizedBox(height: AppDimensions.md,),
