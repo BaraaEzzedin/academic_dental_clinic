@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
 
@@ -14,4 +14,147 @@ class OtpVerification extends StatelessWidget {
       ),
     );
   }
+}*/
+
+
+import 'package:academic_dental_clinic/core/utils/app_validator.dart';
+import 'package:academic_dental_clinic/features/presentation/widgets/resend_button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/widgets/app_primary_button.dart';
+import '../../../../core/widgets/app_text_button.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_text_style.dart';
+import '../manager/otp cubit/otp_cubit.dart';
+import '../manager/otp cubit/otp_state.dart';
+import '../widgets/otp_field.dart';
+
+/// OTP verification screen — entered after the patient requests a code.
+///
+/// The resend countdown is owned by [OtpCubit] (a ticking timer = real state).
+/// The entered code lives in a controller owned here and is validated through a
+/// [Form]; the pinput-backed [OtpField] renders its own error state when the
+/// code is incomplete. The code is verified against the backend in a later phase.
+class OtpVerification extends StatefulWidget {
+  const OtpVerification({
+    super.key,
+    this.phoneNumber = '09XXXXXXXX',
+    this.codeLength = 6,
+  });
+
+  final String phoneNumber;
+  final int codeLength;
+
+  @override
+  State<OtpVerification> createState() => _OtpVerificationState();
 }
+
+class _OtpVerificationState extends State<OtpVerification> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _codeController = TextEditingController();
+  final FocusNode _codeFocusNode = FocusNode();
+
+
+
+  @override
+  void dispose() {
+    _codeController.dispose();
+    _codeFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _onVerify() {
+    _codeFocusNode.unfocus();
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (!isValid) return;
+    // TODO(phase): verify the code with the backend once integration is added.
+  }
+
+  String _formatTime(int seconds) {
+    final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$secs';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<OtpCubit>(
+      create: (_) => OtpCubit(),
+      child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
+        body: SafeArea(
+          child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.screenHorizontalPadding,
+                    vertical: AppDimensions.xxl,
+                  ),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight - (AppDimensions.xxl * 2),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                       /* const IconBadge(
+                          icon: Icons.verified_user,
+                          background: AppColors.roleIconMuted,
+                        ),*/
+                        const SizedBox(height: AppDimensions.xl),
+                        const Text( 'Verify Your Phone Number'),
+                        const SizedBox(height: AppDimensions.md),
+                        Text.rich(
+                          TextSpan(
+                            style: AppTextStyles.subtitle,
+                            children: [
+                              TextSpan(
+                                text: 'Enter the ${widget.codeLength}-digit '
+                                    'code sent to ',
+                              ),
+                              TextSpan(
+                                text: widget.phoneNumber,
+                                style: AppTextStyles.subtitle.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: AppDimensions.xxl),
+                        Form(
+                          key: _formKey,
+                          child: OtpField(
+                            length: widget.codeLength,
+                            controller: _codeController,
+                            focusNode: _codeFocusNode,
+                            autofocus: true,
+                            validator: AppValidator.validateOtp,
+                            onCompleted: (_) => _onVerify(),
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.xl),
+                        ResendButton(formatTime: _formatTime),
+                        const SizedBox(height: AppDimensions.xl),
+                        AppPrimaryButton(
+                          label: 'Verify & Continue',
+                          trailingIcon: Icons.arrow_forward,
+                          onPressed: _onVerify,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Shows "Resend in mm:ss" while counting down, and a tappable "Resend code"
+/// once the timer reaches zero. Reads the countdown from [OtpCubit].
