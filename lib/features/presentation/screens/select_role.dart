@@ -6,7 +6,6 @@ import 'package:academic_dental_clinic/features/presentation/screens/staff_login
 import 'package:academic_dental_clinic/features/presentation/widgets/logo_section.dart';
 import 'package:academic_dental_clinic/features/presentation/widgets/role_card.dart';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class SelectRole extends StatelessWidget {
   const SelectRole({super.key});
