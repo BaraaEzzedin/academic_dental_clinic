@@ -1,18 +1,27 @@
+import 'package:academic_dental_clinic/core/usecases/use_cases.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../core/error/failures.dart';
 import '../entities/user_entity.dart';
 import '../repositories/patient_auth_repository.dart';
 
-class VerifyOtpUseCse {
-  const VerifyOtpUseCse(this.patientAuthRepo);
+class VerifyOtpUseCse extends UseCase<User , VerifyOtpParams> {
+  VerifyOtpUseCse(this.patientAuthRepo);
 
   final PatientAuthRepository patientAuthRepo;
 
-  Future<Either<Failure, User>> call({
-    required String phone,
-    required String code,
-  }) {
-    return patientAuthRepo.verifyOtp(phone: phone, code: code);
+  @override
+  Future<Either<Failure, User>> call(VerifyOtpParams params) {
+    return patientAuthRepo.verifyOtp(phone: params.phone, code: params.code);
   }
+}
+
+class VerifyOtpParams {
+  const VerifyOtpParams({
+    required this.phone,
+    required this.code,
+  });
+
+  final String phone;
+  final String code;
 }

@@ -1,14 +1,23 @@
+import 'package:academic_dental_clinic/core/usecases/use_cases.dart';
+import 'package:academic_dental_clinic/features/domain/entities/user_entity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../core/error/failures.dart';
 import '../repositories/patient_auth_repository.dart';
 
-class RequestOtp {
-  const RequestOtp(this.patientAuthRepo);
+class RequestOtp extends UseCase<Unit , RequestOtpParams > {
+   RequestOtp(this.patientAuthRepo);
 
   final PatientAuthRepository patientAuthRepo;
 
-  Future<Either<Failure, Unit>> call({required String phone}) {
-    return patientAuthRepo.requestOtp(phone: phone);
+  @override
+  Future<Either<Failure, Unit>> call(RequestOtpParams params) {
+    return patientAuthRepo.requestOtp(phone: params.phone);
   }
+}
+
+class RequestOtpParams {
+  const RequestOtpParams({required this.phone});
+
+  final String phone;
 }
