@@ -8,7 +8,7 @@ class ApiConstants {
 
   // Auth — patient
   static const String requestOtp = '/auth/login/send-otp';
-  static const String verifyOtp = '/auth/patient/verify-otp';
+  static const String verifyOtp = '/auth/login/verify-otp';
 
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 30);
