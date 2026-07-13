@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/widgets/app_primary_button.dart';
-import '../../../../core/widgets/app_text_button.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/app_text_style.dart';
-import '../manager/otp cubit/otp_cubit.dart';
-import '../manager/otp cubit/otp_state.dart';
+import '../manager/otp/otp_cubit.dart';
 import '../widgets/otp_field.dart';
 
 

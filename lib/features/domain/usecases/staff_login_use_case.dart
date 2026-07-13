@@ -5,14 +5,14 @@ import '../../../core/error/failures.dart';
 import '../entities/user_entity.dart';
 import '../repositories/staff_auth_repository.dart';
 
-class StuffLoginUseCase extends UseCase< User, LoginParams> {
-   StuffLoginUseCase(this.stuffAuthRepo);
+class StaffLoginUseCase extends UseCase< User, LoginParams> {
+   StaffLoginUseCase(this.staffAuthRepo);
 
-  final StaffAuthRepository stuffAuthRepo;
+  final StaffAuthRepository staffAuthRepo;
 
   @override
   Future<Either<Failure, User>> call( LoginParams params) {
-    return stuffAuthRepo.login(
+    return staffAuthRepo.login(
       universityId: params.universityId,
       password: params.password,
     );

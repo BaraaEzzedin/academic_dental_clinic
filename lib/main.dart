@@ -1,8 +1,10 @@
+import 'package:academic_dental_clinic/core/service_locator/auth_service.dart';
 import 'package:academic_dental_clinic/features/presentation/screens/select_role.dart';
-import 'package:academic_dental_clinic/features/presentation/screens/staff_login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  configureDependencies();
   runApp(const MyApp());
 }
 

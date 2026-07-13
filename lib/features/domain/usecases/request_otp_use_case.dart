@@ -5,8 +5,8 @@ import 'package:dartz/dartz.dart';
 import '../../../core/error/failures.dart';
 import '../repositories/patient_auth_repository.dart';
 
-class RequestOtp extends UseCase<Unit , RequestOtpParams > {
-   RequestOtp(this.patientAuthRepo);
+class RequestOtpUseCase extends UseCase<Unit , RequestOtpParams > {
+   RequestOtpUseCase(this.patientAuthRepo);
 
   final PatientAuthRepository patientAuthRepo;
 

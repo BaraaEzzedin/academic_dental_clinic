@@ -4,8 +4,8 @@ import 'package:academic_dental_clinic/features/presentation/widgets/logo_sectio
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_dimensions.dart';
-import '../manager/password cubit/password_cubit.dart';
-import '../manager/password cubit/password_state.dart';
+import '../manager/password/password_cubit.dart';
+import '../manager/password/password_state.dart';
 import '../widgets/login_form_card.dart';
 
 

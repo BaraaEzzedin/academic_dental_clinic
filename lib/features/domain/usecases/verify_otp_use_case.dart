@@ -5,8 +5,8 @@ import '../../../core/error/failures.dart';
 import '../entities/user_entity.dart';
 import '../repositories/patient_auth_repository.dart';
 
-class VerifyOtpUseCse extends UseCase<User , VerifyOtpParams> {
-  VerifyOtpUseCse(this.patientAuthRepo);
+class VerifyOtpUseCase extends UseCase<User , VerifyOtpParams> {
+  VerifyOtpUseCase(this.patientAuthRepo);
 
   final PatientAuthRepository patientAuthRepo;
 

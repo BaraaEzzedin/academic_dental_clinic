@@ -1,7 +1,7 @@
 import 'package:academic_dental_clinic/core/constants/app_colors.dart';
 import 'package:academic_dental_clinic/core/constants/app_dimensions.dart';
 import 'package:academic_dental_clinic/core/theme/app_text_style.dart';
-import 'package:academic_dental_clinic/features/presentation/screens/Patient_login.dart';
+import 'package:academic_dental_clinic/features/presentation/screens/patient_login.dart';
 import 'package:academic_dental_clinic/features/presentation/screens/staff_login.dart';
 import 'package:academic_dental_clinic/features/presentation/widgets/logo_section.dart';
 import 'package:academic_dental_clinic/features/presentation/widgets/role_card.dart';

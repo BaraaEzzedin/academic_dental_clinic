@@ -41,7 +41,7 @@ class AppValidator {
       return "Phone number must start with +963";
     }
 
-    if (value.length != 13) {
+    if (value.length != 13 ) {
       return "Phone number must be +963 followed by 9 digits";
     }
 
