@@ -12,6 +12,7 @@ import '../manager/otp/otp_cubit.dart';
 import '../manager/verify_otp/verify_otp_cubit.dart';
 import '../manager/verify_otp/verify_otp_state.dart';
 import '../widgets/otp_field.dart';
+import 'patient_home.dart';
 
 
 class OtpVerification extends StatefulWidget {
@@ -79,12 +80,12 @@ class _OtpVerificationState extends State<OtpVerification> {
                   ..hideCurrentSnackBar()
                   ..showSnackBar(SnackBar(content: Text(state.message)));
               } else if (state is VerifyOtpSuccess) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(content: Text('Welcome, ${state.user.fullName}')),
-                  );
-                // TODO(phase): navigate to the patient dashboard once it exists.
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (_) => PatientHome(user: state.user),
+                  ),
+                  (route) => false,
+                );
               }
             },
             builder: (context, state) {

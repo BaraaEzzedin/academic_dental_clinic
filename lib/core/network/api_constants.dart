@@ -1,7 +1,7 @@
 class ApiConstants {
   const ApiConstants._();
 
-  static const String baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'http://192.168.0.2:3000';
 
   // Auth — staff
   static const String staffLogin = '/auth/staff/login';

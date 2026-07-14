@@ -61,7 +61,6 @@
 import 'package:academic_dental_clinic/core/utils/app_validator.dart';
 import 'package:academic_dental_clinic/features/presentation/widgets/forgot_password_button.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../core/constants/app_dimensions.dart';
 import 'email_field.dart';
 import 'password_field.dart';
