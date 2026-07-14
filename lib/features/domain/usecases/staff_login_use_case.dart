@@ -13,7 +13,7 @@ class StaffLoginUseCase extends UseCase< User, LoginParams> {
   @override
   Future<Either<Failure, User>> call( LoginParams params) {
     return staffAuthRepo.login(
-      universityId: params.universityId,
+      email: params.email,
       password: params.password,
     );
   }
@@ -22,10 +22,10 @@ class StaffLoginUseCase extends UseCase< User, LoginParams> {
 
 class LoginParams {
   const LoginParams({
-    required this.universityId,
+    required this.email,
     required this.password,
   });
 
-  final String universityId;
+  final String email;
   final String password;
 }

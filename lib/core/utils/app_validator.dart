@@ -1,15 +1,17 @@
 class AppValidator {
   AppValidator._();
 
-  static String? validateStudentNumber(
+  static String? validateEmail(
       String? value,
       ) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Student number is required';
+    final email = value?.trim() ?? '';
+    if (email.isEmpty) {
+      return 'Email is required';
     }
 
-    if (!RegExp(r'^\d{9}$').hasMatch(value)) {
-      return 'Student number must be 9 digits';
+    final emailRegExp = RegExp(r'^[\w.+-]+@[\w-]+\.[\w.-]+$');
+    if (!emailRegExp.hasMatch(email)) {
+      return 'Enter a valid email address';
     }
 
     return null;

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/app_text_field.dart';
 
-class UniversityIdField extends StatelessWidget {
-  const UniversityIdField({
+class EmailField extends StatelessWidget {
+  const EmailField({
     super.key,
     required this.controller,
     this.onChanged,
@@ -17,11 +17,11 @@ class UniversityIdField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppTextField(
-      label: 'University ID',
+      label: 'Email',
       controller: controller,
-      hintText: 'UD-123456',
-      prefixIcon: Icons.school_outlined,
-      keyboardType: TextInputType.text,
+      hintText: 'name@example.com',
+      prefixIcon: Icons.email_outlined,
+      keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       onChanged: onChanged,
       validator: validator,

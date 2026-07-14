@@ -5,7 +5,7 @@ import '../entities/user_entity.dart';
 
 abstract class StaffAuthRepository {
   Future<Either<Failure, User>> login({
-    required String universityId,
+    required String email,
     required String password,
   });
 }

@@ -7,7 +7,7 @@ import '../../models/auth_response_model.dart';
 
 abstract class StaffAuthRemoteDataSource {
   Future<AuthResponseModel> login({
-    required String universityId,
+    required String email,
     required String password,
   });
 }
@@ -19,14 +19,14 @@ class StaffAuthRemoteDataSourceImpl implements StaffAuthRemoteDataSource {
 
   @override
   Future<AuthResponseModel> login({
-    required String universityId,
+    required String email,
     required String password,
   }) async {
     try {
       final response = await apiClient.post<Map<String, dynamic>>(
         ApiConstants.staffLogin,
         data: {
-          'university_id': universityId,
+          'email': email,
           'password': password,
         },
       );

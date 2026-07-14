@@ -63,15 +63,15 @@ import 'package:academic_dental_clinic/features/presentation/widgets/forgot_pass
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_dimensions.dart';
+import 'email_field.dart';
 import 'password_field.dart';
 import 'sign_in_button.dart';
-import 'university_id_field.dart';
 
 class LoginFormCard extends StatelessWidget {
   const LoginFormCard({
     super.key,
     required this.formKey,
-    required this.universityIdController,
+    required this.emailController,
     required this.passwordController,
     required this.obscurePassword,
     required this.onTogglePassword,
@@ -81,7 +81,7 @@ class LoginFormCard extends StatelessWidget {
   });
 
   final GlobalKey<FormState> formKey;
-  final TextEditingController universityIdController;
+  final TextEditingController emailController;
   final TextEditingController passwordController;
   final bool obscurePassword;
   final VoidCallback onTogglePassword;
@@ -110,9 +110,9 @@ class LoginFormCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            UniversityIdField(
-              controller: universityIdController,
-              validator: AppValidator.validateStudentNumber,
+            EmailField(
+              controller: emailController,
+              validator: AppValidator.validateEmail,
             ),
             const SizedBox(height: AppDimensions.xl),
             PasswordField(

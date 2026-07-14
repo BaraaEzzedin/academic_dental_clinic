@@ -15,12 +15,12 @@ class StaffAuthRepositoryImpl implements StaffAuthRepository {
 
   @override
   Future<Either<Failure, User>> login({
-    required String universityId,
+    required String email,
     required String password,
   }) async {
     try {
       final result = await remote.login(
-        universityId: universityId,
+        email: email,
         password: password,
       );
       await local.saveToken(result.accessToken);

@@ -8,12 +8,12 @@ class StaffLoginCubit extends Cubit<StaffLoginState> {
   final StaffLoginUseCase _loginUseCase;
 
   Future<void> login({
-    required String universityId,
+    required String email,
     required String password,
   }) async {
     emit(const StaffLoginLoading());
     final result = await _loginUseCase(
-      LoginParams(universityId: universityId, password: password),
+      LoginParams(email: email, password: password),
     );
     result.fold(
       (failure) => emit(StaffLoginFailure(failure.message)),
