@@ -1,15 +1,15 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
-import '../../features/data/datasources/auth/auth_local_data_source.dart';
-import '../../features/data/datasources/auth/patient_auth_remote_data_source.dart';
-import '../../features/data/datasources/auth/staff_auth_remote_data_source.dart';
-import '../../features/data/repositories/patient_auth_repository_impl.dart';
-import '../../features/data/repositories/staff_auth_repository_impl.dart';
-import '../../features/domain/repositories/patient_auth_repository.dart';
-import '../../features/domain/repositories/staff_auth_repository.dart';
-import '../../features/domain/usecases/request_otp_use_case.dart';
-import '../../features/domain/usecases/staff_login_use_case.dart';
-import '../../features/domain/usecases/verify_otp_use_case.dart';
+import '../../features/auth/data/data_source/auth_local_data_source.dart';
+import '../../features/auth/data/data_source/patient_auth_remote_data_source.dart';
+import '../../features/auth/data/data_source/staff_auth_remote_data_source.dart';
+import '../../features/auth/data/repositories/patient_auth_repository_impl.dart';
+import '../../features/auth/data/repositories/staff_auth_repository_impl.dart';
+import '../../features/auth/domain/repositories/patient_auth_repository.dart';
+import '../../features/auth/domain/repositories/staff_auth_repository.dart';
+import '../../features/auth/domain/use_cases/request_otp_use_case.dart';
+import '../../features/auth/domain/use_cases/staff_login_use_case.dart';
+import '../../features/auth/domain/use_cases/verify_otp_use_case.dart';
 import '../network/api_client.dart';
 import '../network/auth_interceptor.dart';
 
