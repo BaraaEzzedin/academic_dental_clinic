@@ -42,7 +42,7 @@ class PatientAuthRemoteDataSourceImpl implements PatientAuthRemoteDataSource {
         ApiConstants.verifyOtp,
         data: {
           'phone': phone,
-          'code': code,
+          'otp': code,
         },
       );
       return AuthResponseModel.fromJson(response.data!);
