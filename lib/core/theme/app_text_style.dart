@@ -108,4 +108,32 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
   );
+
+  // ---------- Student home ----------
+  static const TextStyle homeUserName = TextStyle(
+    fontSize: 17,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+  );
+
+  static const TextStyle homeDateLabel = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w700,
+    color: AppColors.primary,
+    letterSpacing: 1.2,
+  );
+
+  static const TextStyle homeGreeting = TextStyle(
+    fontSize: 30,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textPrimary,
+    height: 1.15,
+  );
+
+  static const TextStyle homeSummary = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textSecondary,
+    height: 1.4,
+  );
 }

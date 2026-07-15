@@ -4,7 +4,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../manager/bottom_nav/bottom_nav_cubit.dart';
 import '../manager/bottom_nav/bottom_nav_state.dart';
 import '../widgets/bottom_nav_bar.dart';
-import 'home_Screen.dart';
+import 'home_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -45,7 +45,7 @@ class MainScreen extends StatelessWidget {
 }
 
 class TabPlaceholder extends StatelessWidget {
-  const TabPlaceholder({required this.label});
+  const TabPlaceholder({super.key, required this.label});
 
   final String label;
 
