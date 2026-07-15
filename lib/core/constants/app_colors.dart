@@ -30,4 +30,20 @@ class AppColors {
   static const Color dividerLine = Color(0xFFDDE3E8);
   static const Color indicatorInactive = Color(0xFFCBD5DB);
   static const Color white = Color(0xFFFFFFFF);
+
+  // ---------- Accents ----------
+  // Warm coral used for the flowing accent curves in the home design.
+  static const Color accentCoral = Color(0xFFF2704B);
+  // Positive/completed state (e.g. "recovery complete").
+  static const Color success = Color(0xFF2E9E7B);
+  // Pending/attention state (e.g. "vitals pending").
+  static const Color warning = Color(0xFFE0A32E);
+
+  // ---------- Bottom navigation ----------
+  static const Color navBarBackground = Color(0xFFFFFFFF);
+  static const Color navActive = primary;
+  static const Color navInactive = Color(0xFF8A9AA6);
+  // Soft teal wash behind the selected item's pill.
+  static const Color navIndicator = Color(0xFFDDEEEC);
+  static const Color navShadow = Color(0x140E6E6E);
 }

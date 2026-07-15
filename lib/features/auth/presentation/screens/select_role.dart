@@ -5,6 +5,7 @@ import 'package:academic_dental_clinic/features/auth/presentation/screens/patien
 import 'package:academic_dental_clinic/features/auth/presentation/screens/staff_login.dart';
 import 'package:academic_dental_clinic/features/auth/presentation/widgets/logo_section.dart';
 import 'package:academic_dental_clinic/features/auth/presentation/widgets/role_card.dart';
+import 'package:academic_dental_clinic/features/student/home/presentation/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 
 class SelectRole extends StatelessWidget {
@@ -39,7 +40,7 @@ class SelectRole extends StatelessWidget {
           SizedBox(height: AppDimensions.lg,),
           RoleCard(icon: Icons.school_outlined, title: "Student", description: "Access your clinic cases and curriculum", onTap: (){
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const StaffLogin()),
+                MaterialPageRoute(builder: (context) => const MainScreen()),
                 );
             }
             ),
