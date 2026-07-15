@@ -28,12 +28,7 @@ class MainScreen extends StatelessWidget {
             builder: (context, state) {
               return IndexedStack(
                 index: state.index,
-                children: const [
-                  TabPlaceholder(label: 'Home'),
-                  TabPlaceholder(label: 'Schedule'),
-                  TabPlaceholder(label: 'Patients'),
-                  TabPlaceholder(label: 'Profile'),
-                ],
+                children: pages,
               );
             },
           ),

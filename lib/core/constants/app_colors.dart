@@ -38,6 +38,14 @@ class AppColors {
   static const Color success = Color(0xFF2E9E7B);
   // Pending/attention state (e.g. "vitals pending").
   static const Color warning = Color(0xFFE0A32E);
+  // Bright turquoise used for the live "ongoing" state.
+  static const Color ongoing = Color(0xFF3ECAD6);
+
+  // ---------- Schedule timeline ----------
+  // The dark teal used for the timeline dots and each card's accent strip.
+  static const Color timelineDot = secondary;
+  // The thin connector line between dots.
+  static const Color timelineLine = Color(0xFFC3D3DA);
 
   // ---------- Bottom navigation ----------
   static const Color navBarBackground = Color(0xFFFFFFFF);
