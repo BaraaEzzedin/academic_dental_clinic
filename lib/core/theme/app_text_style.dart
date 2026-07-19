@@ -167,4 +167,41 @@ class AppTextStyles {
     fontWeight: FontWeight.w800,
     letterSpacing: 0.6,
   );
+
+  // ---------- Student: assigned patients ----------
+  static const TextStyle filterChip = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textSecondary,
+  );
+
+  static const TextStyle patientName = TextStyle(
+    fontSize: 17,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+  );
+
+  static const TextStyle patientFieldLabel = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textHint,
+  );
+
+  static const TextStyle patientFieldValue = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+  );
+
+  static const TextStyle statusBadge = TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w800,
+    letterSpacing: 0.3,
+  );
+
+  static const TextStyle viewDetailsButton = TextStyle(
+    fontSize: 13.5,
+    fontWeight: FontWeight.w700,
+    color: AppColors.primary,
+  );
 }
