@@ -204,4 +204,94 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
     color: AppColors.primary,
   );
+
+  // ---------- Student: case details ----------
+  static const TextStyle casePatientName = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textPrimary,
+  );
+
+  static const TextStyle casePatientId = TextStyle(
+    fontSize: 12.5,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textHint,
+  );
+
+  // Uppercase labels: AGE / NEXT SESSION / SUBJECT / SUPERVISOR / TARGET TOOTH
+  static const TextStyle caseFieldLabel = TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textHint,
+    letterSpacing: 0.6,
+  );
+
+  static const TextStyle caseFieldValue = TextStyle(
+    fontSize: 14.5,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+  );
+
+  static const TextStyle caseToothLabel = TextStyle(
+    fontSize: 13.5,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textSecondary,
+  );
+
+  static const TextStyle caseProcedure = TextStyle(
+    fontSize: 13.5,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textDark,
+  );
+
+  static const TextStyle caseHighlightValue = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w800,
+    color: AppColors.primary,
+  );
+
+  static const TextStyle timelinePhaseTitle = TextStyle(
+    fontSize: 14.5,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+  );
+
+  static const TextStyle timelinePhaseMeta = TextStyle(
+    fontSize: 12.5,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textSecondary,
+  );
+
+  static const TextStyle mediaCaption = TextStyle(
+    fontSize: 11.5,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textSecondary,
+  );
+
+  static const TextStyle noteReviewer = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textPrimary,
+    letterSpacing: 0.3,
+  );
+
+  static const TextStyle noteTimeAgo = TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textHint,
+  );
+
+  static const TextStyle noteMeta = TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w700,
+    color: AppColors.primary,
+    letterSpacing: 0.2,
+  );
+
+  static const TextStyle noteMessage = TextStyle(
+    fontSize: 13.5,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textPrimary,
+    height: 1.5,
+  );
 }

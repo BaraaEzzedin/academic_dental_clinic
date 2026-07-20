@@ -47,6 +47,10 @@ class AppColors {
   // The thin connector line between dots.
   static const Color timelineLine = Color(0xFFC3D3DA);
 
+  // ---------- Case details ----------
+  static const Color caseChipBackground = Color(0xFFEAF4F6);
+  static const Color mediaBackground = Color(0xFF102A33);
+
   // ---------- Bottom navigation ----------
   static const Color navBarBackground = Color(0xFFFFFFFF);
   static const Color navActive = primary;
