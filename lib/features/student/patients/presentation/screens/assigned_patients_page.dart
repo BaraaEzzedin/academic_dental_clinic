@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/widgets/status_badge.dart';
 import '../../../home/presentation/widgets/home_top_bar.dart';
 import '../manager/patient_filter/patient_filter_cubit.dart';
 import '../manager/patient_filter/patient_filter_state.dart';
