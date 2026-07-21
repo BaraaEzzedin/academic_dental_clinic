@@ -23,7 +23,7 @@ class DiagnosticMediaCard extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.zero,
               itemCount: media.length,
-              separatorBuilder: (_, __) =>
+              separatorBuilder: (_, _) =>
                   const SizedBox(width: AppDimensions.md),
               itemBuilder: (context, index) =>
                   DiagnosticMediaThumbnail(item: media[index]),

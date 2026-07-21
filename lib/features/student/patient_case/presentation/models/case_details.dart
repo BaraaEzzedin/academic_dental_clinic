@@ -17,7 +17,7 @@ class CaseDetails {
     required this.subject,
     required this.supervisor,
     required this.planRows,
-    required this.highlights,
+    required this.materials,
     required this.phases,
     required this.media,
     required this.notes,
@@ -31,7 +31,7 @@ class CaseDetails {
   final String subject;
   final String supervisor;
   final List<TreatmentPlanRow> planRows;
-  final List<PlanHighlight> highlights;
+  final List<String> materials;
   final List<ProgressPhase> phases;
   final List<DiagnosticMediaItem> media;
   final List<SupervisorNote> notes;

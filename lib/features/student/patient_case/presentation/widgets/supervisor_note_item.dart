@@ -60,17 +60,26 @@ class SupervisorNoteItem extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppDimensions.sm),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(AppDimensions.md),
-          decoration: BoxDecoration(
-            color: AppColors.caseChipBackground,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-            border: const Border(
-              left: BorderSide(color: AppColors.primary, width: 3),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(width: 3, color: AppColors.primary),
+                Expanded(
+                  child: Container(
+                    color: AppColors.caseChipBackground,
+                    padding: const EdgeInsets.all(AppDimensions.md),
+                    child: Text(
+                      note.message,
+                      style: AppTextStyles.noteMessage,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          child: Text(note.message, style: AppTextStyles.noteMessage),
         ),
       ],
     );

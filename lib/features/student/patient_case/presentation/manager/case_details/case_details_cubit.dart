@@ -45,10 +45,7 @@ class CaseDetailsCubit extends Cubit<CaseDetailsState> {
         TreatmentPlanRow(tooth: 'Tooth #13', procedure: 'Endodontic Access'),
         TreatmentPlanRow(tooth: 'Tooth #23', procedure: 'Pulpectomy'),
       ],
-      highlights: const [
-        PlanHighlight(label: 'TARGET TOOTH', value: 'Tooth #32'),
-        PlanHighlight(label: 'MATERIALS', value: 'Zirconia'),
-      ],
+      materials: const ['Zirconia', 'Gutta-percha', 'Composite Resin'],
       phases: const [
         ProgressPhase(
           title: 'First Phase',
@@ -58,7 +55,7 @@ class CaseDetailsCubit extends Cubit<CaseDetailsState> {
         ProgressPhase(
           title: 'Second Phase',
           date: 'Oct 04, 2023',
-          status: PhaseStatus.completed,
+          status: PhaseStatus.upcoming,
         ),
       ],
       media: const [

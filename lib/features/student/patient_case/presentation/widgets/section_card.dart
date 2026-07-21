@@ -40,7 +40,7 @@ class SectionTitle extends StatelessWidget {
     return Row(
       children: [
         Expanded(child: Text(title, style: AppTextStyles.sectionTitle)),
-        if (trailing != null) trailing!,
+        ?trailing,
       ],
     );
   }

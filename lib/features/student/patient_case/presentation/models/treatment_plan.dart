@@ -10,14 +10,3 @@ class TreatmentPlanRow {
   final String tooth;
   final String procedure;
 }
-
-// A highlighted summary chip, e.g. "TARGET TOOTH" -> "Tooth #32".
-class PlanHighlight {
-  const PlanHighlight({
-    required this.label,
-    required this.value,
-  });
-
-  final String label;
-  final String value;
-}

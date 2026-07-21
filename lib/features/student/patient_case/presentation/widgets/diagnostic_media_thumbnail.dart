@@ -25,7 +25,7 @@ class DiagnosticMediaThumbnail extends StatelessWidget {
             aspectRatio: 16 / 10,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-              child: _MediaImage(imageUrl: item.imageUrl),
+              child: MediaImage(imageUrl: item.imageUrl),
             ),
           ),
           const SizedBox(height: AppDimensions.sm),
@@ -41,8 +41,8 @@ class DiagnosticMediaThumbnail extends StatelessWidget {
   }
 }
 
-class _MediaImage extends StatelessWidget {
-  const _MediaImage({this.imageUrl});
+class MediaImage extends StatelessWidget {
+  const MediaImage({super.key,this.imageUrl});
 
   final String? imageUrl;
 
@@ -52,17 +52,17 @@ class _MediaImage extends StatelessWidget {
       return Image.network(
         imageUrl!,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const _MediaPlaceholder(),
+        errorBuilder: (_, _, _) => const MediaPlaceholder(),
         loadingBuilder: (context, child, progress) =>
-            progress == null ? child : const _MediaPlaceholder(),
+            progress == null ? child : const MediaPlaceholder(),
       );
     }
-    return const _MediaPlaceholder();
+    return const MediaPlaceholder();
   }
 }
 
-class _MediaPlaceholder extends StatelessWidget {
-  const _MediaPlaceholder();
+class MediaPlaceholder extends StatelessWidget {
+  const MediaPlaceholder({super.key});
 
   @override
   Widget build(BuildContext context) {

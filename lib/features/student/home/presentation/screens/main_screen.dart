@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
+import '../../../patients/presentation/screens/assigned_patients_page.dart';
 import '../manager/bottom_nav/bottom_nav_cubit.dart';
 import '../manager/bottom_nav/bottom_nav_state.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -12,7 +13,7 @@ class MainScreen extends StatelessWidget {
   static const List<Widget> pages = [
     HomeScreen(),
     TabPlaceholder(label: 'Patients'),
-    TabPlaceholder(label: 'Patients'),
+    AssignedPatientsPage(),
     TabPlaceholder(label: 'Patients'),
   ];
 

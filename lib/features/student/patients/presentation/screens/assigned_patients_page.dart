@@ -4,6 +4,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/widgets/status_badge.dart';
 import '../../../home/presentation/widgets/home_top_bar.dart';
+import '../../../patient_case/presentation/screens/case_details_screen.dart';
 import '../manager/patient_filter/patient_filter_cubit.dart';
 import '../manager/patient_filter/patient_filter_state.dart';
 import '../models/assigned_patient.dart';
@@ -86,7 +87,16 @@ class AssignedPatientsPage extends StatelessWidget {
                   builder: (context, state) {
                     return PatientListView(
                       patients: state.filteredPatients,
-                      onViewDetails: (_) {},
+                      onViewDetails: (patient) {
+                        // TODO(backend): pass a real patient id once available.
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => CaseDetailsScreen(
+                              patientId: patient.patientName,
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),

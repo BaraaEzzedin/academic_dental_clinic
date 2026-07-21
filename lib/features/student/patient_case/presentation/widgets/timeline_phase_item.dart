@@ -17,6 +17,8 @@ class TimelinePhaseItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = phase.status.color;
+    final isCurrent = phase.status == PhaseStatus.upcoming;
+
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,6 +31,14 @@ class TimelinePhaseItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: color,
                   shape: BoxShape.circle,
+                  boxShadow: isCurrent
+                      ? [
+                          BoxShadow(
+                            color: color.withValues(alpha: 0.25),
+                            spreadRadius: 3,
+                          ),
+                        ]
+                      : null,
                 ),
                 child: Icon(phase.status.icon, size: 15, color: AppColors.white),
               ),
@@ -36,7 +46,8 @@ class TimelinePhaseItem extends StatelessWidget {
                 Expanded(
                   child: Container(
                     width: 2,
-                    margin: const EdgeInsets.symmetric(vertical: AppDimensions.xs),
+                    margin:
+                        const EdgeInsets.symmetric(vertical: AppDimensions.xs),
                     color: AppColors.timelineLine,
                   ),
                 ),
@@ -46,16 +57,40 @@ class TimelinePhaseItem extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(bottom: isLast ? 0 : AppDimensions.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(phase.title, style: AppTextStyles.timelinePhaseTitle),
-                  const SizedBox(height: AppDimensions.xs),
-                  Text(
-                    '${phase.date} · ${phase.status.label}',
-                    style: AppTextStyles.timelinePhaseMeta,
-                  ),
-                ],
+              child: Container(
+                padding: isCurrent
+                    ? const EdgeInsets.symmetric(
+                        horizontal: AppDimensions.md,
+                        vertical: AppDimensions.sm,
+                      )
+                    : EdgeInsets.zero,
+                decoration: isCurrent
+                    ? BoxDecoration(
+                        color: color.withValues(alpha: 0.10),
+                        borderRadius:
+                            BorderRadius.circular(AppDimensions.radiusSm),
+                      )
+                    : null,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      phase.title,
+                      style: AppTextStyles.timelinePhaseTitle.copyWith(
+                        color: isCurrent ? color : AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.xs),
+                    Text(
+                      '${phase.date} · ${phase.status.label}',
+                      style: AppTextStyles.timelinePhaseMeta.copyWith(
+                        color: isCurrent ? color : AppColors.textSecondary,
+                        fontWeight:
+                            isCurrent ? FontWeight.w700 : FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

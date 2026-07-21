@@ -3,27 +3,23 @@ import '../../../../../core/constants/app_colors.dart';
 
 enum PhaseStatus {
   completed,
-  inProgress,
-  pending,
+  upcoming,
 }
 
 extension PhaseStatusX on PhaseStatus {
   String get label => switch (this) {
         PhaseStatus.completed => 'Completed',
-        PhaseStatus.inProgress => 'In Progress',
-        PhaseStatus.pending => 'Pending',
+        PhaseStatus.upcoming => 'Upcoming',
       };
 
   Color get color => switch (this) {
         PhaseStatus.completed => AppColors.success,
-        PhaseStatus.inProgress => AppColors.primary,
-        PhaseStatus.pending => AppColors.textHint,
+        PhaseStatus.upcoming => AppColors.primary,
       };
 
   IconData get icon => switch (this) {
         PhaseStatus.completed => Icons.check_rounded,
-        PhaseStatus.inProgress => Icons.timelapse_rounded,
-        PhaseStatus.pending => Icons.circle_outlined,
+        PhaseStatus.upcoming => Icons.play_arrow_rounded,
       };
 }
 
