@@ -11,15 +11,17 @@ import 'case_details_state.dart';
 class CaseDetailsCubit extends Cubit<CaseDetailsState> {
   CaseDetailsCubit() : super(const CaseDetailsState());
 
-  Future<void> load(String patientId) async {
+  Future<void> load(String patientId, PatientStatus status) async {
     emit(state.copyWith(status: CaseDetailsStatus.loading));
     try {
       // TODO(backend): replace with repository.fetchCaseDetails(patientId).
+      // The real payload will carry the case status; the `status` arg is a
+      // temporary bridge from the patient list so the mock renders correctly.
       await Future<void>.delayed(const Duration(milliseconds: 400));
       emit(
         state.copyWith(
           status: CaseDetailsStatus.loaded,
-          details: _mock(patientId),
+          details: _mock(patientId, status),
         ),
       );
     } catch (_) {
@@ -33,11 +35,11 @@ class CaseDetailsCubit extends Cubit<CaseDetailsState> {
   }
 
   // mock data for ui , delete when backend is ready
-  CaseDetails _mock(String patientId) {
+  CaseDetails _mock(String patientId, PatientStatus status) {
     return CaseDetails(
       patientId: patientId,
       patientName: 'Ahmad Mohammad',
-      status: PatientStatus.inTreatment,
+      status: status,
       age: 28,
       nextSession: '15 / June',
       subject: 'Endodontics 2',

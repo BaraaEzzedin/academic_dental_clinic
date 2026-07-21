@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
+import '../../../../../core/widgets/status_badge.dart';
 import '../manager/case_details/case_details_cubit.dart';
 import '../manager/case_details/case_details_state.dart';
 import '../models/case_details.dart';
@@ -10,19 +11,27 @@ import '../widgets/case_details_top_bar.dart';
 import '../widgets/diagnostic_media_card.dart';
 import '../widgets/patient_case_header_card.dart';
 import '../widgets/progress_timeline_card.dart';
+import '../widgets/section_card.dart';
 import '../widgets/supervisor_notes_card.dart';
 import '../widgets/treatment_plan_summary_card.dart';
 import 'dental_chart_screen.dart';
 
 class CaseDetailsScreen extends StatelessWidget {
-  const CaseDetailsScreen({super.key, required this.patientId});
+  const CaseDetailsScreen({
+    super.key,
+    required this.patientId,
+    required this.status,
+  });
 
   final String patientId;
+
+  // TODO(backend): drop this once fetchCaseDetails returns the real status.
+  final PatientStatus status;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CaseDetailsCubit>(
-      create: (_) => CaseDetailsCubit()..load(patientId),
+      create: (_) => CaseDetailsCubit()..load(patientId, status),
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
@@ -52,8 +61,9 @@ class CaseDetailsScreen extends StatelessWidget {
                       return ErrorView(
                         message: state.errorMessage ??
                             'Could not load case details.',
-                        onRetry: () =>
-                            context.read<CaseDetailsCubit>().load(patientId),
+                        onRetry: () => context
+                            .read<CaseDetailsCubit>()
+                            .load(patientId, status),
                       );
                     }
                     return CaseDetailsBody(details: state.details!);
@@ -75,6 +85,9 @@ class CaseDetailsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final isWaitingApproval = details.status == PatientStatus.waitingApproval;
+
     return ListView(
       padding: const EdgeInsets.fromLTRB(
         AppDimensions.screenHorizontalPadding,
@@ -96,18 +109,67 @@ class CaseDetailsBody extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: AppDimensions.lg),
-        ProgressTimelineCard(
-          phases: details.phases,
-          onViewDetails: () {
-            // TODO: navigate to the full progress details screen.
-          },
-        ),
+        if (isWaitingApproval) ...[
+          const SizedBox(height: AppDimensions.lg),
+          const ApprovalPendingCard(),
+        ],
         const SizedBox(height: AppDimensions.lg),
         DiagnosticMediaCard(media: details.media),
-        const SizedBox(height: AppDimensions.lg),
-        SupervisorNotesCard(notes: details.notes),
+        if (!isWaitingApproval) ...[
+          const SizedBox(height: AppDimensions.lg),
+          ProgressTimelineCard(
+            phases: details.phases,
+            onViewDetails: () {
+              // TODO: navigate to the full progress details screen.
+            },
+          ),
+          const SizedBox(height: AppDimensions.lg),
+          SupervisorNotesCard(notes: details.notes),
+        ],
       ],
+    );
+  }
+}
+
+
+class ApprovalPendingCard extends StatelessWidget {
+  const ApprovalPendingCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SectionCard(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(AppDimensions.sm),
+            decoration: BoxDecoration(
+              color: AppColors.warning.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+            ),
+            child: const Icon(
+              Icons.hourglass_top_rounded,
+              color: AppColors.warning,
+              size: AppDimensions.iconSize,
+            ),
+          ),
+          const SizedBox(width: AppDimensions.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Waiting for approval', style: AppTextStyles.sectionTitle),
+                const SizedBox(height: AppDimensions.xs),
+                Text(
+                  'Treatment sessions, progress timeline, and supervisor notes '
+                  'will appear here once the supervisor approves this case.',
+                  style: AppTextStyles.subtitle,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -93,6 +93,7 @@ class AssignedPatientsPage extends StatelessWidget {
                           MaterialPageRoute<void>(
                             builder: (_) => CaseDetailsScreen(
                               patientId: patient.patientName,
+                              status: patient.status,
                             ),
                           ),
                         );
