@@ -2,6 +2,7 @@ import '../../../../../core/widgets/status_badge.dart';
 import 'diagnostic_media_item.dart';
 import 'progress_phase.dart';
 import 'supervisor_note.dart';
+import 'tooth.dart';
 import 'treatment_plan.dart';
 
 // Aggregate ui model for the case details screen.
@@ -21,6 +22,7 @@ class CaseDetails {
     required this.phases,
     required this.media,
     required this.notes,
+    required this.dentalChart,
   });
 
   final String patientId;
@@ -35,4 +37,6 @@ class CaseDetails {
   final List<ProgressPhase> phases;
   final List<DiagnosticMediaItem> media;
   final List<SupervisorNote> notes;
+  // Full-mouth clinical chart keyed by FDI tooth number.
+  final Map<int, ToothRecord> dentalChart;
 }

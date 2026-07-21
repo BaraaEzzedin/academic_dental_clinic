@@ -12,6 +12,7 @@ import '../widgets/patient_case_header_card.dart';
 import '../widgets/progress_timeline_card.dart';
 import '../widgets/supervisor_notes_card.dart';
 import '../widgets/treatment_plan_summary_card.dart';
+import 'dental_chart_screen.dart';
 
 class CaseDetailsScreen extends StatelessWidget {
   const CaseDetailsScreen({super.key, required this.patientId});
@@ -88,7 +89,11 @@ class CaseDetailsBody extends StatelessWidget {
           rows: details.planRows,
           materials: details.materials,
           onViewDentalChart: () {
-            // TODO: navigate to the dental chart screen.
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => DentalChartScreen(records: details.dentalChart),
+              ),
+            );
           },
         ),
         const SizedBox(height: AppDimensions.lg),
