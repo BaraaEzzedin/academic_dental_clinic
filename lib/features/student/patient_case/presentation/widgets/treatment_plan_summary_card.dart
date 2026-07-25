@@ -3,7 +3,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../models/treatment_plan.dart';
-import 'section_card.dart';
+import 'progress_timeline_section.dart';
 import 'treatment_plan_row.dart';
 
 class TreatmentPlanSummaryCard extends StatelessWidget {
@@ -20,7 +20,7 @@ class TreatmentPlanSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SectionCard(
+    return ProgressTimelineSection(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

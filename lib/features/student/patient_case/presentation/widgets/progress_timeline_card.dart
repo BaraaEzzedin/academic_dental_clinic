@@ -3,26 +3,39 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../models/progress_phase.dart';
-import 'section_card.dart';
+import 'progress_timeline_section.dart';
 import 'timeline_phase_item.dart';
 
 class ProgressTimelineCard extends StatelessWidget {
   const ProgressTimelineCard({
     super.key,
     required this.phases,
-    this.onViewDetails,
+    this.onViewSessions,
   });
 
   final List<ProgressPhase> phases;
-  final VoidCallback? onViewDetails;
+  final VoidCallback? onViewSessions;
 
   @override
   Widget build(BuildContext context) {
-    return SectionCard(
+    return ProgressTimelineSection(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionTitle('Progress Timeline'),
+          SectionTitle(
+            'Progress Timeline',
+            trailing: IconButton(
+              onPressed: onViewSessions,
+              icon: const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.primary,
+              ),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              splashRadius: 20,
+              tooltip: 'View sessions',
+            ),
+          ),
           const SizedBox(height: AppDimensions.lg),
           for (var i = 0; i < phases.length; i++)
             TimelinePhaseItem(
@@ -33,7 +46,7 @@ class ProgressTimelineCard extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: onViewDetails,
+              onPressed: onViewSessions,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.white,
@@ -44,7 +57,7 @@ class ProgressTimelineCard extends StatelessWidget {
                 ),
                 textStyle: AppTextStyles.button,
               ),
-              child: const Text('View Details'),
+              child: const Text('View Sessions'),
             ),
           ),
         ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../models/diagnostic_media_item.dart';
 import 'diagnostic_media_thumbnail.dart';
-import 'section_card.dart';
+import 'progress_timeline_section.dart';
 
 class DiagnosticMediaCard extends StatelessWidget {
   const DiagnosticMediaCard({super.key, required this.media});
@@ -11,7 +11,7 @@ class DiagnosticMediaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SectionCard(
+    return ProgressTimelineSection(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

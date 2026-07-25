@@ -256,6 +256,22 @@ class AppTextStyles {
     color: AppColors.textPrimary,
   );
 
+  static const TextStyle sessionTitle = TextStyle(
+    fontSize: 17.5,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textPrimary,
+    height: 1.25,
+    letterSpacing: -0.2,
+  );
+
+  // Slightly smaller than [sectionTitle] for the "Sessions" list heading.
+  static const TextStyle sessionsHeading = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    letterSpacing: 0.1,
+  );
+
   static const TextStyle timelinePhaseMeta = TextStyle(
     fontSize: 12.5,
     fontWeight: FontWeight.w600,

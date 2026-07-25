@@ -1,6 +1,7 @@
 import '../../../../../core/widgets/status_badge.dart';
 import 'diagnostic_media_item.dart';
 import 'progress_phase.dart';
+import 'session.dart';
 import 'supervisor_note.dart';
 import 'tooth.dart';
 import 'treatment_plan.dart';
@@ -20,6 +21,7 @@ class CaseDetails {
     required this.planRows,
     required this.materials,
     required this.phases,
+    required this.sessions,
     required this.media,
     required this.notes,
     required this.dentalChart,
@@ -35,6 +37,7 @@ class CaseDetails {
   final List<TreatmentPlanRow> planRows;
   final List<String> materials;
   final List<ProgressPhase> phases;
+  final List<Session> sessions;
   final List<DiagnosticMediaItem> media;
   final List<SupervisorNote> notes;
   // Full-mouth clinical chart keyed by FDI tooth number.

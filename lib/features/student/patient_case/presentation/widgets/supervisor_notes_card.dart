@@ -3,7 +3,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../models/supervisor_note.dart';
-import 'section_card.dart';
+import 'progress_timeline_section.dart';
 import 'supervisor_note_item.dart';
 
 class SupervisorNotesCard extends StatelessWidget {
@@ -13,7 +13,7 @@ class SupervisorNotesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SectionCard(
+    return ProgressTimelineSection(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -11,10 +11,11 @@ import '../widgets/case_details_top_bar.dart';
 import '../widgets/diagnostic_media_card.dart';
 import '../widgets/patient_case_header_card.dart';
 import '../widgets/progress_timeline_card.dart';
-import '../widgets/section_card.dart';
+import '../widgets/progress_timeline_section.dart';
 import '../widgets/supervisor_notes_card.dart';
 import '../widgets/treatment_plan_summary_card.dart';
 import 'dental_chart_screen.dart';
+import 'sessions_screen.dart';
 
 class CaseDetailsScreen extends StatelessWidget {
   const CaseDetailsScreen({
@@ -119,8 +120,12 @@ class CaseDetailsBody extends StatelessWidget {
           const SizedBox(height: AppDimensions.lg),
           ProgressTimelineCard(
             phases: details.phases,
-            onViewDetails: () {
-              // TODO: navigate to the full progress details screen.
+            onViewSessions: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => SessionsScreen(sessions: details.sessions),
+                ),
+              );
             },
           ),
           const SizedBox(height: AppDimensions.lg),
@@ -137,7 +142,7 @@ class ApprovalPendingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SectionCard(
+    return ProgressTimelineSection(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

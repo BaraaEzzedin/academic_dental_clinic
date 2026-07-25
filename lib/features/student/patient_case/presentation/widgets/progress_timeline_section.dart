@@ -4,8 +4,8 @@ import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 
 
-class SectionCard extends StatelessWidget {
-  const SectionCard({
+class ProgressTimelineSection extends StatelessWidget {
+  const ProgressTimelineSection({
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(AppDimensions.lg),
@@ -30,16 +30,19 @@ class SectionCard extends StatelessWidget {
 }
 
 class SectionTitle extends StatelessWidget {
-  const SectionTitle(this.title, {super.key, this.trailing});
+  const SectionTitle(this.title, {super.key, this.trailing, this.style});
 
   final String title;
   final Widget? trailing;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: Text(title, style: AppTextStyles.sectionTitle)),
+        Expanded(
+          child: Text(title, style: style ?? AppTextStyles.sectionTitle),
+        ),
         ?trailing,
       ],
     );
