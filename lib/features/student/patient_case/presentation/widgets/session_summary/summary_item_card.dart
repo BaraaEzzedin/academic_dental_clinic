@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
 import '../../models/session.dart';
-import 'status_selector.dart';
+import '../session/session_status_chip.dart';
 
-class TreatmentItemCard extends StatelessWidget {
-  const TreatmentItemCard({
-    super.key,
-    required this.item,
-    required this.onStatusChanged,
-  });
+
+class SummaryItemCard extends StatelessWidget {
+  const SummaryItemCard({super.key, required this.item});
 
   final SessionTreatmentItem item;
-  final ValueChanged<SessionStatus> onStatusChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -40,21 +36,23 @@ class TreatmentItemCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppDimensions.sm),
-              Text(
-                item.procedure,
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textDark,
+              Flexible(
+                child: Text(
+                  item.procedure,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textDark,
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: AppDimensions.md),
-          StatusSelector(
-            selected: item.status,
-            onChanged: onStatusChanged,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SessionStatusChip(status: item.status),
           ),
         ],
       ),

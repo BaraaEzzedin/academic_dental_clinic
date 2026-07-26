@@ -3,16 +3,17 @@ import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
 import '../../../../../../core/theme/app_text_style.dart';
 
-// Pinned "Cancel" / "Update Session" action bar, safe-area aware.
 class EditSessionFooter extends StatelessWidget {
   const EditSessionFooter({
     super.key,
     required this.onCancel,
     required this.onUpdate,
+    this.isSubmitting = false,
   });
 
   final VoidCallback onCancel;
   final VoidCallback onUpdate;
+  final bool isSubmitting;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class EditSessionFooter extends StatelessWidget {
         children: [
           Expanded(
             child: OutlinedButton(
-              onPressed: onCancel,
+              onPressed: isSubmitting ? null : onCancel,
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.textPrimary,
                 side: const BorderSide(color: AppColors.cardBorder),
@@ -50,10 +51,13 @@ class EditSessionFooter extends StatelessWidget {
           Expanded(
             flex: 2,
             child: ElevatedButton(
-              onPressed: onUpdate,
+              onPressed: isSubmitting ? null : onUpdate,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.white,
+                disabledBackgroundColor:
+                    AppColors.primary.withValues(alpha: 0.6),
+                disabledForegroundColor: AppColors.white,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: AppDimensions.md),
                 shape: RoundedRectangleBorder(
@@ -61,7 +65,17 @@ class EditSessionFooter extends StatelessWidget {
                 ),
                 textStyle: AppTextStyles.button,
               ),
-              child: const Text('Complete Session'),
+              child: isSubmitting
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.2,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppColors.white),
+                      ),
+                    )
+                  : const Text('Complete Session'),
             ),
           ),
         ],

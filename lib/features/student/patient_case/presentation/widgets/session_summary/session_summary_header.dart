@@ -3,8 +3,9 @@ import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
 import '../../../../../../core/theme/app_text_style.dart';
 
-class EditSessionHeader extends StatelessWidget {
-  const EditSessionHeader({
+
+class SessionSummaryHeader extends StatelessWidget {
+  const SessionSummaryHeader({
     super.key,
     required this.title,
     required this.date,
@@ -13,7 +14,7 @@ class EditSessionHeader extends StatelessWidget {
 
   final String title;
   final String date;
-  final VoidCallback? onClose;
+  final VoidCallback onClose;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class EditSessionHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Edit Session', style: _titleStyle),
+                Text('Session Summary', style: _titleStyle),
                 const SizedBox(height: AppDimensions.xs),
                 Text(
                   '$title · $date',

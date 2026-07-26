@@ -80,6 +80,7 @@ class Session {
   int get totalCount => items.length;
 
   Session copyWith({
+    SessionStatus? status,
     List<SessionTreatmentItem>? treatmentItems,
     // Wrap in `() => value` to override note (including clearing it to null);
     // omit to keep the current note.
@@ -88,7 +89,7 @@ class Session {
       Session(
         title: title,
         date: date,
-        status: status,
+        status: status ?? this.status,
         items: items,
         treatmentItems: treatmentItems ?? this.treatmentItems,
         note: note != null ? note() : this.note,

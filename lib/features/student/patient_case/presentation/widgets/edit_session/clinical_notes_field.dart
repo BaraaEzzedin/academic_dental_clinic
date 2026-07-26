@@ -3,7 +3,6 @@ import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
 import '../../../../../../core/theme/app_text_style.dart';
 
-// Multiline text field for the session's clinical notes.
 class ClinicalNotesField extends StatelessWidget {
   const ClinicalNotesField({super.key, required this.controller});
 

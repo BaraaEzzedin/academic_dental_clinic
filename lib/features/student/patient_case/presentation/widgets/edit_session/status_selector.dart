@@ -3,8 +3,6 @@ import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
 import '../../models/session.dart';
 
-// Three-segment pill: Planned / In Progress / Completed. The selected segment
-// is tinted with the status colour and its label is coloured to match.
 class StatusSelector extends StatelessWidget {
   const StatusSelector({
     super.key,

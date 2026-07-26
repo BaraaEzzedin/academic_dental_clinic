@@ -3,7 +3,7 @@ import '../../../../../../core/constants/app_dimensions.dart';
 import '../../../../../../core/theme/app_text_style.dart';
 import '../../models/session.dart';
 
-// Small pill showing the session's status (icon + label) tinted by its colour.
+
 class SessionStatusChip extends StatelessWidget {
   const SessionStatusChip({super.key, required this.status});
 

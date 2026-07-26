@@ -7,6 +7,7 @@ import '../widgets/case_details_top_bar.dart';
 import '../widgets/edit_session/edit_session_sheet.dart';
 import '../widgets/progress_timeline_section.dart';
 import '../widgets/session/session_timeline_item.dart';
+import '../widgets/session_summary/session_summary_sheet.dart';
 
 class SessionsScreen extends StatefulWidget {
   const SessionsScreen({super.key, required this.sessions});
@@ -64,8 +65,7 @@ class _SessionsScreenState extends State<SessionsScreen> {
                         SessionTimelineItem(
                           session: sessions[i],
                           isLast: i == sessions.length - 1,
-                          onShareSummary: () =>
-                              _placeholder(context, 'Share summary'),
+                          onViewSummary: () => _viewSummary(i),
                           onEdit: () => _editSession(i),
                         ),
                   ],
@@ -107,7 +107,7 @@ class _SessionsScreenState extends State<SessionsScreen> {
     );
   }
 
-  // Opens the "Edit Session" sheet and applies the edited statuses/notes.
+
   Future<void> _editSession(int index) async {
     final result = await showEditSessionSheet(
       context,
@@ -116,12 +116,26 @@ class _SessionsScreenState extends State<SessionsScreen> {
     if (result == null || !mounted) return;
     setState(() {
       sessions[index] = sessions[index].copyWith(
+        status: SessionStatus.completed,
         treatmentItems: result.treatmentItems,
         note: () => result.note.isEmpty ? null : result.note,
       );
     });
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(content: Text('Session completed successfully')),
+      );
   }
 
+
+  Future<void> _viewSummary(int index) async {
+    final shared = await showSessionSummarySheet(
+      context,
+      session: sessions[index],
+    );
+    if (shared == true && mounted) _placeholder(context, 'Share summary');
+  }
 
   void _placeholder(BuildContext context, String action) {
     ScaffoldMessenger.of(context)

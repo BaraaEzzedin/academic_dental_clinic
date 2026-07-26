@@ -3,8 +3,6 @@ import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
 import '../../models/session.dart';
 
-// Read-only card for a completed tooth/procedure. Completed items are preserved
-// for historical reference and can no longer be edited from the sheet.
 class CompletedItemCard extends StatelessWidget {
   const CompletedItemCard({super.key, required this.item});
 

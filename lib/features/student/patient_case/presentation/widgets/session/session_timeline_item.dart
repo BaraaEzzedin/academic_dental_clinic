@@ -4,20 +4,19 @@ import '../../../../../../core/constants/app_dimensions.dart';
 import '../../models/session.dart';
 import 'session_detail_card.dart';
 
-// One row in the sessions timeline: the status dot + connector on the left and
-// the session detail card on the right.
+
 class SessionTimelineItem extends StatelessWidget {
   const SessionTimelineItem({
     super.key,
     required this.session,
     required this.isLast,
-    this.onShareSummary,
+    this.onViewSummary,
     this.onEdit,
   });
 
   final Session session;
   final bool isLast;
-  final VoidCallback? onShareSummary;
+  final VoidCallback? onViewSummary;
   final VoidCallback? onEdit;
 
   @override
@@ -69,7 +68,7 @@ class SessionTimelineItem extends StatelessWidget {
               padding: EdgeInsets.only(bottom: isLast ? 0 : AppDimensions.lg),
               child: SessionDetailCard(
                 session: session,
-                onShareSummary: onShareSummary,
+                onViewSummary: onViewSummary,
                 onEdit: onEdit,
               ),
             ),

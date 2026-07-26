@@ -9,7 +9,6 @@ import 'edit_session_footer.dart';
 import 'edit_session_header.dart';
 import 'treatment_item_card.dart';
 
-// The payload returned when the student saves the "Edit Session" sheet.
 class EditSessionResult {
   const EditSessionResult({required this.treatmentItems, required this.note});
 
@@ -45,6 +44,7 @@ class _EditSessionSheetState extends State<EditSessionSheet> {
       List.of(widget.session.treatmentItems);
   late final TextEditingController _noteController =
       TextEditingController(text: widget.session.note ?? '');
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -56,7 +56,13 @@ class _EditSessionSheetState extends State<EditSessionSheet> {
     setState(() => _items[index] = _items[index].copyWith(status: status));
   }
 
-  void _submit() {
+  // Simulates the "end session" backend request. Replace the delay with the
+  // real repository call once the endpoint exists.
+  Future<void> _submit() async {
+    setState(() => _isSubmitting = true);
+    // TODO(backend): await repository.completeSession(sessionId, ...).
+    await Future<void>.delayed(const Duration(milliseconds: 1200));
+    if (!mounted) return;
     Navigator.of(context).pop(
       EditSessionResult(
         treatmentItems: List.of(_items),
@@ -97,7 +103,8 @@ class _EditSessionSheetState extends State<EditSessionSheet> {
             EditSessionHeader(
               title: widget.session.title,
               date: widget.session.date,
-              onClose: () => Navigator.of(context).pop(),
+              onClose:
+                  _isSubmitting ? null : () => Navigator.of(context).pop(),
             ),
             const Divider(height: 1, color: AppColors.dividerLine),
             Flexible(
@@ -170,6 +177,7 @@ class _EditSessionSheetState extends State<EditSessionSheet> {
             EditSessionFooter(
               onCancel: () => Navigator.of(context).pop(),
               onUpdate: _submit,
+              isSubmitting: _isSubmitting,
             ),
           ],
         ),

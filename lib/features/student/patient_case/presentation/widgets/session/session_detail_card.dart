@@ -6,17 +6,17 @@ import '../../models/session.dart';
 import 'session_actions.dart';
 import 'session_status_chip.dart';
 
-// The card body for a single session: title, status, date, note and actions.
+
 class SessionDetailCard extends StatelessWidget {
   const SessionDetailCard({
     super.key,
     required this.session,
-    this.onShareSummary,
+    this.onViewSummary,
     this.onEdit,
   });
 
   final Session session;
-  final VoidCallback? onShareSummary;
+  final VoidCallback? onViewSummary;
   final VoidCallback? onEdit;
 
   @override
@@ -89,7 +89,7 @@ class SessionDetailCard extends StatelessWidget {
           const SizedBox(height: AppDimensions.lg),
           SessionActions(
             status: session.status,
-            onShareSummary: onShareSummary,
+            onViewSummary: onViewSummary,
             onEdit: onEdit,
           ),
         ],
