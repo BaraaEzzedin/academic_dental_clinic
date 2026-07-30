@@ -51,6 +51,10 @@ class AppColors {
   static const Color caseChipBackground = Color(0xFFEAF4F6);
   static const Color mediaBackground = Color(0xFF102A33);
 
+  // ---------- Add session calendar ----------
+  // Purple circle marking the selected day in the "Add New Session" calendar.
+  static const Color calendarSelectedDay = Color(0xFF7C4DBC);
+
   // ---------- Bottom navigation ----------
   static const Color navBarBackground = Color(0xFFFFFFFF);
   static const Color navActive = primary;

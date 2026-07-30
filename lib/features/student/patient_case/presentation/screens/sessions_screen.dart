@@ -3,6 +3,8 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../models/session.dart';
+import '../widgets/add_session/add_session_sheet.dart';
+import '../widgets/add_session/session_date_format.dart';
 import '../widgets/case_details_top_bar.dart';
 import '../widgets/edit_session/edit_session_sheet.dart';
 import '../widgets/progress_timeline_section.dart';
@@ -20,6 +22,9 @@ class SessionsScreen extends StatefulWidget {
 
 class _SessionsScreenState extends State<SessionsScreen> {
   late final List<Session> sessions = List.of(widget.sessions);
+
+  bool get _canAddSession =>
+      sessions.isEmpty || sessions.last.status == SessionStatus.completed;
 
   @override
   Widget build(BuildContext context) {
@@ -79,26 +84,42 @@ class _SessionsScreenState extends State<SessionsScreen> {
                 AppDimensions.screenHorizontalPadding,
                 AppDimensions.lg,
               ),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  // TODO(backend): open the create-session flow.
-                  onPressed: () => _placeholder(context, 'Create new session'),
-                  icon: const Icon(Icons.add_rounded),
-                  label: const Text('Create New Session'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.white,
-                    elevation: 0,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: AppDimensions.md),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppDimensions.radiusMd),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (!_canAddSession)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: AppDimensions.sm),
+                      child: Text(
+                        'Complete the current session before adding a new one.',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.subtitle.copyWith(
+                          color: AppColors.textHint,
+                          fontSize: 13,
+                        ),
+                      ),
                     ),
-                    textStyle: AppTextStyles.button,
+                  ElevatedButton.icon(
+                    onPressed: _canAddSession ? _addSession : null,
+                    icon: const Icon(Icons.add_rounded),
+                    label: const Text('Create New Session'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.white,
+                      disabledBackgroundColor:
+                          AppColors.primary.withValues(alpha: 0.5),
+                      disabledForegroundColor: AppColors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: AppDimensions.md),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(AppDimensions.radiusMd),
+                      ),
+                      textStyle: AppTextStyles.button,
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ],
@@ -107,6 +128,26 @@ class _SessionsScreenState extends State<SessionsScreen> {
     );
   }
 
+
+  Future<void> _addSession() async {
+    final result = await showAddSessionSheet(context);
+    if (result == null || !mounted) return;
+    setState(() {
+      sessions.add(
+        Session(
+          title: result.title,
+          date: '${formatSessionDate(result.date)} · ${result.time}',
+          status: SessionStatus.planned,
+          items: const [],
+        ),
+      );
+    });
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(content: Text('Session added successfully')),
+      );
+  }
 
   Future<void> _editSession(int index) async {
     final result = await showEditSessionSheet(
