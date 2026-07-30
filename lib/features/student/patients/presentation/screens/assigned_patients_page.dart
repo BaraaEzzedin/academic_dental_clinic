@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
-import '../../../../../core/widgets/status_badge.dart';
+import '../../../../../core/enums/patient_status.dart';
 import '../../../home/presentation/widgets/home_top_bar.dart';
 import '../../../patient_case/presentation/screens/case_details_screen.dart';
 import '../manager/patient_filter/patient_filter_cubit.dart';

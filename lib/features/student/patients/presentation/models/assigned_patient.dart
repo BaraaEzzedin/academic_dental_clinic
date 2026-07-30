@@ -1,4 +1,4 @@
-import '../../../../../core/widgets/status_badge.dart';
+import '../../../../../core/enums/patient_status.dart';
 
 
 enum PatientStatusFilter {

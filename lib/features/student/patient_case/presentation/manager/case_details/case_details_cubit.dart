@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/widgets/status_badge.dart';
+import '../../../../../../core/enums/patient_status.dart';
 import '../../models/case_details.dart';
 import '../../models/diagnostic_media_item.dart';
 import '../../models/progress_phase.dart';

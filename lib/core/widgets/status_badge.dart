@@ -1,22 +1,11 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_dimensions.dart';
+import '../enums/patient_status.dart';
 import '../theme/app_text_style.dart';
 
 
-enum PatientStatus {
-  waitingApproval,
-  inTreatment,
-  completed,
-}
-
-extension PatientStatusX on PatientStatus {
-  String get label => switch (this) {
-        PatientStatus.waitingApproval => 'Waiting Approval',
-        PatientStatus.inTreatment => 'In Treatment',
-        PatientStatus.completed => 'Completed',
-      };
-
+extension PatientStatusColorX on PatientStatus {
   Color get color => switch (this) {
         PatientStatus.waitingApproval => AppColors.warning,
         PatientStatus.inTreatment => AppColors.primary,

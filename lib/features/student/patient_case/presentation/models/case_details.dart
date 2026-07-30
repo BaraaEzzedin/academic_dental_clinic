@@ -1,4 +1,4 @@
-import '../../../../../core/widgets/status_badge.dart';
+import '../../../../../core/enums/patient_status.dart';
 import 'diagnostic_media_item.dart';
 import 'progress_phase.dart';
 import 'session.dart';

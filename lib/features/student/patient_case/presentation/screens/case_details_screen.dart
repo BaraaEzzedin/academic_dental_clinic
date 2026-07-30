@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
-import '../../../../../core/widgets/status_badge.dart';
+import '../../../../../core/enums/patient_status.dart';
 import '../manager/case_details/case_details_cubit.dart';
 import '../manager/case_details/case_details_state.dart';
 import '../models/case_details.dart';
