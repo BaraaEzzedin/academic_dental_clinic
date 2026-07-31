@@ -15,7 +15,7 @@ class AssignedPatientEntity extends Equatable {
   final int id;
   final String patientName;
   final String subject;
-  final int sessionNumber;
+  final int? sessionNumber;
   final PatientStatus status;
 
   @override

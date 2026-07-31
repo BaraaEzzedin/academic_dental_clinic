@@ -16,11 +16,12 @@ class PatientsRemoteDataSourceImpl implements PatientsRemoteDataSource {
   @override
   Future<List<AssignedPatientModel>> getAssignedPatients() async {
     try {
-      final response = await apiClient.get<List<dynamic>>(
+      final response = await apiClient.get<Map<String, dynamic>>(
         ApiConstants.myClinicalCases,
       );
-      final data = response.data ?? const [];
-      return data
+      final data = response.data?['data'] as Map<String, dynamic>?;
+      final cases = data?['cases'] as List<dynamic>? ?? const [];
+      return cases
           .map((e) =>
               AssignedPatientModel.fromJson(e as Map<String, dynamic>))
           .toList();

@@ -10,6 +10,10 @@ import '../../features/auth/domain/repositories/staff_auth_repository.dart';
 import '../../features/auth/domain/use_cases/request_otp_use_case.dart';
 import '../../features/auth/domain/use_cases/staff_login_use_case.dart';
 import '../../features/auth/domain/use_cases/verify_otp_use_case.dart';
+import '../../features/student/patients/data/data_source/patients_remote_data_source.dart';
+import '../../features/student/patients/data/repositories/patients_repository_impl.dart';
+import '../../features/student/patients/domain/repositories/patients_repository.dart';
+import '../../features/student/patients/domain/use_cases/get_assigned_patients_use_case.dart';
 import '../network/api_client.dart';
 import '../network/auth_interceptor.dart';
 
@@ -41,6 +45,9 @@ void configureDependencies() {
   sl.registerLazySingleton<PatientAuthRemoteDataSource>(
     () => PatientAuthRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<PatientsRemoteDataSource>(
+    () => PatientsRemoteDataSourceImpl(sl<ApiClient>()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<StaffAuthRepository>(
@@ -55,6 +62,9 @@ void configureDependencies() {
       sl<AuthLocalDataSource>(),
     ),
   );
+  sl.registerLazySingleton<PatientsRepository>(
+    () => PatientsRepositoryImpl(sl<PatientsRemoteDataSource>()),
+  );
 
   // ---------- Use cases ----------
   sl.registerFactory<StaffLoginUseCase>(
@@ -65,5 +75,8 @@ void configureDependencies() {
   );
   sl.registerFactory<VerifyOtpUseCase>(
     () => VerifyOtpUseCase(sl<PatientAuthRepository>()),
+  );
+  sl.registerFactory<GetAssignedPatientsUseCase>(
+    () => GetAssignedPatientsUseCase(sl<PatientsRepository>()),
   );
 }

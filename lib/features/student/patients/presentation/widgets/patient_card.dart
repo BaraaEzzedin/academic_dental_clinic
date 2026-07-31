@@ -77,7 +77,9 @@ class PatientCard extends StatelessWidget {
                       ),
                       const SizedBox(height: AppDimensions.sm),
                       Text(
-                        'Session #${patient.sessionNumber}',
+                        patient.sessionNumber == null
+                            ? 'No sessions yet'
+                            : 'Session #${patient.sessionNumber}',
                         style: AppTextStyles.scheduleMeta,
                       ),
                       const SizedBox(height: AppDimensions.md),

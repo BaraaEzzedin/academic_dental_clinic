@@ -40,7 +40,7 @@ class SelectRole extends StatelessWidget {
           SizedBox(height: AppDimensions.lg,),
           RoleCard(icon: Icons.school_outlined, title: "Student", description: "Access your clinic cases and curriculum", onTap: (){
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const MainScreen()),
+                MaterialPageRoute(builder: (context) => const StaffLogin()),
                 );
             }
             ),

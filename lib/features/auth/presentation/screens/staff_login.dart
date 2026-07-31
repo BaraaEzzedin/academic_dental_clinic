@@ -2,6 +2,7 @@ import 'package:academic_dental_clinic/core/constants/app_colors.dart';
 import 'package:academic_dental_clinic/core/service_locator/auth_service.dart';
 import 'package:academic_dental_clinic/core/theme/app_text_style.dart';
 import 'package:academic_dental_clinic/features/auth/presentation/widgets/logo_section.dart';
+import 'package:academic_dental_clinic/features/student/home/presentation/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_dimensions.dart';
@@ -72,7 +73,8 @@ class _StaffLoginState extends State<StaffLogin> {
                   ..showSnackBar(
                     SnackBar(content: Text('Welcome, ${state.user.fullName}')),
                   );
-                // TODO(phase): navigate to the staff dashboard once it exists.
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const MainScreen()),);
               }
             },
             builder: (context, loginState) {

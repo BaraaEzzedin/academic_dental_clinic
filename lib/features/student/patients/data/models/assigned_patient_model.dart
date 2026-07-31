@@ -15,7 +15,10 @@ class AssignedPatientModel extends AssignedPatientEntity {
       id: (json['id'] as num).toInt(),
       patientName: json['patientName'] as String,
       subject: json['subjectName'] as String,
-      sessionNumber: (json['sessionCount'] as num).toInt(),
+      sessionNumber: switch (json['sessionCount']) {
+        final num n => n.toInt(),
+        _ => null,
+      },
       status: patientStatusFromApi(json['status'] as String?),
     );
   }

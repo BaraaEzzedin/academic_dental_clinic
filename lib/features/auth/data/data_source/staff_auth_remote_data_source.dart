@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:dio/dio.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_constants.dart';
@@ -30,8 +31,16 @@ class StaffAuthRemoteDataSourceImpl implements StaffAuthRemoteDataSource {
           'password': password,
         },
       );
+      developer.log(
+        'Staff login status code: ${response.statusCode}',
+        name: 'AUTH',
+      );
       return AuthResponseModel.fromJson(response.data!);
     } on DioException catch (e) {
+      developer.log(
+        'Staff login error status code: ${e.response?.statusCode}',
+        name: 'AUTH',
+      );
       throw mapDioException(e);
     }
   }

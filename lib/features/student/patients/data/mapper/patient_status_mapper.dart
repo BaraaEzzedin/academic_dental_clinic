@@ -8,7 +8,7 @@ import '../../../../../core/enums/patient_status.dart';
 /// - `AWAITING_CASE_REVIEW`     -> [PatientStatus.finalReview]
 /// - `COMPLETED`                -> [PatientStatus.completed]
 PatientStatus patientStatusFromApi(String? value) {
-  return switch (value) {
+  return switch (value?.toUpperCase()) {
     'DIAGNOSIS_PENDING_REVIEW' => PatientStatus.waitingApproval,
     'TREATMENT_IN_PROGRESS' => PatientStatus.inTreatment,
     'AWAITING_CASE_REVIEW' => PatientStatus.finalReview,

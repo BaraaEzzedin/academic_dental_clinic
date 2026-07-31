@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:dio/dio.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_constants.dart';
@@ -23,11 +24,19 @@ class PatientAuthRemoteDataSourceImpl implements PatientAuthRemoteDataSource {
   @override
   Future<void> requestOtp({required String phone}) async {
     try {
-      await apiClient.post<void>(
+      final response = await apiClient.post<void>(
         ApiConstants.requestOtp,
         data: {'phone': phone},
       );
+      developer.log(
+        'Request OTP status code: ${response.statusCode}',
+        name: 'AUTH',
+      );
     } on DioException catch (e) {
+      developer.log(
+        'Request OTP error status code: ${e.response?.statusCode}',
+        name: 'AUTH',
+      );
       throw mapDioException(e);
     }
   }
@@ -45,8 +54,16 @@ class PatientAuthRemoteDataSourceImpl implements PatientAuthRemoteDataSource {
           'otp': code,
         },
       );
+      developer.log(
+        'Verify OTP status code: ${response.statusCode}',
+        name: 'AUTH',
+      );
       return AuthResponseModel.fromJson(response.data!);
     } on DioException catch (e) {
+      developer.log(
+        'Verify OTP error status code: ${e.response?.statusCode}',
+        name: 'AUTH',
+      );
       throw mapDioException(e);
     }
   }

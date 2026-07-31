@@ -1,7 +1,7 @@
 class ApiConstants {
   const ApiConstants._();
 
-  static const String baseUrl = 'http://192.168.0.2:3000';
+  static const String baseUrl = 'https://main-dental-clinical.onrender.com';
 
   // Auth — staff
   static const String staffLogin = '/auth/staff/login';
@@ -14,6 +14,6 @@ class ApiConstants {
   static const String myClinicalCases = '/clinical-cases/my-cases';
 
   // Timeouts
-  static const Duration connectTimeout = Duration(seconds: 30);
-  static const Duration receiveTimeout = Duration(seconds: 30);
+  static const Duration connectTimeout = Duration(seconds: 60);
+  static const Duration receiveTimeout = Duration(seconds: 60);
 }
