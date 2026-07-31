@@ -10,6 +10,9 @@ class ApiConstants {
   static const String requestOtp = '/auth/login/send-otp';
   static const String verifyOtp = '/auth/login/verify-otp';
 
+  // Clinical cases — student
+  static const String myClinicalCases = '/clinical-cases/my-cases';
+
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
