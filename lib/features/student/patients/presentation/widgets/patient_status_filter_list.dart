@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_dimensions.dart';
-import '../models/assigned_patient.dart';
+import '../models/patient_status_filter.dart';
 import 'patient_status_filter_chip.dart';
 
 

@@ -3,7 +3,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../../../../core/widgets/status_badge.dart';
-import '../models/assigned_patient.dart';
+import '../../domain/entities/assigned_patient_entity.dart';
 
 
 class PatientCard extends StatelessWidget {
@@ -13,7 +13,7 @@ class PatientCard extends StatelessWidget {
     this.onViewDetails,
   });
 
-  final AssignedPatient patient;
+  final AssignedPatientEntity patient;
   final VoidCallback? onViewDetails;
 
   @override
@@ -56,13 +56,6 @@ class PatientCard extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: AppDimensions.xs),
-                      Text(
-                        patient.subject,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.scheduleSubject,
-                      ),
-                      const SizedBox(height: AppDimensions.sm),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -74,10 +67,10 @@ class PatientCard extends StatelessWidget {
                           const SizedBox(width: AppDimensions.xs),
                           Flexible(
                             child: Text(
-                              patient.procedure,
+                              patient.subject,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.scheduleMeta,
+                              style: AppTextStyles.scheduleSubject,
                             ),
                           ),
                         ],

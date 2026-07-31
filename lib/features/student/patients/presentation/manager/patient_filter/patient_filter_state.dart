@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import '../../models/assigned_patient.dart';
+import '../../../domain/entities/assigned_patient_entity.dart';
+import '../../models/patient_status_filter.dart';
 
 class PatientFilterState extends Equatable {
   const PatientFilterState({
@@ -8,15 +9,15 @@ class PatientFilterState extends Equatable {
   });
 
   final PatientStatusFilter selectedFilter;
-  final List<AssignedPatient> patients;
+  final List<AssignedPatientEntity> patients;
 
   /// Patients matching the currently selected filter.
-  List<AssignedPatient> get filteredPatients =>
+  List<AssignedPatientEntity> get filteredPatients =>
       patients.where((patient) => selectedFilter.matches(patient.status)).toList();
 
   PatientFilterState copyWith({
     PatientStatusFilter? selectedFilter,
-    List<AssignedPatient>? patients,
+    List<AssignedPatientEntity>? patients,
   }) {
     return PatientFilterState(
       selectedFilter: selectedFilter ?? this.selectedFilter,

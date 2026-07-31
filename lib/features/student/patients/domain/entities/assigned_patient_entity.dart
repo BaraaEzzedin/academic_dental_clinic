@@ -8,7 +8,6 @@ class AssignedPatientEntity extends Equatable {
     required this.id,
     required this.patientName,
     required this.subject,
-    required this.procedure,
     required this.sessionNumber,
     required this.status,
   });
@@ -16,7 +15,6 @@ class AssignedPatientEntity extends Equatable {
   final int id;
   final String patientName;
   final String subject;
-  final String procedure;
   final int sessionNumber;
   final PatientStatus status;
 
@@ -25,7 +23,6 @@ class AssignedPatientEntity extends Equatable {
         id,
         patientName,
         subject,
-        procedure,
         sessionNumber,
         status,
       ];

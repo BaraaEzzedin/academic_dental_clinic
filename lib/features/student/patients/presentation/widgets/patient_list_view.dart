@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
-import '../models/assigned_patient.dart';
+import '../../domain/entities/assigned_patient_entity.dart';
 import 'patient_card.dart';
 
 
@@ -13,8 +13,8 @@ class PatientListView extends StatelessWidget {
     this.onViewDetails,
   });
 
-  final List<AssignedPatient> patients;
-  final void Function(AssignedPatient patient)? onViewDetails;
+  final List<AssignedPatientEntity> patients;
+  final void Function(AssignedPatientEntity patient)? onViewDetails;
 
   @override
   Widget build(BuildContext context) {

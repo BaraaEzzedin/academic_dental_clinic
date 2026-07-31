@@ -9,6 +9,7 @@ extension PatientStatusColorX on PatientStatus {
   Color get color => switch (this) {
         PatientStatus.waitingApproval => AppColors.warning,
         PatientStatus.inTreatment => AppColors.primary,
+        PatientStatus.finalReview => AppColors.secondary,
         PatientStatus.completed => AppColors.success,
       };
 }

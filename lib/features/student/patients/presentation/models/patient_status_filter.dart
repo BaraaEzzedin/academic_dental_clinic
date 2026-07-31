@@ -1,10 +1,10 @@
 import '../../../../../core/enums/patient_status.dart';
 
-
 enum PatientStatusFilter {
   all,
   waitingApproval,
   inTreatment,
+  finalReview,
   completed,
 }
 
@@ -13,6 +13,7 @@ extension PatientStatusFilterX on PatientStatusFilter {
         PatientStatusFilter.all => 'All',
         PatientStatusFilter.waitingApproval => 'Waiting Approval',
         PatientStatusFilter.inTreatment => 'In Treatment',
+        PatientStatusFilter.finalReview => 'Final Review',
         PatientStatusFilter.completed => 'Completed',
       };
 
@@ -21,23 +22,7 @@ extension PatientStatusFilterX on PatientStatusFilter {
         PatientStatusFilter.waitingApproval =>
           status == PatientStatus.waitingApproval,
         PatientStatusFilter.inTreatment => status == PatientStatus.inTreatment,
+        PatientStatusFilter.finalReview => status == PatientStatus.finalReview,
         PatientStatusFilter.completed => status == PatientStatus.completed,
       };
-}
-
-// model for ui , edit when backend is ready
-class AssignedPatient {
-  const AssignedPatient({
-    required this.patientName,
-    required this.subject,
-    required this.procedure,
-    required this.sessionNumber,
-    required this.status,
-  });
-
-  final String patientName;
-  final String subject;
-  final String procedure;
-  final int sessionNumber;
-  final PatientStatus status;
 }
