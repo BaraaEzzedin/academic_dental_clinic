@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
+import '../../../open_cases/presentation/screens/open_cases_page.dart';
 import '../../../patients/presentation/screens/assigned_patients_page.dart';
 import '../manager/bottom_nav/bottom_nav_cubit.dart';
 import '../manager/bottom_nav/bottom_nav_state.dart';
@@ -12,7 +13,7 @@ class MainScreen extends StatelessWidget {
 
   static const List<Widget> pages = [
     HomeScreen(),
-    TabPlaceholder(label: 'Patients'),
+    OpenCasesPage(),
     AssignedPatientsPage(),
     TabPlaceholder(label: 'Patients'),
   ];
@@ -26,6 +27,7 @@ class MainScreen extends StatelessWidget {
         body: SafeArea(
           bottom: false,
           child: BlocBuilder<BottomNavCubit, BottomNavState>(
+            buildWhen: (previous, current) => previous.index != current.index,
             builder: (context, state) {
               return IndexedStack(
                 index: state.index,

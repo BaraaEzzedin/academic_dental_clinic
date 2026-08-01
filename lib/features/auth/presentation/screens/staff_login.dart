@@ -73,8 +73,10 @@ class _StaffLoginState extends State<StaffLogin> {
                   ..showSnackBar(
                     SnackBar(content: Text('Welcome, ${state.user.fullName}')),
                   );
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const MainScreen()),);
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const MainScreen()),
+                  (route) => false,
+                );
               }
             },
             builder: (context, loginState) {

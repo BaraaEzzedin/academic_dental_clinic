@@ -3,15 +3,11 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../../../../core/widgets/status_badge.dart';
+import '../../../../../core/widgets/view_details_button.dart';
 import '../../domain/entities/assigned_patient_entity.dart';
 
-
 class PatientCard extends StatelessWidget {
-  const PatientCard({
-    super.key,
-    required this.patient,
-    this.onViewDetails,
-  });
+  const PatientCard({super.key, required this.patient, this.onViewDetails});
 
   final AssignedPatientEntity patient;
   final VoidCallback? onViewDetails;
@@ -83,26 +79,7 @@ class PatientCard extends StatelessWidget {
                         style: AppTextStyles.scheduleMeta,
                       ),
                       const SizedBox(height: AppDimensions.md),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: onViewDetails,
-                          icon: const Icon(Icons.visibility_outlined, size: 18),
-                          label: const Text('View Details'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.primary,
-                            side: const BorderSide(color: AppColors.primary),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: AppDimensions.md,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(AppDimensions.radiusMd),
-                            ),
-                            textStyle: AppTextStyles.viewDetailsButton,
-                          ),
-                        ),
-                      ),
+                      ViewDetailsButton(onPressed: onViewDetails),
                     ],
                   ),
                 ),

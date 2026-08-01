@@ -33,9 +33,9 @@ class AppBottomNavBar extends StatelessWidget {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today_outlined),
-                activeIcon: Icon(Icons.calendar_today_rounded),
-                label: 'Schedule',
+                icon: Icon(Icons.assignment_outlined),
+                activeIcon: Icon(Icons.assignment_rounded),
+                label: 'Requests',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.people_outline),

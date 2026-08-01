@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 /// The destinations shown in the student home bottom navigation bar.
 /// Order here defines the order in the bar and the [BottomNavState.index].
-enum NavTab { home, schedule, patients, profile }
+enum NavTab { home, openCases, patients, profile }
 
 class BottomNavState extends Equatable {
   const BottomNavState({this.tab = NavTab.home});
