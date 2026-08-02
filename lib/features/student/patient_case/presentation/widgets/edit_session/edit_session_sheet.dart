@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
 import '../../../../../../core/theme/app_text_style.dart';
+import '../../../../../../core/widgets/sheet_grabber.dart';
 import '../../models/session.dart';
 import 'clinical_notes_field.dart';
 import 'completed_item_card.dart';
@@ -99,7 +100,7 @@ class _EditSessionSheetState extends State<EditSessionSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const _Grabber(),
+            const SheetGrabber(),
             EditSessionHeader(
               title: widget.session.title,
               date: widget.session.date,
@@ -181,23 +182,6 @@ class _EditSessionSheetState extends State<EditSessionSheet> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _Grabber extends StatelessWidget {
-  const _Grabber();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: AppDimensions.md),
-      width: 44,
-      height: 5,
-      decoration: BoxDecoration(
-        color: AppColors.indicatorInactive,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
       ),
     );
   }

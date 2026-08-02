@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
+import '../../../../../../core/widgets/sheet_grabber.dart';
 import '../../models/session.dart';
 import 'session_summary_footer.dart';
 import 'session_summary_header.dart';
@@ -40,7 +41,7 @@ class SessionSummarySheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const _Grabber(),
+          const SheetGrabber(),
           SessionSummaryHeader(
             title: session.title,
             date: session.date,
@@ -88,23 +89,6 @@ class SessionSummarySheet extends StatelessWidget {
             onShare: () => Navigator.of(context).pop(true),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _Grabber extends StatelessWidget {
-  const _Grabber();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: AppDimensions.md),
-      width: 44,
-      height: 5,
-      decoration: BoxDecoration(
-        color: AppColors.indicatorInactive,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
       ),
     );
   }

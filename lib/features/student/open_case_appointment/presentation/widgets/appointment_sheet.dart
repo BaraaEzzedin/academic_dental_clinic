@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/constants/app_colors.dart';
-import '../../../../../../core/constants/app_dimensions.dart';
-import '../../../../../../core/theme/app_text_style.dart';
-import '../../../../../../core/widgets/sheet_grabber.dart';
-import '../../manager/add_session/add_session_cubit.dart';
-import '../../manager/add_session/add_session_state.dart';
-import 'available_times_section.dart';
-import 'session_calendar.dart';
-import 'session_title_field.dart';
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/theme/app_text_style.dart';
+import '../../../../../core/widgets/sheet_grabber.dart';
+import '../../../patient_case/presentation/widgets/add_session/available_times_section.dart';
+import '../../../patient_case/presentation/widgets/add_session/session_calendar.dart';
+import '../manager/appointment/appointment_cubit.dart';
+import '../manager/appointment/appointment_state.dart';
+import 'appointment_title_field.dart';
 
-class AddSessionResult {
-  const AddSessionResult({
+/// The booked appointment, returned when the sheet is submitted.
+class AppointmentResult {
+  const AppointmentResult({
     required this.title,
     required this.date,
     required this.time,
@@ -22,28 +23,31 @@ class AddSessionResult {
   final String time;
 }
 
-
-Future<AddSessionResult?> showAddSessionSheet(BuildContext context) {
-  return showModalBottomSheet<AddSessionResult>(
+/// Opens the "Book Appointment" bottom sheet (calendar + available times),
+/// pre-filled with the "Initial Examination" title. Resolves to the booked
+/// [AppointmentResult], or `null` if dismissed.
+Future<AppointmentResult?> showAppointmentSheet(BuildContext context) {
+  return showModalBottomSheet<AppointmentResult>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => BlocProvider(
-      create: (_) => AddSessionCubit(),
-      child: const AddSessionSheet(),
+      create: (_) => AppointmentCubit(),
+      child: const AppointmentSheet(),
     ),
   );
 }
 
-class AddSessionSheet extends StatefulWidget {
-  const AddSessionSheet({super.key});
+class AppointmentSheet extends StatefulWidget {
+  const AppointmentSheet({super.key});
 
   @override
-  State<AddSessionSheet> createState() => _AddSessionSheetState();
+  State<AppointmentSheet> createState() => _AppointmentSheetState();
 }
 
-class _AddSessionSheetState extends State<AddSessionSheet> {
-  final TextEditingController _titleController = TextEditingController();
+class _AppointmentSheetState extends State<AppointmentSheet> {
+  final TextEditingController _titleController =
+      TextEditingController(text: kInitialExaminationTitle);
 
   @override
   void dispose() {
@@ -52,13 +56,13 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
   }
 
   Future<void> _submit(BuildContext context) async {
-    final cubit = context.read<AddSessionCubit>();
+    final cubit = context.read<AppointmentCubit>();
     await cubit.submit();
     if (!context.mounted) return;
     final state = cubit.state;
     if (state.selectedDate == null || state.selectedTime == null) return;
     Navigator.of(context).pop(
-      AddSessionResult(
+      AppointmentResult(
         title: state.title.trim(),
         date: state.selectedDate!,
         time: state.selectedTime!,
@@ -80,9 +84,9 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
             top: Radius.circular(AppDimensions.radiusXl),
           ),
         ),
-        child: BlocBuilder<AddSessionCubit, AddSessionState>(
+        child: BlocBuilder<AppointmentCubit, AppointmentState>(
           builder: (context, state) {
-            final cubit = context.read<AddSessionCubit>();
+            final cubit = context.read<AppointmentCubit>();
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -101,7 +105,7 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
                       children: [
                         const _NextAppointmentBanner(),
                         const SizedBox(height: AppDimensions.lg),
-                        SessionTitleField(
+                        AppointmentTitleField(
                           controller: _titleController,
                           enabled: !state.isSubmitting,
                           onChanged: cubit.setTitle,
@@ -164,12 +168,15 @@ class _Header extends StatelessWidget {
               color: AppColors.caseChipBackground,
               borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
             ),
-            child: const Icon(Icons.add_rounded, color: AppColors.primary),
+            child: const Icon(
+              Icons.event_note_rounded,
+              color: AppColors.primary,
+            ),
           ),
           const SizedBox(width: AppDimensions.md),
           const Expanded(
             child: Text(
-              'Add New Session',
+              'Book Appointment',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
@@ -212,9 +219,9 @@ class _NextAppointmentBanner extends StatelessWidget {
               size: 22, color: AppColors.primary),
           SizedBox(width: AppDimensions.md),
           Text(
-            'Next appointment date',
+            'Pick a date for the initial examination',
             style: TextStyle(
-              fontSize: 17,
+              fontSize: 15,
               fontWeight: FontWeight.w700,
               color: AppColors.textPrimary,
             ),
@@ -274,7 +281,7 @@ class _Footer extends StatelessWidget {
                     valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
                   ),
                 )
-              : const Text('Add Session'),
+              : const Text('Submit Appointment'),
         ),
       ),
     );

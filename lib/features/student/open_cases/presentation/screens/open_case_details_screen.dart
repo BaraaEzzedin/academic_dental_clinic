@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/widgets/error_retry_view.dart';
+import '../../../open_case_appointment/presentation/widgets/appointment_sheet.dart';
+import '../../../open_case_appointment/presentation/widgets/appointment_summary_dialog.dart';
 import '../../../patient_case/presentation/widgets/case_details_top_bar.dart';
 import '../../domain/entities/open_case_details_entity.dart';
 import '../../domain/entities/open_case_entity.dart';
@@ -69,24 +71,17 @@ class OpenCaseDetailsScreen extends StatelessWidget {
     );
   }
 
-  void _onStartExamination(
+  Future<void> _onStartExamination(
     BuildContext context,
     OpenCaseDetailsEntity details,
-  ) {
-    // TODO(examination): navigate to the initial patient examination /
-    // appointment scheduling flow once it exists, e.g.:
-    //   Navigator.of(context).push(
-    //     MaterialPageRoute<void>(
-    //       builder: (_) => InitialExaminationScreen(caseId: details.id),
-    //     ),
-    //   );
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text('Initial patient examination flow coming soon.'),
-        ),
-      );
+  ) async {
+    final result = await showAppointmentSheet(context);
+    if (result == null || !context.mounted) return;
+    await showAppointmentSummaryDialog(
+      context,
+      result: result,
+      patientName: details.patientName,
+      subject: details.subject,
+    );
   }
 }
