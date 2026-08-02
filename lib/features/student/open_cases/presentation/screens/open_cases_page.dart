@@ -11,6 +11,7 @@ import '../manager/open_cases/open_cases_state.dart';
 import '../widgets/open_case_list_shimmer.dart';
 import '../widgets/open_case_list_view.dart';
 import '../widgets/subject_filter_list.dart';
+import 'open_case_details_screen.dart';
 
 class OpenCasesPage extends StatelessWidget {
   const OpenCasesPage({super.key});
@@ -18,7 +19,7 @@ class OpenCasesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<OpenCasesCubit>(
-      create: (_) => OpenCasesCubit()..loadCases(),
+      create: (_) => OpenCasesCubit(),
       child: BlocListener<BottomNavCubit, BottomNavState>(
         listenWhen: (previous, current) =>
             current.tab == NavTab.openCases && previous.tab != current.tab,
@@ -36,7 +37,7 @@ class OpenCasesPage extends StatelessWidget {
                     AppDimensions.screenHorizontalPadding,
                     AppDimensions.lg,
                   ),
-                  child: HomeTopBar(studentName: 'Patient Requests'),
+                  child: HomeTopBar(studentName: 'Open Cases'),
                 ),
                 BlocBuilder<OpenCasesCubit, OpenCasesState>(
                   buildWhen: (previous, current) =>
@@ -73,8 +74,12 @@ class OpenCasesPage extends StatelessWidget {
                       return OpenCaseListView(
                         cases: state.filteredCases,
                         onViewDetails: (openCase) {
-                          // TODO(details): navigate to the case details screen
-                          // once the open-case details flow is available.
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) =>
+                                  OpenCaseDetailsScreen(openCase: openCase),
+                            ),
+                          );
                         },
                       );
                     },

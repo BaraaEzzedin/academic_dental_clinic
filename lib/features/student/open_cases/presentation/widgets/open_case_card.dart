@@ -4,6 +4,7 @@ import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../../../../core/widgets/view_details_button.dart';
 import '../../domain/entities/open_case_entity.dart';
+import 'subject_chip.dart';
 
 class OpenCaseCard extends StatelessWidget {
   const OpenCaseCard({super.key, required this.openCase, this.onViewDetails});
@@ -39,26 +40,8 @@ class OpenCaseCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.schedulePatientName,
                       ),
-                      const SizedBox(height: AppDimensions.xs),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.medical_services_outlined,
-                            size: 15,
-                            color: AppColors.textSecondary,
-                          ),
-                          const SizedBox(width: AppDimensions.xs),
-                          Flexible(
-                            child: Text(
-                              openCase.subject,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.scheduleSubject,
-                            ),
-                          ),
-                        ],
-                      ),
+                      const SizedBox(height: AppDimensions.sm),
+                      SubjectChip(subject: openCase.subject),
                       const SizedBox(height: AppDimensions.md),
                       _ChiefComplaint(text: openCase.chiefComplaint),
                       if (openCase.coordinatorName != null ||

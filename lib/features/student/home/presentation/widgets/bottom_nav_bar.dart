@@ -35,12 +35,12 @@ class AppBottomNavBar extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.assignment_outlined),
                 activeIcon: Icon(Icons.assignment_rounded),
-                label: 'Requests',
+                label: 'Open Cases',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.people_outline),
                 activeIcon: Icon(Icons.people_rounded),
-                label: 'Patients',
+                label: 'My Patients',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person_outline),
