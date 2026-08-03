@@ -40,7 +40,7 @@ class AssignedPatientsPage extends StatelessWidget {
                     AppDimensions.screenHorizontalPadding,
                     AppDimensions.lg,
                   ),
-                  child: HomeTopBar(studentName: 'Assigned Patients'),
+                  child: HomeTopBar(studentName: 'My Patients'),
                 ),
                 BlocBuilder<PatientFilterCubit, PatientFilterState>(
                   buildWhen: (previous, current) =>

@@ -2,6 +2,7 @@ import 'package:academic_dental_clinic/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../assigned_patients/presentation/widgets/assigned_patients_section.dart';
 import '../models/schedule_item.dart';
 import '../widgets/home_header.dart';
 import '../widgets/home_top_bar.dart';
@@ -60,6 +61,8 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.xl),
               const TodayScheduleSection(items: _schedule),
+              const SizedBox(height: AppDimensions.xl),
+              const AssignedPatientsSection(),
             ],
           ),
         ),
