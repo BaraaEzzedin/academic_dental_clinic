@@ -68,11 +68,11 @@ class _StaffLoginState extends State<StaffLogin> {
                   ..hideCurrentSnackBar()
                   ..showSnackBar(SnackBar(content: Text(state.message)));
               } else if (state is StaffLoginSuccess) {
-                ScaffoldMessenger.of(context)
+                /*ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
                   ..showSnackBar(
                     SnackBar(content: Text('Welcome, ${state.user.fullName}')),
-                  );
+                  );*/
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => const MainScreen()),
                   (route) => false,

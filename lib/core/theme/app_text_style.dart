@@ -311,6 +311,14 @@ class AppTextStyles {
     height: 1.5,
   );
 
+  // ---------- Student home: clinical courses ----------
+  static const TextStyle clinicalCourseName = TextStyle(
+    fontSize: 12.5,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+    height: 1.2,
+  );
+
   // ---------- Reusable stepper ----------
   // Number shown inside a step circle (completed circles show a check instead).
   static const TextStyle stepNumber = TextStyle(
