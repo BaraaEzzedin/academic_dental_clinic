@@ -6,41 +6,12 @@ import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/widgets/app_primary_button.dart';
 import '../../../assigned_patients/presentation/widgets/assigned_patients_section.dart';
 import '../../../clinical_courses/presentation/widgets/clinical_courses_section.dart';
-import '../models/schedule_item.dart';
+import '../../../today_appointments/presentation/widgets/today_schedule_section.dart';
 import '../widgets/home_header.dart';
 import '../widgets/home_top_bar.dart';
-import '../widgets/today_schedule_section.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  // data for ui , delete when back is ready
-  static const List<ScheduleItem> _schedule = [
-    ScheduleItem(
-      patientName: 'Sara Mahmoud',
-      subject: 'Periodontics',
-      clinic: 'Clinic 1',
-      startTime: '8:00',
-      endTime: '9:00',
-      status: ScheduleStatus.last,
-    ),
-    ScheduleItem(
-      patientName: 'Ahmad Khaled',
-      subject: 'Operative Dentistry',
-      clinic: 'Clinic 4',
-      startTime: '9:00',
-      endTime: '11:00',
-      status: ScheduleStatus.now,
-    ),
-    ScheduleItem(
-      patientName: 'Lina Yousef',
-      subject: 'Endodontics',
-      clinic: 'Clinic 2',
-      startTime: '11:30',
-      endTime: '13:00',
-      status: ScheduleStatus.next,
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +34,7 @@ class HomeScreen extends StatelessWidget {
                 summary: 'You have 3 clinical procedures scheduled for today.',
               ),
               const SizedBox(height: AppDimensions.xl),
-              const TodayScheduleSection(items: _schedule),
+              const TodayScheduleSection(),
               const SizedBox(height: AppDimensions.xl),
               const ClinicalCoursesSection(),
               const SizedBox(height: AppDimensions.xl),

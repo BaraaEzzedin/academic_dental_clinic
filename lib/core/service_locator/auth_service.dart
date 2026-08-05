@@ -60,6 +60,9 @@ void configureDependencies() {
   sl.registerLazySingleton<CaseAcceptanceRequestRemoteDataSource>(
     () => CaseAcceptanceRequestRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<TodayAppointmentsRemoteDataSource>(
+    () => TodayAppointmentsRemoteDataSourceImpl(sl<ApiClient>()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<StaffAuthRepository>(
@@ -82,6 +85,11 @@ void configureDependencies() {
       sl<CaseAcceptanceRequestRemoteDataSource>(),
     ),
   );
+  sl.registerLazySingleton<TodayAppointmentsRepository>(
+    () => TodayAppointmentsRepositoryImpl(
+      sl<TodayAppointmentsRemoteDataSource>(),
+    ),
+  );
 
   // ---------- Use cases ----------
   sl.registerFactory<StaffLoginUseCase>(
@@ -95,6 +103,9 @@ void configureDependencies() {
   );
   sl.registerFactory<GetAssignedPatientsUseCase>(
     () => GetAssignedPatientsUseCase(sl<PatientsRepository>()),
+  );
+  sl.registerFactory<GetTodayAppointmentsUseCase>(
+    () => GetTodayAppointmentsUseCase(sl<TodayAppointmentsRepository>()),
   );
   sl.registerFactory<GetAvailableProceduresUseCase>(
     () => GetAvailableProceduresUseCase(sl<CaseAcceptanceRequestRepository>()),
