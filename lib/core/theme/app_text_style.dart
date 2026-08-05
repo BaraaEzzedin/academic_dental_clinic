@@ -310,4 +310,35 @@ class AppTextStyles {
     color: AppColors.textPrimary,
     height: 1.5,
   );
+
+  // ---------- Reusable stepper ----------
+  // Number shown inside a step circle (completed circles show a check instead).
+  static const TextStyle stepNumber = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+  );
+
+  // Title under the current step: prominent, primary color.
+  static const TextStyle stepTitleActive = TextStyle(
+    fontSize: 12.5,
+    fontWeight: FontWeight.w700,
+    color: AppColors.primary,
+    height: 1.2,
+  );
+
+  // Title under a completed step.
+  static const TextStyle stepTitleCompleted = TextStyle(
+    fontSize: 12.5,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textDark,
+    height: 1.2,
+  );
+
+  // Title under an upcoming (inactive) step.
+  static const TextStyle stepTitleInactive = TextStyle(
+    fontSize: 12.5,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textHint,
+    height: 1.2,
+  );
 }

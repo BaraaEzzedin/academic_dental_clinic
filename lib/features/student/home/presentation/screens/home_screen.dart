@@ -1,7 +1,9 @@
 import 'package:academic_dental_clinic/core/constants/app_colors.dart';
+import 'package:academic_dental_clinic/features/student/add_patient/presentation/screens/add_patient_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/widgets/app_primary_button.dart';
 import '../../../assigned_patients/presentation/widgets/assigned_patients_section.dart';
 import '../models/schedule_item.dart';
 import '../widgets/home_header.dart';
@@ -63,6 +65,17 @@ class HomeScreen extends StatelessWidget {
               const TodayScheduleSection(items: _schedule),
               const SizedBox(height: AppDimensions.xl),
               const AssignedPatientsSection(),
+              const SizedBox(height: AppDimensions.xl),
+              AppPrimaryButton(
+                label: 'Add your Patient',
+                trailingIcon: Icons.person_add_alt_1_rounded,
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                          builder: (_) =>
+                              AddPatientScreen(),),);
+                },
+              ),
             ],
           ),
         ),
