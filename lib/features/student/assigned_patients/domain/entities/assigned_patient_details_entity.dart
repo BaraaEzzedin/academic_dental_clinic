@@ -12,6 +12,7 @@ class AssignedPatientDetailsEntity extends Equatable {
   const AssignedPatientDetailsEntity({
     required this.id,
     required this.patientName,
+    required this.subjectId,
     required this.subjectName,
     required this.age,
     required this.gender,
@@ -28,6 +29,10 @@ class AssignedPatientDetailsEntity extends Equatable {
 
   final int id;
   final String patientName;
+
+  /// Identifier of the subject this case is filed under — used to fetch the
+  /// available procedures on the Case Acceptance Request screen.
+  final int subjectId;
   final String subjectName;
   final int age;
   final String gender;
@@ -51,6 +56,7 @@ class AssignedPatientDetailsEntity extends Equatable {
   List<Object?> get props => [
         id,
         patientName,
+        subjectId,
         subjectName,
         age,
         gender,

@@ -34,27 +34,14 @@ class AssignedPatientDetailsCubit extends Cubit<AssignedPatientDetailsState> {
     }
   }
 
-  /// Sends the case-acceptance request to the supervisor.
-  ///
-  /// TODO(backend): replace with a `SubmitCaseAcceptanceRequestUseCase(id)` call
-  /// once the API is ready.
-  Future<void> submitAcceptanceRequest() async {
-    if (state.isSubmitting || state.details == null) return;
-    emit(state.copyWith(submission: RequestSubmission.submitting));
-    try {
-      await Future<void>.delayed(const Duration(milliseconds: 900));
-      emit(state.copyWith(submission: RequestSubmission.success));
-    } catch (_) {
-      emit(state.copyWith(submission: RequestSubmission.failure));
-    }
-  }
-
   // Mock data for the UI — delete when the backend is ready. The identifying
   // fields come straight from the list entity so nothing drifts between screens.
   AssignedPatientDetailsEntity _mock(AssignedPatientEntity patient) {
     return AssignedPatientDetailsEntity(
       id: patient.id,
       patientName: patient.patientName,
+      // TODO(backend): use the real subject id from the API response.
+      subjectId: 1,
       subjectName: patient.subjectName,
       chiefComplaint: patient.chiefComplaint,
       appointmentDate: patient.appointmentDate,
