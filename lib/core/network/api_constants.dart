@@ -13,6 +13,9 @@ class ApiConstants {
   // Clinical cases — student
   static const String myClinicalCases = '/clinical-cases/my-cases';
 
+  // Clinical appointments — student
+  static const String todayAppointments = '/clinical-appointments/today';
+
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 60);
   static const Duration receiveTimeout = Duration(seconds: 60);
