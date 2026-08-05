@@ -54,10 +54,8 @@ class _ItemSkeleton extends StatelessWidget {
   }
 }
 
-/// Shared sizing so the section, list and shimmer stay in lockstep.
 class ClinicalCoursesSectionMetrics {
-  ClinicalCoursesSectionMetrics._();
-  /// Height that fits the avatar plus a two-line course name.
+  ClinicalCoursesSectionMetrics();
    static const double listHeight =
        ClinicalCourseItem.avatarSize + AppDimensions.sm + 34;
 }

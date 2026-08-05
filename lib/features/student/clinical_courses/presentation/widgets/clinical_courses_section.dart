@@ -8,11 +8,6 @@ import '../manager/clinical_courses/clinical_courses_state.dart';
 import 'clinical_course_item.dart';
 import 'clinical_courses_shimmer.dart';
 
-/// Home section listing the student's enrolled clinical courses for the
-/// semester as a horizontal, scrollable strip of course avatars.
-///
-/// It is an entry point for the future Course Details feature: tapping a course
-/// will eventually open its progress, procedures, related cases and supervisor.
 class ClinicalCoursesSection extends StatelessWidget {
   const ClinicalCoursesSection({super.key});
 
