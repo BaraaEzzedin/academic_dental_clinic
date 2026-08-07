@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/widgets/error_retry_view.dart';
+import '../../../clinical_courses/domain/use_cases/get_clinical_courses_use_case.dart';
+import '../../domain/use_cases/get_open_cases_use_case.dart';
 import '../../../home/presentation/manager/bottom_nav/bottom_nav_cubit.dart';
 import '../../../home/presentation/manager/bottom_nav/bottom_nav_state.dart';
 import '../../../home/presentation/widgets/home_top_bar.dart';
@@ -19,7 +22,10 @@ class OpenCasesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<OpenCasesCubit>(
-      create: (_) => OpenCasesCubit(),
+      create: (_) => OpenCasesCubit(
+        sl<GetOpenCasesUseCase>(),
+        sl<GetClinicalCoursesUseCase>(),
+      ),
       child: BlocListener<BottomNavCubit, BottomNavState>(
         listenWhen: (previous, current) =>
             current.tab == NavTab.openCases && previous.tab != current.tab,

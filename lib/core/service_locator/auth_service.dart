@@ -19,6 +19,10 @@ import '../../features/student/clinical_courses/data/data_source/clinical_course
 import '../../features/student/clinical_courses/data/repositories/clinical_courses_repository_impl.dart';
 import '../../features/student/clinical_courses/domain/repositories/clinical_courses_repository.dart';
 import '../../features/student/clinical_courses/domain/use_cases/get_clinical_courses_use_case.dart';
+import '../../features/student/open_cases/data/data_source/open_cases_remote_data_source.dart';
+import '../../features/student/open_cases/data/repositories/open_cases_repository_impl.dart';
+import '../../features/student/open_cases/domain/repositories/open_cases_repository.dart';
+import '../../features/student/open_cases/domain/use_cases/get_open_cases_use_case.dart';
 import '../../features/student/patients/data/data_source/patients_remote_data_source.dart';
 import '../../features/student/patients/data/repositories/patients_repository_impl.dart';
 import '../../features/student/patients/domain/repositories/patients_repository.dart';
@@ -70,6 +74,9 @@ void configureDependencies() {
   sl.registerLazySingleton<ClinicalCoursesRemoteDataSource>(
     () => ClinicalCoursesRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<OpenCasesRemoteDataSource>(
+    () => OpenCasesRemoteDataSourceImpl(sl<ApiClient>()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<StaffAuthRepository>(
@@ -102,6 +109,11 @@ void configureDependencies() {
       sl<ClinicalCoursesRemoteDataSource>(),
     ),
   );
+  sl.registerLazySingleton<OpenCasesRepository>(
+    () => OpenCasesRepositoryImpl(
+      sl<OpenCasesRemoteDataSource>(),
+    ),
+  );
 
   // ---------- Use cases ----------
   sl.registerFactory<StaffLoginUseCase>(
@@ -121,6 +133,9 @@ void configureDependencies() {
   );
   sl.registerFactory<GetClinicalCoursesUseCase>(
     () => GetClinicalCoursesUseCase(sl<ClinicalCoursesRepository>()),
+  );
+  sl.registerFactory<GetOpenCasesUseCase>(
+    () => GetOpenCasesUseCase(sl<OpenCasesRepository>()),
   );
   sl.registerFactory<GetAvailableProceduresUseCase>(
     () => GetAvailableProceduresUseCase(sl<CaseAcceptanceRequestRepository>()),
