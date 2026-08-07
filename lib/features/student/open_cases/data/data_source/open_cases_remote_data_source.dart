@@ -2,10 +2,12 @@ import 'package:dio/dio.dart';
 import '../../../../../core/network/api_client.dart';
 import '../../../../../core/network/api_constants.dart';
 import '../../../../../core/network/network_exception_mapper.dart';
+import '../models/open_case_details_model.dart';
 import '../models/open_case_model.dart';
 
 abstract class OpenCasesRemoteDataSource {
   Future<List<OpenCaseModel>> getOpenCases();
+  Future<OpenCaseDetailsModel> getOpenCaseDetails(int id);
 }
 
 class OpenCasesRemoteDataSourceImpl implements OpenCasesRemoteDataSource {
@@ -24,6 +26,19 @@ class OpenCasesRemoteDataSourceImpl implements OpenCasesRemoteDataSource {
       return openCases
           .map((e) => OpenCaseModel.fromJson(e as Map<String, dynamic>))
           .toList();
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  @override
+  Future<OpenCaseDetailsModel> getOpenCaseDetails(int id) async {
+    try {
+      final response = await apiClient.get<Map<String, dynamic>>(
+        ApiConstants.openCaseDetails(id),
+      );
+      final data = response.data?['data'] as Map<String, dynamic>? ?? const {};
+      return OpenCaseDetailsModel.fromJson(data);
     } on DioException catch (e) {
       throw mapDioException(e);
     }
