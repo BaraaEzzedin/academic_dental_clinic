@@ -23,7 +23,7 @@ class TodayAppointmentsRemoteDataSourceImpl
       final data = response.data?['data'] as List<dynamic>? ?? const [];
       return data
           .map((e) =>
-              TodayAppointmentModel.fromJson(e as Map<String, dynamic>))
+          TodayAppointmentModel.fromJson(e as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
       throw mapDioException(e);

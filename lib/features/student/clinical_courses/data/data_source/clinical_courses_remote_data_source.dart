@@ -24,7 +24,7 @@ class ClinicalCoursesRemoteDataSourceImpl
       final subjects = data?['subjects'] as List<dynamic>? ?? const [];
       return subjects
           .map((e) =>
-              ClinicalCourseModel.fromJson(e as Map<String, dynamic>))
+          ClinicalCourseModel.fromJson(e as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
       throw mapDioException(e);

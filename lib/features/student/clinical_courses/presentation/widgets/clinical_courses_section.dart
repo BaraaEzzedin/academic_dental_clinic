@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/theme/app_text_style.dart';
+import '../../domain/use_cases/get_clinical_courses_use_case.dart';
 import '../manager/clinical_courses/clinical_courses_cubit.dart';
 import '../manager/clinical_courses/clinical_courses_state.dart';
 import 'clinical_course_item.dart';
@@ -14,7 +16,8 @@ class ClinicalCoursesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ClinicalCoursesCubit>(
-      create: (_) => ClinicalCoursesCubit()..loadCourses(),
+      create: (_) =>
+          ClinicalCoursesCubit(sl<GetClinicalCoursesUseCase>())..loadCourses(),
       child: BlocBuilder<ClinicalCoursesCubit, ClinicalCoursesState>(
         builder: (context, state) {
           return Column(

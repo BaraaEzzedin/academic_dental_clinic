@@ -15,6 +15,10 @@ import '../../features/student/case_acceptance_request/data/repositories/case_ac
 import '../../features/student/case_acceptance_request/domain/repositories/case_acceptance_request_repository.dart';
 import '../../features/student/case_acceptance_request/domain/use_cases/get_available_procedures_use_case.dart';
 import '../../features/student/case_acceptance_request/domain/use_cases/submit_case_acceptance_request_use_case.dart';
+import '../../features/student/clinical_courses/data/data_source/clinical_courses_remote_data_source.dart';
+import '../../features/student/clinical_courses/data/repositories/clinical_courses_repository_impl.dart';
+import '../../features/student/clinical_courses/domain/repositories/clinical_courses_repository.dart';
+import '../../features/student/clinical_courses/domain/use_cases/get_clinical_courses_use_case.dart';
 import '../../features/student/patients/data/data_source/patients_remote_data_source.dart';
 import '../../features/student/patients/data/repositories/patients_repository_impl.dart';
 import '../../features/student/patients/domain/repositories/patients_repository.dart';
@@ -63,6 +67,9 @@ void configureDependencies() {
   sl.registerLazySingleton<TodayAppointmentsRemoteDataSource>(
     () => TodayAppointmentsRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<ClinicalCoursesRemoteDataSource>(
+    () => ClinicalCoursesRemoteDataSourceImpl(sl<ApiClient>()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<StaffAuthRepository>(
@@ -90,6 +97,11 @@ void configureDependencies() {
       sl<TodayAppointmentsRemoteDataSource>(),
     ),
   );
+  sl.registerLazySingleton<ClinicalCoursesRepository>(
+    () => ClinicalCoursesRepositoryImpl(
+      sl<ClinicalCoursesRemoteDataSource>(),
+    ),
+  );
 
   // ---------- Use cases ----------
   sl.registerFactory<StaffLoginUseCase>(
@@ -106,6 +118,9 @@ void configureDependencies() {
   );
   sl.registerFactory<GetTodayAppointmentsUseCase>(
     () => GetTodayAppointmentsUseCase(sl<TodayAppointmentsRepository>()),
+  );
+  sl.registerFactory<GetClinicalCoursesUseCase>(
+    () => GetClinicalCoursesUseCase(sl<ClinicalCoursesRepository>()),
   );
   sl.registerFactory<GetAvailableProceduresUseCase>(
     () => GetAvailableProceduresUseCase(sl<CaseAcceptanceRequestRepository>()),
