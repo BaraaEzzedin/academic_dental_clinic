@@ -50,8 +50,8 @@ class OpenCasePatientCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: CaseInfoField(
-                              label: 'Age',
-                              value: '${details.age}',
+                              label: 'Date of Birth',
+                              value: details.dateOfBirth,
                             ),
                           ),
                           Expanded(

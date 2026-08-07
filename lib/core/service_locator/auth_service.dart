@@ -22,6 +22,7 @@ import '../../features/student/clinical_courses/domain/use_cases/get_clinical_co
 import '../../features/student/open_cases/data/data_source/open_cases_remote_data_source.dart';
 import '../../features/student/open_cases/data/repositories/open_cases_repository_impl.dart';
 import '../../features/student/open_cases/domain/repositories/open_cases_repository.dart';
+import '../../features/student/open_cases/domain/use_cases/get_open_case_details_use_case.dart';
 import '../../features/student/open_cases/domain/use_cases/get_open_cases_use_case.dart';
 import '../../features/student/patients/data/data_source/patients_remote_data_source.dart';
 import '../../features/student/patients/data/repositories/patients_repository_impl.dart';
@@ -136,6 +137,9 @@ void configureDependencies() {
   );
   sl.registerFactory<GetOpenCasesUseCase>(
     () => GetOpenCasesUseCase(sl<OpenCasesRepository>()),
+  );
+  sl.registerFactory<GetOpenCaseDetailsUseCase>(
+    () => GetOpenCaseDetailsUseCase(sl<OpenCasesRepository>()),
   );
   sl.registerFactory<GetAvailableProceduresUseCase>(
     () => GetAvailableProceduresUseCase(sl<CaseAcceptanceRequestRepository>()),

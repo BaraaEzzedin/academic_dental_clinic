@@ -4,7 +4,7 @@ import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../models/session.dart';
 import '../widgets/add_session/add_session_sheet.dart';
-import '../widgets/add_session/session_date_format.dart';
+import '../../../../../core/utils/date_formatter.dart';
 import '../widgets/case_details_top_bar.dart';
 import '../widgets/edit_session/edit_session_sheet.dart';
 import '../widgets/progress_timeline_section.dart';
@@ -136,7 +136,7 @@ class _SessionsScreenState extends State<SessionsScreen> {
       sessions.add(
         Session(
           title: result.title,
-          date: '${formatSessionDate(result.date)} · ${result.time}',
+          date: '${DateFormatter.toMediumDate(result.date)} · ${result.time}',
           status: SessionStatus.planned,
           items: const [],
         ),

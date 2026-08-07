@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
-import 'session_date_format.dart';
+import '../../../../../../core/utils/date_formatter.dart';
 
 const List<String> _weekdayHeaders = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
@@ -49,7 +49,7 @@ class SessionCalendar extends StatelessWidget {
     return Row(
       children: [
         Text(
-          formatMonthYear(focusedMonth),
+          DateFormatter.toMonthYear(focusedMonth),
           style: const TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w700,
@@ -105,7 +105,7 @@ class SessionCalendar extends StatelessWidget {
     for (var day = 1; day <= daysInMonth; day++) {
       final date = DateTime(focusedMonth.year, focusedMonth.month, day);
       final isPast = date.isBefore(todayDate);
-      final isSelected = isSameDay(date, selectedDate);
+      final isSelected = DateFormatter.isSameDay(date, selectedDate);
       cells.add(
         _DayCell(
           day: day,

@@ -1,3 +1,4 @@
+import '../../../../../core/utils/date_formatter.dart';
 import '../../domain/entities/open_case_details_entity.dart';
 
 class OpenCaseDetailsModel extends OpenCaseDetailsEntity {
@@ -5,7 +6,7 @@ class OpenCaseDetailsModel extends OpenCaseDetailsEntity {
     required super.id,
     required super.patientName,
     required super.subject,
-    required super.age,
+    required super.dateOfBirth,
     required super.gender,
     required super.phoneNumber,
     required super.chiefComplaint,
@@ -24,7 +25,8 @@ class OpenCaseDetailsModel extends OpenCaseDetailsEntity {
       id: (json['id'] as num).toInt(),
       patientName: patient?['fullName'] as String? ?? '',
       subject: subject?['name'] as String? ?? '',
-      age: (patient?['age'] as num?)?.toInt() ?? 0,
+      dateOfBirth:
+          DateFormatter.mediumDateFromIso(patient?['dateOfBirth'] as String?),
       gender: patient?['gender'] as String? ?? '',
       phoneNumber: patient?['phone'] as String? ?? '',
       chiefComplaint: request?['chiefComplaint'] as String? ?? '',
@@ -37,9 +39,7 @@ class OpenCaseDetailsModel extends OpenCaseDetailsEntity {
     );
   }
 
-  /// The backend sends multi-value text fields as a single string with `*`
-  /// separating each entry. Split on it and drop blanks so the UI can render
-  /// one bullet per value.
+
   static List<String> _splitBullets(String? raw) {
     if (raw == null) return const [];
     return raw

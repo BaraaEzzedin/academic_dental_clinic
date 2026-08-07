@@ -1,18 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-/// Full detail payload for a single open (unassigned) case, shown on the
-/// Open Case Details screen. This aggregates everything the student needs
-/// before taking the case for the initial patient examination.
-///
-/// TODO(backend): map this from the real API response once the open-case
-/// details endpoint is ready. The widgets already consume this entity, so no
-/// UI changes will be needed.
 class OpenCaseDetailsEntity extends Equatable {
   const OpenCaseDetailsEntity({
     required this.id,
     required this.patientName,
     required this.subject,
-    required this.age,
+    required this.dateOfBirth,
     required this.gender,
     required this.phoneNumber,
     required this.chiefComplaint,
@@ -25,7 +18,7 @@ class OpenCaseDetailsEntity extends Equatable {
   final int id;
   final String patientName;
   final String subject;
-  final int age;
+  final String dateOfBirth;
   final String gender;
   final String phoneNumber;
 
@@ -42,7 +35,7 @@ class OpenCaseDetailsEntity extends Equatable {
         id,
         patientName,
         subject,
-        age,
+        dateOfBirth,
         gender,
         phoneNumber,
         chiefComplaint,

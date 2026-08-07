@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
-import '../../../patient_case/presentation/widgets/add_session/session_date_format.dart';
+import '../../../../../core/utils/date_formatter.dart';
 import 'appointment_sheet.dart';
 
 Future<void> showAppointmentSummaryDialog(
@@ -37,7 +37,7 @@ ${result.title} Appointment
 
 Patient: $patientName
 Subject: $subject
-Date: ${formatSessionDate(result.date)}
+Date: ${DateFormatter.toMediumDate(result.date)}
 Time: ${result.time}''';
 
   Future<void> _share(BuildContext context) async {
@@ -130,7 +130,7 @@ Time: ${result.time}''';
           _SummaryRow(
             icon: Icons.calendar_today_rounded,
             label: 'Date',
-            value: formatSessionDate(result.date),
+            value: DateFormatter.toMediumDate(result.date),
           ),
           _SummaryRow(
             icon: Icons.schedule_rounded,

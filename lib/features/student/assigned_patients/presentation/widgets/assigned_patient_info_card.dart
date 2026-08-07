@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
+import '../../../../../core/utils/date_formatter.dart';
 import '../../../patient_case/presentation/widgets/case_info_field.dart';
 import '../../domain/entities/assigned_patient_details_entity.dart';
-import 'appointment_date_label.dart';
 import 'subject_badge.dart';
 
 
@@ -131,7 +131,7 @@ class _AppointmentHighlight extends StatelessWidget {
                 Expanded(
                   child: _AppointmentItem(
                     icon: Icons.event_rounded,
-                    value: formatAppointmentDate(date),
+                    value: DateFormatter.toDayLabel(date),
                   ),
                 ),
                 const VerticalDivider(

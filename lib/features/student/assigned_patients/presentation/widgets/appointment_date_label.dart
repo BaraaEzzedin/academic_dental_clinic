@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
+import '../../../../../core/utils/date_formatter.dart';
 
 
 class AppointmentDateLabel extends StatelessWidget {
@@ -22,7 +23,7 @@ class AppointmentDateLabel extends StatelessWidget {
         const SizedBox(width: AppDimensions.xs),
         Flexible(
           child: Text(
-            formatAppointmentDate(date),
+            DateFormatter.toDayLabel(date),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.scheduleMeta,
@@ -31,19 +32,4 @@ class AppointmentDateLabel extends StatelessWidget {
       ],
     );
   }
-}
-
-const List<String> _monthsShort = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-];
-
-const List<String> _weekdaysShort = [
-  'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
-];
-
-/// e.g. "Wed, Aug 5"
-String formatAppointmentDate(DateTime date) {
-  final weekday = _weekdaysShort[date.weekday - 1];
-  return '$weekday, ${_monthsShort[date.month - 1]} ${date.day}';
 }

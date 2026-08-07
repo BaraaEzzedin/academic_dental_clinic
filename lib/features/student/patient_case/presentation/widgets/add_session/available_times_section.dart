@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
 import '../../manager/add_session/add_session_state.dart';
-import 'session_date_format.dart';
+import '../../../../../../core/utils/date_formatter.dart';
 
 
 class AvailableTimesSection extends StatelessWidget {
@@ -47,7 +47,7 @@ class AvailableTimesSection extends StatelessWidget {
                   ),
                   const SizedBox(width: AppDimensions.xs),
                   Text(
-                    formatDayLabel(selectedDate!),
+                    DateFormatter.toDayLabel(selectedDate!),
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
