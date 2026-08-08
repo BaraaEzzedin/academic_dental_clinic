@@ -19,6 +19,11 @@ import '../../features/student/clinical_courses/data/data_source/clinical_course
 import '../../features/student/clinical_courses/data/repositories/clinical_courses_repository_impl.dart';
 import '../../features/student/clinical_courses/domain/repositories/clinical_courses_repository.dart';
 import '../../features/student/clinical_courses/domain/use_cases/get_clinical_courses_use_case.dart';
+import '../../features/student/open_case_appointment/data/data_source/appointment_remote_data_source.dart';
+import '../../features/student/open_case_appointment/data/repositories/appointment_repository_impl.dart';
+import '../../features/student/open_case_appointment/domain/repositories/appointment_repository.dart';
+import '../../features/student/open_case_appointment/domain/use_cases/book_appointment_use_case.dart';
+import '../../features/student/open_case_appointment/domain/use_cases/get_available_appointments_use_case.dart';
 import '../../features/student/open_cases/data/data_source/open_cases_remote_data_source.dart';
 import '../../features/student/open_cases/data/repositories/open_cases_repository_impl.dart';
 import '../../features/student/open_cases/domain/repositories/open_cases_repository.dart';
@@ -78,6 +83,9 @@ void configureDependencies() {
   sl.registerLazySingleton<OpenCasesRemoteDataSource>(
     () => OpenCasesRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<AppointmentRemoteDataSource>(
+    () => AppointmentRemoteDataSourceImpl(sl<ApiClient>()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<StaffAuthRepository>(
@@ -115,6 +123,11 @@ void configureDependencies() {
       sl<OpenCasesRemoteDataSource>(),
     ),
   );
+  sl.registerLazySingleton<AppointmentRepository>(
+    () => AppointmentRepositoryImpl(
+      sl<AppointmentRemoteDataSource>(),
+    ),
+  );
 
   // ---------- Use cases ----------
   sl.registerFactory<StaffLoginUseCase>(
@@ -140,6 +153,12 @@ void configureDependencies() {
   );
   sl.registerFactory<GetOpenCaseDetailsUseCase>(
     () => GetOpenCaseDetailsUseCase(sl<OpenCasesRepository>()),
+  );
+  sl.registerFactory<GetAvailableAppointmentsUseCase>(
+    () => GetAvailableAppointmentsUseCase(sl<AppointmentRepository>()),
+  );
+  sl.registerFactory<BookAppointmentUseCase>(
+    () => BookAppointmentUseCase(sl<AppointmentRepository>()),
   );
   sl.registerFactory<GetAvailableProceduresUseCase>(
     () => GetAvailableProceduresUseCase(sl<CaseAcceptanceRequestRepository>()),

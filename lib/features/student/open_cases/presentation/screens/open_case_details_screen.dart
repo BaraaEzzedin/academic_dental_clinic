@@ -80,13 +80,33 @@ class OpenCaseDetailsScreen extends StatelessWidget {
     BuildContext context,
     OpenCaseDetailsEntity details,
   ) async {
-    final result = await showAppointmentSheet(context);
+    final result =
+        await showAppointmentSheet(context, clinicalCaseId: details.id);
     if (result == null || !context.mounted) return;
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: AppColors.success,
+          content: Text(
+            'Appointment booked successfully.',
+            style: TextStyle(color: AppColors.white),
+          ),
+        ),
+      );
+
     await showAppointmentSummaryDialog(
       context,
       result: result,
       patientName: details.patientName,
       subject: details.subject,
     );
+
+    // Once the summary is dismissed, return to the open-cases list and let it
+    // reload so the newly booked case is reflected.
+    if (!context.mounted) return;
+    Navigator.of(context).pop(true);
   }
 }

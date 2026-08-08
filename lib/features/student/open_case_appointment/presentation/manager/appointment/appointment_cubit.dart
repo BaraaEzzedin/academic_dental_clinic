@@ -1,17 +1,29 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../patient_case/presentation/manager/add_session/add_session_state.dart'
     show AvailableTimesStatus;
+import '../../../domain/use_cases/book_appointment_use_case.dart';
+import '../../../domain/use_cases/get_available_appointments_use_case.dart';
 import 'appointment_state.dart';
 
 /// Drives the open-case "Book Appointment" sheet: month navigation, day
 /// selection (which loads the available times), time selection and submit.
 class AppointmentCubit extends Cubit<AppointmentState> {
-  AppointmentCubit({DateTime? initialMonth})
-      : super(
+  AppointmentCubit({
+    required GetAvailableAppointmentsUseCase getAvailableAppointments,
+    required BookAppointmentUseCase bookAppointment,
+    required this.clinicalCaseId,
+    DateTime? initialMonth,
+  })  : _getAvailableAppointments = getAvailableAppointments,
+        _bookAppointment = bookAppointment,
+        super(
           AppointmentState(
             focusedMonth: _monthStart(initialMonth ?? DateTime.now()),
           ),
         );
+
+  final GetAvailableAppointmentsUseCase _getAvailableAppointments;
+  final BookAppointmentUseCase _bookAppointment;
+  final int clinicalCaseId;
 
   static DateTime _monthStart(DateTime date) => DateTime(date.year, date.month);
 
@@ -35,19 +47,34 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       state.copyWith(
         selectedDate: () => normalized,
         selectedTime: () => null,
+        supervisor: () => null,
         timesStatus: AvailableTimesStatus.loading,
         availableTimes: const [],
       ),
     );
 
-    // TODO(backend): replace with repository.fetchAvailableTimes(normalized).
-    await Future<void>.delayed(const Duration(milliseconds: 900));
+    final result = await _getAvailableAppointments(
+      GetAvailableAppointmentsParams(
+        date: normalized,
+        clinicalCaseId: clinicalCaseId,
+      ),
+    );
+
+    // The user may have picked another day (or closed the sheet) while the
+    // request was in flight; ignore stale responses.
     if (isClosed || state.selectedDate != normalized) return;
 
-    emit(
-      state.copyWith(
-        timesStatus: AvailableTimesStatus.loaded,
-        availableTimes: _mockTimes(normalized),
+    result.fold(
+      (failure) => emit(
+        state.copyWith(timesStatus: AvailableTimesStatus.error),
+      ),
+      (appointments) => emit(
+        state.copyWith(
+          timesStatus: AvailableTimesStatus.loaded,
+          availableTimes:
+              appointments.slots.map((slot) => slot.startTime).toList(),
+          supervisor: () => appointments.supervisor,
+        ),
       ),
     );
   }
@@ -56,26 +83,34 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     emit(state.copyWith(selectedTime: () => time));
   }
 
-  Future<void> submit() async {
-    if (!state.canSubmit) return;
-    emit(state.copyWith(isSubmitting: true));
-    // TODO(backend): await repository.bookAppointment(date, time, ...).
-    await Future<void>.delayed(const Duration(milliseconds: 1200));
-    if (isClosed) return;
-    emit(state.copyWith(isSubmitting: false));
-  }
+  /// Books the appointment for the selected day/time. Returns `true` on
+  /// success; on failure it stays open with [AppointmentState.submitError] set.
+  Future<bool> submit() async {
+    if (!state.canSubmit) return false;
+    emit(state.copyWith(isSubmitting: true, submitError: () => null));
 
-  // mock available slots for ui , delete when backend is ready
-  List<String> _mockTimes(DateTime date) {
-    const all = [
-      '09:00 AM',
-      '10:30 AM',
-      '12:00 PM',
-      '01:30 PM',
-      '03:00 PM',
-      '04:30 PM',
-    ];
-    final count = 3 + (date.day % 3);
-    return all.take(count).toList();
+    final result = await _bookAppointment(
+      BookAppointmentParams(
+        clinicalCaseId: clinicalCaseId,
+        date: state.selectedDate!,
+        time: state.selectedTime!,
+      ),
+    );
+
+    if (isClosed) return false;
+
+    return result.fold(
+      (failure) {
+        emit(state.copyWith(
+          isSubmitting: false,
+          submitError: () => failure.message,
+        ));
+        return false;
+      },
+      (_) {
+        emit(state.copyWith(isSubmitting: false));
+        return true;
+      },
+    );
   }
 }

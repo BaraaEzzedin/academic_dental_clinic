@@ -39,6 +39,14 @@ class DateFormatter {
     return toMediumDate(date);
   }
 
+  /// Formats a date as an ISO calendar date (`yyyy-MM-dd`), e.g. "2026-08-09".
+  /// Suitable for query parameters.
+  static String toIsoDate(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
+  }
+
   /// True when [a] and [b] fall on the same calendar day.
   static bool isSameDay(DateTime? a, DateTime? b) =>
       a != null &&

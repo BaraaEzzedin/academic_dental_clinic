@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../../../../core/widgets/sheet_grabber.dart';
 import '../../../patient_case/presentation/widgets/add_session/available_times_section.dart';
 import '../../../patient_case/presentation/widgets/add_session/session_calendar.dart';
+import '../../domain/use_cases/book_appointment_use_case.dart';
+import '../../domain/use_cases/get_available_appointments_use_case.dart';
 import '../manager/appointment/appointment_cubit.dart';
 import '../manager/appointment/appointment_state.dart';
 import 'appointment_title_field.dart';
 
-/// The booked appointment, returned when the sheet is submitted.
+
 class AppointmentResult {
   const AppointmentResult({
     required this.title,
@@ -23,16 +26,21 @@ class AppointmentResult {
   final String time;
 }
 
-/// Opens the "Book Appointment" bottom sheet (calendar + available times),
-/// pre-filled with the "Initial Examination" title. Resolves to the booked
-/// [AppointmentResult], or `null` if dismissed.
-Future<AppointmentResult?> showAppointmentSheet(BuildContext context) {
+
+Future<AppointmentResult?> showAppointmentSheet(
+  BuildContext context, {
+  required int clinicalCaseId,
+}) {
   return showModalBottomSheet<AppointmentResult>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => BlocProvider(
-      create: (_) => AppointmentCubit(),
+      create: (_) => AppointmentCubit(
+        getAvailableAppointments: sl<GetAvailableAppointmentsUseCase>(),
+        bookAppointment: sl<BookAppointmentUseCase>(),
+        clinicalCaseId: clinicalCaseId,
+      ),
       child: const AppointmentSheet(),
     ),
   );
@@ -57,9 +65,24 @@ class _AppointmentSheetState extends State<AppointmentSheet> {
 
   Future<void> _submit(BuildContext context) async {
     final cubit = context.read<AppointmentCubit>();
-    await cubit.submit();
+    final succeeded = await cubit.submit();
     if (!context.mounted) return;
     final state = cubit.state;
+    if (!succeeded) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: AppColors.error,
+            content: Text(
+              state.submitError ?? 'Could not book the appointment.',
+              style: const TextStyle(color: AppColors.white),
+            ),
+          ),
+        );
+      return;
+    }
     if (state.selectedDate == null || state.selectedTime == null) return;
     Navigator.of(context).pop(
       AppointmentResult(
@@ -103,7 +126,7 @@ class _AppointmentSheetState extends State<AppointmentSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const _NextAppointmentBanner(),
+                        _NextAppointmentBanner(supervisor: state.supervisor),
                         const SizedBox(height: AppDimensions.lg),
                         AppointmentTitleField(
                           controller: _titleController,
@@ -199,10 +222,13 @@ class _Header extends StatelessWidget {
 }
 
 class _NextAppointmentBanner extends StatelessWidget {
-  const _NextAppointmentBanner();
+  const _NextAppointmentBanner({this.supervisor});
+
+  final String? supervisor;
 
   @override
   Widget build(BuildContext context) {
+    final hasSupervisor = supervisor != null && supervisor!.trim().isNotEmpty;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
@@ -214,17 +240,46 @@ class _NextAppointmentBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
       ),
       child: Row(
-        children: const [
-          Icon(Icons.event_available_rounded,
-              size: 22, color: AppColors.primary),
-          SizedBox(width: AppDimensions.md),
-          Text(
-            'Pick a date for the initial examination',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
-            ),
+        children: [
+          Icon(
+            hasSupervisor
+                ? Icons.person_rounded
+                : Icons.event_available_rounded,
+            size: 22,
+            color: AppColors.primary,
+          ),
+          const SizedBox(width: AppDimensions.md),
+          Expanded(
+            child: hasSupervisor
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Supervisor',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      Text(
+                        supervisor!,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  )
+                : const Text(
+                    'Pick a date for the initial examination',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
           ),
         ],
       ),

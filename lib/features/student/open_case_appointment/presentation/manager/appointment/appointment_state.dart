@@ -20,7 +20,9 @@ class AppointmentState extends Equatable {
     this.timesStatus = AvailableTimesStatus.initial,
     this.availableTimes = const [],
     this.selectedTime,
+    this.supervisor,
     this.isSubmitting = false,
+    this.submitError,
   });
 
   final String title;
@@ -29,7 +31,13 @@ class AppointmentState extends Equatable {
   final AvailableTimesStatus timesStatus;
   final List<String> availableTimes;
   final String? selectedTime;
+
+  /// Supervising doctor for the selected day, from the available-slots API.
+  final String? supervisor;
   final bool isSubmitting;
+
+  /// Error message from the last booking attempt, null when there is none.
+  final String? submitError;
 
   bool get canSubmit =>
       title.trim().isNotEmpty &&
@@ -44,7 +52,9 @@ class AppointmentState extends Equatable {
     AvailableTimesStatus? timesStatus,
     List<String>? availableTimes,
     ValueGetter<String?>? selectedTime,
+    ValueGetter<String?>? supervisor,
     bool? isSubmitting,
+    ValueGetter<String?>? submitError,
   }) {
     return AppointmentState(
       title: title ?? this.title,
@@ -53,7 +63,9 @@ class AppointmentState extends Equatable {
       timesStatus: timesStatus ?? this.timesStatus,
       availableTimes: availableTimes ?? this.availableTimes,
       selectedTime: selectedTime != null ? selectedTime() : this.selectedTime,
+      supervisor: supervisor != null ? supervisor() : this.supervisor,
       isSubmitting: isSubmitting ?? this.isSubmitting,
+      submitError: submitError != null ? submitError() : this.submitError,
     );
   }
 
@@ -65,6 +77,8 @@ class AppointmentState extends Equatable {
         timesStatus,
         availableTimes,
         selectedTime,
+        supervisor,
         isSubmitting,
+        submitError,
       ];
 }

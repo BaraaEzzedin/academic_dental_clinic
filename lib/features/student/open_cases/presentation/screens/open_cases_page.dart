@@ -79,13 +79,17 @@ class OpenCasesPage extends StatelessWidget {
                       }
                       return OpenCaseListView(
                         cases: state.filteredCases,
-                        onViewDetails: (openCase) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute<void>(
+                        onViewDetails: (openCase) async {
+                          final cubit = context.read<OpenCasesCubit>();
+                          final booked = await Navigator.of(context).push<bool>(
+                            MaterialPageRoute<bool>(
                               builder: (_) =>
                                   OpenCaseDetailsScreen(openCase: openCase),
                             ),
                           );
+                          if (booked == true) {
+                            cubit.loadCases();
+                          }
                         },
                       );
                     },
