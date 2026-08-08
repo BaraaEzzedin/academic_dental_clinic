@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../../../../core/widgets/view_all_button.dart';
+import '../../domain/use_cases/get_assigned_cases_use_case.dart';
 import '../manager/assigned_patients/assigned_patients_cubit.dart';
 import '../manager/assigned_patients/assigned_patients_state.dart';
 import '../navigation/open_patient_case.dart';
@@ -19,7 +21,8 @@ class AssignedPatientsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AssignedPatientsCubit>(
-      create: (_) => AssignedPatientsCubit()..loadAssignedPatients(),
+      create: (_) => AssignedPatientsCubit(sl<GetAssignedCasesUseCase>())
+        ..loadAssignedPatients(),
       child: BlocBuilder<AssignedPatientsCubit, AssignedPatientsState>(
         builder: (context, state) {
           return Column(

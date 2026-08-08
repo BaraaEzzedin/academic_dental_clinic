@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/widgets/error_retry_view.dart';
 import '../../../patient_case/presentation/widgets/case_details_top_bar.dart';
+import '../../domain/use_cases/get_assigned_cases_use_case.dart';
 import '../manager/assigned_patients/assigned_patients_cubit.dart';
 import '../manager/assigned_patients/assigned_patients_state.dart';
 import '../navigation/open_patient_case.dart';
@@ -16,7 +18,8 @@ class AssignedPatientsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AssignedPatientsCubit>(
-      create: (_) => AssignedPatientsCubit()..loadAssignedPatients(),
+      create: (_) => AssignedPatientsCubit(sl<GetAssignedCasesUseCase>())
+        ..loadAssignedPatients(),
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(

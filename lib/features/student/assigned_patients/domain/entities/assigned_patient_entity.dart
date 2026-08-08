@@ -7,16 +7,14 @@ class AssignedPatientEntity extends Equatable {
     required this.patientName,
     required this.subjectName,
     required this.chiefComplaint,
-    this.appointmentDate,
+    required this.appointmentDate,
   });
 
   final int id;
   final String patientName;
   final String subjectName;
   final String chiefComplaint;
-
-  /// Date of the next appointment, or `null` when none is scheduled yet.
-  final DateTime? appointmentDate;
+  final DateTime appointmentDate;
 
   @override
   List<Object?> get props => [

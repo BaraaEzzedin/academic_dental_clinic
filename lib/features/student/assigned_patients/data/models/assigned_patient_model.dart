@@ -6,19 +6,18 @@ class AssignedPatientModel extends AssignedPatientEntity {
     required super.patientName,
     required super.subjectName,
     required super.chiefComplaint,
-    super.appointmentDate,
+    required super.appointmentDate,
   });
 
   factory AssignedPatientModel.fromJson(Map<String, dynamic> json) {
-    final nextAppointment = json['nextAppointment'] as Map<String, dynamic>?;
+    final nextAppointment = json['nextAppointment'] as Map<String, dynamic>;
     return AssignedPatientModel(
       id: (json['id'] as num).toInt(),
       patientName: json['patient'] as String? ?? '',
       subjectName: json['subject'] as String? ?? '',
       chiefComplaint: json['chiefComplaint'] as String? ?? '',
-      appointmentDate: DateTime.tryParse(
-        nextAppointment?['appointmentDate'] as String? ?? '',
-      ),
+      appointmentDate:
+          DateTime.parse(nextAppointment['appointmentDate'] as String),
     );
   }
 }
