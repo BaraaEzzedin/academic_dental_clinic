@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/widgets/error_retry_view.dart';
 import '../../../patient_case/presentation/widgets/case_details_top_bar.dart';
 import '../../domain/entities/assigned_patient_entity.dart';
+import '../../domain/use_cases/get_assigned_case_details_use_case.dart';
 import '../manager/assigned_patient_details/assigned_patient_details_cubit.dart';
 import '../manager/assigned_patient_details/assigned_patient_details_state.dart';
 import '../widgets/assigned_patient_details_content.dart';
 import '../widgets/assigned_patient_details_shimmer.dart';
 
-/// Details of a single assigned patient, opened via "View Details" from the
-/// Assigned Patients list. Presents everything the student needs to review
-/// before opening a case-acceptance request for the supervisor.
 class AssignedPatientDetailsScreen extends StatelessWidget {
   const AssignedPatientDetailsScreen({super.key, required this.patient});
 
@@ -21,7 +20,9 @@ class AssignedPatientDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AssignedPatientDetailsCubit>(
-      create: (_) => AssignedPatientDetailsCubit()..load(patient),
+      create: (_) => AssignedPatientDetailsCubit(
+        sl<GetAssignedCaseDetailsUseCase>(),
+      )..load(patient),
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(

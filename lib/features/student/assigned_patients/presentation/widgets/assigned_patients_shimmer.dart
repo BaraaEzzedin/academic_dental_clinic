@@ -49,21 +49,37 @@ class _CardSkeleton extends StatelessWidget {
           const ShimmerBox(width: 5, height: double.infinity, borderRadius: 0),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(AppDimensions.md),
+              padding: const EdgeInsets.all(AppDimensions.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  ShimmerBox(width: 120, height: 15),
+                  Row(
+                    children: [
+                      Expanded(child: ShimmerBox(width: 120, height: 16)),
+                      SizedBox(width: AppDimensions.sm),
+                      ShimmerBox(
+                        width: 84,
+                        height: 24,
+                        borderRadius: AppDimensions.radiusXl,
+                      ),
+                    ],
+                  ),
                   SizedBox(height: AppDimensions.md),
-                  ShimmerBox(width: 96, height: 13),
+                  Expanded(
+                    child: ShimmerBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      borderRadius: AppDimensions.radiusMd,
+                    ),
+                  ),
+                  SizedBox(height: AppDimensions.md),
+                  ShimmerBox(width: 104, height: 14),
                   SizedBox(height: AppDimensions.md),
                   ShimmerBox(
                     width: double.infinity,
-                    height: 52,
+                    height: 44,
                     borderRadius: AppDimensions.radiusMd,
                   ),
-                  Spacer(),
-                  ShimmerBox(width: 104, height: 12),
                 ],
               ),
             ),

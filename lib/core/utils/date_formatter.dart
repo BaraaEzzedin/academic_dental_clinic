@@ -39,6 +39,21 @@ class DateFormatter {
     return toMediumDate(date);
   }
 
+  /// Formats a `HH:mm[:ss]` time string as a 12-hour label, e.g.
+  /// "09:00:00" -> "9:00 AM". Returns the raw value if it can't be parsed and
+  /// an empty string when [raw] is null or empty.
+  static String toTimeOfDay(String? raw) {
+    if (raw == null || raw.isEmpty) return '';
+    final parts = raw.split(':');
+    if (parts.length < 2) return raw;
+    final hour = int.tryParse(parts[0]);
+    final minute = int.tryParse(parts[1]);
+    if (hour == null || minute == null) return raw;
+    final period = hour >= 12 ? 'PM' : 'AM';
+    final hour12 = hour % 12 == 0 ? 12 : hour % 12;
+    return '$hour12:${minute.toString().padLeft(2, '0')} $period';
+  }
+
   /// Formats a date as an ISO calendar date (`yyyy-MM-dd`), e.g. "2026-08-09".
   /// Suitable for query parameters.
   static String toIsoDate(DateTime date) {

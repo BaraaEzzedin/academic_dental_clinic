@@ -1,73 +1,79 @@
 import 'package:equatable/equatable.dart';
 
-/// Full detail payload for a single assigned patient, shown on the Assigned
-/// Patient Details screen. It aggregates everything the student needs to review
-/// before submitting a case-acceptance request to the supervisor.
-///
-/// TODO(backend): map this from the real API response once the assigned-patient
-/// details endpoint is ready. The identifying fields ([patientName],
-/// [subjectName], [chiefComplaint], [appointmentDate]) come straight from the
-/// list entity so nothing drifts between the list and this screen.
 class AssignedPatientDetailsEntity extends Equatable {
   const AssignedPatientDetailsEntity({
     required this.id,
+    required this.status,
+    required this.patientId,
     required this.patientName,
-    required this.subjectId,
-    required this.subjectName,
-    required this.age,
+    required this.dateOfBirth,
     required this.gender,
     required this.phoneNumber,
     required this.clinic,
-    required this.appointmentDate,
-    required this.appointmentTime,
+    required this.medicalHistory,
+    required this.currentMedications,
+    required this.allergies,
+    required this.subjectId,
+    required this.subjectName,
     required this.chiefComplaint,
     required this.symptoms,
-    required this.currentMedications,
-    required this.medicalConditions,
-    required this.allergies,
+    required this.assignedStudentName,
+    required this.assignedSupervisorName,
+    required this.appointmentDate,
+    required this.appointmentStartTime,
+    required this.appointmentEndTime,
   });
 
-  final int id;
-  final String patientName;
 
-  /// Identifier of the subject this case is filed under — used to fetch the
-  /// available procedures on the Case Acceptance Request screen.
-  final int subjectId;
-  final String subjectName;
-  final int age;
+  final int id;
+  final String status;
+
+  final int patientId;
+  final String patientName;
+  final DateTime? dateOfBirth;
   final String gender;
   final String phoneNumber;
   final String clinic;
 
-  /// Initial examination appointment.
-  final DateTime appointmentDate;
-  final String appointmentTime;
+  final String medicalHistory;
+  final String currentMedications;
+  final String allergies;
 
-  /// The main complaint — identical to the one shown on the assigned-patient
-  /// list card.
+  final int subjectId;
+  final String subjectName;
+
   final String chiefComplaint;
 
-  final List<String> symptoms;
-  final List<String> currentMedications;
-  final List<String> medicalConditions;
-  final List<String> allergies;
+  final String symptoms;
+
+  final String assignedStudentName;
+  final String assignedSupervisorName;
+
+  final DateTime appointmentDate;
+  final String appointmentStartTime;
+  final String appointmentEndTime;
 
   @override
   List<Object?> get props => [
         id,
+        status,
+        patientId,
         patientName,
-        subjectId,
-        subjectName,
-        age,
+        dateOfBirth,
         gender,
         phoneNumber,
         clinic,
-        appointmentDate,
-        appointmentTime,
+        medicalHistory,
+        currentMedications,
+        allergies,
+        subjectId,
+        subjectName,
         chiefComplaint,
         symptoms,
-        currentMedications,
-        medicalConditions,
-        allergies,
+        assignedStudentName,
+        assignedSupervisorName,
+        appointmentDate,
+        appointmentStartTime,
+        appointmentEndTime,
       ];
 }

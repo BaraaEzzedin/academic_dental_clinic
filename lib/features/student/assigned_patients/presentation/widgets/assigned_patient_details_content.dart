@@ -17,9 +17,8 @@ class AssignedPatientDetailsContent extends StatelessWidget {
     openCaseAcceptanceRequest(
       context,
       CaseAcceptanceRequestArgs(
-        patientId: details.id,
+        patientId: details.patientId,
         patientName: details.patientName,
-        age: details.age,
         subjectId: details.subjectId,
         subjectName: details.subjectName,
         chiefComplaint: details.chiefComplaint,
@@ -46,7 +45,7 @@ class AssignedPatientDetailsContent extends StatelessWidget {
         const SizedBox(height: AppDimensions.lg),
         MedicalInformationCard(
           currentMedications: details.currentMedications,
-          medicalConditions: details.medicalConditions,
+          medicalHistory: details.medicalHistory,
           allergies: details.allergies,
         ),
         const SizedBox(height: AppDimensions.xl),

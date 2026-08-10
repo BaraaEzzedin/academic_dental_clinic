@@ -35,17 +35,35 @@ class AssignedPatientInfoCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        details.patientName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.casePatientName,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              details.patientName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.casePatientName,
+                            ),
+                          ),
+                          const SizedBox(width: AppDimensions.sm),
+                          SubjectBadge(subject: details.subjectName),
+                        ],
                       ),
-                      const SizedBox(height: AppDimensions.sm),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: SubjectBadge(subject: details.subjectName),
-                      ),
+                      if (details.assignedSupervisorName.isNotEmpty) ...[
+                        const SizedBox(height: AppDimensions.md),
+                        _MetaRow(
+                          icon: Icons.badge_outlined,
+                          text: details.assignedSupervisorName,
+                        ),
+                      ],
+                      if (details.clinic.isNotEmpty) ...[
+                        const SizedBox(height: AppDimensions.xs),
+                        _MetaRow(
+                          icon: Icons.meeting_room_outlined,
+                          text: details.clinic,
+                        ),
+                      ],
                       const Padding(
                         padding:
                             EdgeInsets.symmetric(vertical: AppDimensions.md),
@@ -55,39 +73,33 @@ class AssignedPatientInfoCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: CaseInfoField(
-                              label: 'Age',
-                              value: '${details.age}',
+                              label: 'Date of Birth',
+                              value: details.dateOfBirth != null
+                                  ? DateFormatter.toMediumDate(
+                                      details.dateOfBirth!,
+                                    )
+                                  : '—',
                             ),
                           ),
                           Expanded(
                             child: CaseInfoField(
                               label: 'Gender',
-                              value: details.gender,
+                              value: details.gender.isEmpty
+                                  ? '—'
+                                  : details.gender,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: AppDimensions.md),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CaseInfoField(
-                              label: 'Phone',
-                              value: details.phoneNumber,
-                            ),
-                          ),
-                          Expanded(
-                            child: CaseInfoField(
-                              label: 'Clinic',
-                              value: details.clinic,
-                            ),
-                          ),
-                        ],
+                      CaseInfoField(
+                        label: 'Phone',
+                        value: details.phoneNumber,
                       ),
                       const SizedBox(height: AppDimensions.lg),
                       _AppointmentHighlight(
                         date: details.appointmentDate,
-                        time: details.appointmentTime,
+                        time: _appointmentStartTime(details),
                       ),
                     ],
                   ),
@@ -99,6 +111,38 @@ class AssignedPatientInfoCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _MetaRow extends StatelessWidget {
+  const _MetaRow({required this.icon, required this.text});
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: AppColors.primary),
+        const SizedBox(width: AppDimensions.xs),
+        Expanded(
+          child: Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.scheduleMeta.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+String _appointmentStartTime(AssignedPatientDetailsEntity details) {
+  final start = DateFormatter.toTimeOfDay(details.appointmentStartTime);
+  return start.isEmpty ? '—' : start;
 }
 
 class _AppointmentHighlight extends StatelessWidget {

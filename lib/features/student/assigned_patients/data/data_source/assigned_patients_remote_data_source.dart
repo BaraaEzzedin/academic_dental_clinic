@@ -2,10 +2,12 @@ import 'package:dio/dio.dart';
 import '../../../../../core/network/api_client.dart';
 import '../../../../../core/network/api_constants.dart';
 import '../../../../../core/network/network_exception_mapper.dart';
+import '../models/assigned_patient_details_model.dart';
 import '../models/assigned_patient_model.dart';
 
 abstract class AssignedPatientsRemoteDataSource {
   Future<List<AssignedPatientModel>> getAssignedPatients();
+  Future<AssignedPatientDetailsModel> getAssignedPatientDetails(int caseId);
 }
 
 class AssignedPatientsRemoteDataSourceImpl
@@ -25,6 +27,21 @@ class AssignedPatientsRemoteDataSourceImpl
           .map((e) =>
               AssignedPatientModel.fromJson(e as Map<String, dynamic>))
           .toList();
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  @override
+  Future<AssignedPatientDetailsModel> getAssignedPatientDetails(
+    int caseId,
+  ) async {
+    try {
+      final response = await apiClient.get<Map<String, dynamic>>(
+        ApiConstants.assignedCaseDetails(caseId),
+      );
+      final data = response.data?['data'] as Map<String, dynamic>? ?? const {};
+      return AssignedPatientDetailsModel.fromJson(data);
     } on DioException catch (e) {
       throw mapDioException(e);
     }

@@ -49,8 +49,6 @@ class PatientSummaryCard extends StatelessWidget {
                             EdgeInsets.symmetric(vertical: AppDimensions.md),
                         child: Divider(height: 1, color: AppColors.dividerLine),
                       ),
-                      //CaseInfoField(label: 'Age', value: '${args.age}'),
-                      //const SizedBox(height: AppDimensions.lg),
                       _ChiefComplaint(complaint: complaint),
                     ],
                   ),

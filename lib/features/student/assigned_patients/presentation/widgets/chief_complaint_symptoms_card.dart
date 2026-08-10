@@ -12,37 +12,26 @@ class ChiefComplaintSymptomsCard extends StatelessWidget {
   });
 
   final String chiefComplaint;
-  final List<String> symptoms;
+  final String symptoms;
 
   @override
   Widget build(BuildContext context) {
     final complaint = chiefComplaint.trim();
+    final symptomsText = symptoms.trim();
     return ProgressTimelineSection(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SectionTitle('Chief Complaint'),
           const SizedBox(height: AppDimensions.md),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(AppDimensions.md),
-            decoration: BoxDecoration(
-              color: AppColors.caseChipBackground,
-              borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-            ),
-            child: Text(
-              complaint.isEmpty ? 'No chief complaint recorded.' : complaint,
-              style: AppTextStyles.noteMessage.copyWith(
-                color: complaint.isEmpty
-                    ? AppColors.textHint
-                    : AppColors.textPrimary,
-              ),
-            ),
+          _TextBox(
+            text: complaint,
+            emptyMessage: 'No chief complaint recorded.',
           ),
           const SizedBox(height: AppDimensions.lg),
           Text('SYMPTOMS', style: AppTextStyles.caseFieldLabel),
           const SizedBox(height: AppDimensions.md),
-          if (symptoms.isEmpty)
+          if (symptomsText.isEmpty)
             Text(
               'No symptoms recorded.',
               style: AppTextStyles.subtitle.copyWith(
@@ -52,49 +41,34 @@ class ChiefComplaintSymptomsCard extends StatelessWidget {
               ),
             )
           else
-            Wrap(
-              spacing: AppDimensions.sm,
-              runSpacing: AppDimensions.sm,
-              children: [
-                for (final symptom in symptoms) _SymptomChip(label: symptom),
-              ],
-            ),
+            _TextBox(text: symptomsText, emptyMessage: ''),
         ],
       ),
     );
   }
 }
 
-class _SymptomChip extends StatelessWidget {
-  const _SymptomChip({required this.label});
+class _TextBox extends StatelessWidget {
+  const _TextBox({required this.text, required this.emptyMessage});
 
-  final String label;
+  final String text;
+  final String emptyMessage;
 
   @override
   Widget build(BuildContext context) {
+    final isEmpty = text.isEmpty;
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.md,
-        vertical: AppDimensions.sm,
-      ),
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
+        color: AppColors.caseChipBackground,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.fiber_manual_record,
-            size: 7,
-            color: AppColors.primary,
-          ),
-          const SizedBox(width: AppDimensions.sm),
-          Text(
-            label,
-            style: AppTextStyles.scheduleMeta.copyWith(color: AppColors.primary),
-          ),
-        ],
+      child: Text(
+        isEmpty ? emptyMessage : text,
+        style: AppTextStyles.noteMessage.copyWith(
+          color: isEmpty ? AppColors.textHint : AppColors.textPrimary,
+        ),
       ),
     );
   }

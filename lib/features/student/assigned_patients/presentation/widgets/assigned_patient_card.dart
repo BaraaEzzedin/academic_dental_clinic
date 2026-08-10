@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
-import '../../../../../core/widgets/view_all_button.dart';
-import '../../../open_cases/presentation/widgets/subject_chip.dart';
+import '../../../../../core/widgets/view_details_button.dart';
 import '../../domain/entities/assigned_patient_entity.dart';
 import 'appointment_date_label.dart';
 import 'chief_complaint_box.dart';
+import 'subject_badge.dart';
 
 class AssignedPatientCard extends StatelessWidget {
   const AssignedPatientCard({
@@ -16,8 +16,8 @@ class AssignedPatientCard extends StatelessWidget {
   });
 
 
-  static const double width = 268;
-  static const double height = 195;
+  static const double width = 300;
+  static const double height = 230;
 
   final AssignedPatientEntity patient;
   final VoidCallback? onViewDetails;
@@ -44,24 +44,36 @@ class AssignedPatientCard extends StatelessWidget {
                 Container(width: 5, color: AppColors.primary),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppDimensions.md),
+                    padding: const EdgeInsets.all(AppDimensions.lg),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          patient.patientName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.schedulePatientName,
-                        ),
-                        const SizedBox(height: AppDimensions.sm),
-                        SubjectChip(
-                          subject: patient.subjectName,
-                          maxWidth: width,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                patient.patientName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.schedulePatientName,
+                              ),
+                            ),
+                            const SizedBox(width: AppDimensions.sm),
+                            SubjectBadge(
+                              subject: patient.subjectName,
+                              maxWidth: 120,
+                            ),
+                          ],
                         ),
                         const SizedBox(height: AppDimensions.md),
-                        ChiefComplaintBox(text: patient.chiefComplaint),
-                        const SizedBox(height: AppDimensions.md,),
+                        Expanded(
+                          child: ChiefComplaintBox(
+                            text: patient.chiefComplaint,
+                            maxLines: 3,
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.md),
                         Row(
                           children: [
                             Expanded(
@@ -69,13 +81,10 @@ class AssignedPatientCard extends StatelessWidget {
                                 date: patient.appointmentDate,
                               ),
                             ),
-                            const SizedBox(width: AppDimensions.xs),
-                            ViewAllButton(
-                              label: 'View Details',
-                              onPressed: onViewDetails,
-                            ),
                           ],
                         ),
+                        const SizedBox(height: AppDimensions.md),
+                        ViewDetailsButton(onPressed: onViewDetails),
                       ],
                     ),
                   ),
