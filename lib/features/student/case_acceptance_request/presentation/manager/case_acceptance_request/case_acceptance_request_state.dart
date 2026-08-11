@@ -1,66 +1,88 @@
 import 'package:equatable/equatable.dart';
 import '../../../domain/entities/available_procedure_entity.dart';
+import '../../../domain/entities/procedure_request_entity.dart';
+import '../../../domain/entities/subject_config_entity.dart';
+import '../../../domain/entities/subject_question_entity.dart';
 
-enum ProceduresStatus { initial, loading, loaded, empty, error }
+enum ConfigStatus { initial, loading, loaded, error }
 
 enum RequestSubmission { idle, submitting, success, failure }
 
 class CaseAcceptanceRequestState extends Equatable {
   const CaseAcceptanceRequestState({
-    this.proceduresStatus = ProceduresStatus.initial,
-    this.procedures = const [],
-    this.proceduresError,
-    this.selections = const {},
-    this.diagnosis = '',
+    this.configStatus = ConfigStatus.initial,
+    this.config,
+    this.configError,
+    this.requests = const [],
     this.submission = RequestSubmission.idle,
     this.submissionError,
   });
 
-  final ProceduresStatus proceduresStatus;
-  final List<AvailableProcedureEntity> procedures;
-  final String? proceduresError;
+  final ConfigStatus configStatus;
+  final SubjectConfigEntity? config;
+  final String? configError;
 
-  final Map<int, AvailableProcedureEntity> selections;
-  final String diagnosis;
+  /// Locally saved procedure requests (mock state, not yet submitted).
+  final List<ProcedureRequestEntity> requests;
 
   final RequestSubmission submission;
   final String? submissionError;
 
-  bool get isLoadingProcedures =>
-      proceduresStatus == ProceduresStatus.initial ||
-      proceduresStatus == ProceduresStatus.loading;
+  bool get isLoadingConfig =>
+      configStatus == ConfigStatus.initial ||
+      configStatus == ConfigStatus.loading;
 
-  bool get hasProceduresError => proceduresStatus == ProceduresStatus.error;
+  bool get hasConfigError => configStatus == ConfigStatus.error;
 
-  bool get hasSelections => selections.isNotEmpty;
+  bool get requiresDentalChart => config?.requiresDentalChart ?? false;
 
-  bool get isDiagnosisValid => diagnosis.trim().isNotEmpty;
+  List<AvailableProcedureEntity> get procedures =>
+      config?.availableProcedures ?? const [];
+
+  List<SubjectQuestionEntity> get questions =>
+      config?.orderedQuestions ?? const [];
+
+  Set<int> get selectedTeeth => {
+        for (final request in requests)
+          if (request.toothNumber != null) request.toothNumber!,
+      };
+
+  bool get hasRequests => requests.isNotEmpty;
 
   bool get isSubmitting => submission == RequestSubmission.submitting;
 
-  bool get canSubmit => hasSelections && isDiagnosisValid && !isSubmitting;
+  bool get canSubmit => hasRequests && !isSubmitting;
 
-  List<MapEntry<int, AvailableProcedureEntity>> get orderedSelections {
-    final entries = selections.entries.toList()
-      ..sort((a, b) => a.key.compareTo(b.key));
-    return entries;
+
+  List<ProcedureRequestEntity> get orderedRequests {
+    if (!requiresDentalChart) return requests;
+    final list = [...requests]
+      ..sort(
+        (a, b) => (a.toothNumber ?? 0).compareTo(b.toothNumber ?? 0),
+      );
+    return list;
+  }
+
+  ProcedureRequestEntity? requestForTooth(int toothNumber) {
+    for (final request in requests) {
+      if (request.toothNumber == toothNumber) return request;
+    }
+    return null;
   }
 
   CaseAcceptanceRequestState copyWith({
-    ProceduresStatus? proceduresStatus,
-    List<AvailableProcedureEntity>? procedures,
-    String? proceduresError,
-    Map<int, AvailableProcedureEntity>? selections,
-    String? diagnosis,
+    ConfigStatus? configStatus,
+    SubjectConfigEntity? config,
+    String? configError,
+    List<ProcedureRequestEntity>? requests,
     RequestSubmission? submission,
     String? submissionError,
   }) {
     return CaseAcceptanceRequestState(
-      proceduresStatus: proceduresStatus ?? this.proceduresStatus,
-      procedures: procedures ?? this.procedures,
-      proceduresError: proceduresError,
-      selections: selections ?? this.selections,
-      diagnosis: diagnosis ?? this.diagnosis,
+      configStatus: configStatus ?? this.configStatus,
+      config: config ?? this.config,
+      configError: configError,
+      requests: requests ?? this.requests,
       submission: submission ?? this.submission,
       submissionError: submissionError,
     );
@@ -68,11 +90,10 @@ class CaseAcceptanceRequestState extends Equatable {
 
   @override
   List<Object?> get props => [
-        proceduresStatus,
-        procedures,
-        proceduresError,
-        selections,
-        diagnosis,
+        configStatus,
+        config,
+        configError,
+        requests,
         submission,
         submissionError,
       ];

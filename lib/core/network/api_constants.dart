@@ -24,6 +24,11 @@ class ApiConstants {
 
   // Subjects (clinical courses) — student
   static const String mySubjects = '/students/me/subjects';
+  static String subjectProcedures(int subjectId) =>
+      '/subjects/$subjectId/procedures';
+
+  // Case acceptance requests — student
+  static const String caseAcceptanceRequests = '/case-acceptance-requests';
 
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 60);

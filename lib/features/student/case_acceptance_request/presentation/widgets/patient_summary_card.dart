@@ -44,6 +44,20 @@ class PatientSummaryCard extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: SubjectBadge(subject: args.subjectName),
                       ),
+                      if (args.supervisorName.trim().isNotEmpty) ...[
+                        const SizedBox(height: AppDimensions.md),
+                        _MetaRow(
+                          icon: Icons.badge_outlined,
+                          text: args.supervisorName,
+                        ),
+                      ],
+                      if (args.section.trim().isNotEmpty) ...[
+                        const SizedBox(height: AppDimensions.xs),
+                        _MetaRow(
+                          icon: Icons.meeting_room_outlined,
+                          text: args.section,
+                        ),
+                      ],
                       const Padding(
                         padding:
                             EdgeInsets.symmetric(vertical: AppDimensions.md),
@@ -58,6 +72,33 @@ class PatientSummaryCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _MetaRow extends StatelessWidget {
+  const _MetaRow({required this.icon, required this.text});
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: AppColors.primary),
+        const SizedBox(width: AppDimensions.xs),
+        Expanded(
+          child: Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.scheduleMeta.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

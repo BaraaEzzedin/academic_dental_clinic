@@ -8,6 +8,8 @@ class CaseAcceptanceRequestArgs extends Equatable {
     required this.subjectId,
     required this.subjectName,
     required this.chiefComplaint,
+    this.supervisorName = '',
+    this.section = '',
   });
 
   final int patientId;
@@ -16,6 +18,10 @@ class CaseAcceptanceRequestArgs extends Equatable {
   final String subjectName;
   final String chiefComplaint;
 
+  final String supervisorName;
+
+  final String section;
+
   @override
   List<Object?> get props => [
         patientId,
@@ -23,5 +29,7 @@ class CaseAcceptanceRequestArgs extends Equatable {
         subjectId,
         subjectName,
         chiefComplaint,
+        supervisorName,
+        section,
       ];
 }

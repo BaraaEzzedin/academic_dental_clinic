@@ -3,20 +3,22 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../../patient_case/presentation/widgets/progress_timeline_section.dart';
-import '../../domain/entities/available_procedure_entity.dart';
+import '../../domain/entities/procedure_request_entity.dart';
 import 'selected_procedure_card.dart';
 
 class SelectedProceduresSection extends StatelessWidget {
   const SelectedProceduresSection({
     super.key,
-    required this.selections,
+    required this.requests,
+    required this.emptyMessage,
     required this.onEdit,
     required this.onRemove,
   });
 
-  final List<MapEntry<int, AvailableProcedureEntity>> selections;
-  final ValueChanged<int> onEdit;
-  final ValueChanged<int> onRemove;
+  final List<ProcedureRequestEntity> requests;
+  final String emptyMessage;
+  final ValueChanged<ProcedureRequestEntity> onEdit;
+  final ValueChanged<String> onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +28,19 @@ class SelectedProceduresSection extends StatelessWidget {
         Row(
           children: [
             const Expanded(child: SectionTitle('Selected Procedures')),
-            if (selections.isNotEmpty) _CountBadge(count: selections.length),
+            if (requests.isNotEmpty) _CountBadge(count: requests.length),
           ],
         ),
         const SizedBox(height: AppDimensions.md),
-        if (selections.isEmpty)
-          const _NoSelectionMessage()
+        if (requests.isEmpty)
+          _NoSelectionMessage(message: emptyMessage)
         else
-          for (var i = 0; i < selections.length; i++) ...[
+          for (var i = 0; i < requests.length; i++) ...[
             if (i > 0) const SizedBox(height: AppDimensions.sm),
             SelectedProcedureCard(
-              toothNumber: selections[i].key,
-              procedure: selections[i].value,
-              onEdit: () => onEdit(selections[i].key),
-              onRemove: () => onRemove(selections[i].key),
+              request: requests[i],
+              onEdit: () => onEdit(requests[i]),
+              onRemove: () => onRemove(requests[i].localId),
             ),
           ],
       ],
@@ -71,9 +72,10 @@ class _CountBadge extends StatelessWidget {
   }
 }
 
-
 class _NoSelectionMessage extends StatelessWidget {
-  const _NoSelectionMessage();
+  const _NoSelectionMessage({required this.message});
+
+  final String message;
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +94,7 @@ class _NoSelectionMessage extends StatelessWidget {
           const SizedBox(width: AppDimensions.sm),
           Expanded(
             child: Text(
-              'Please select at least one tooth and procedure.',
+              message,
               style: AppTextStyles.subtitle.copyWith(
                 fontSize: 13.5,
                 color: AppColors.error,

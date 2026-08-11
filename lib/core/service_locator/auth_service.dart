@@ -18,7 +18,7 @@ import '../../features/student/assigned_patients/domain/use_cases/get_assigned_c
 import '../../features/student/case_acceptance_request/data/data_source/case_acceptance_request_remote_data_source.dart';
 import '../../features/student/case_acceptance_request/data/repositories/case_acceptance_request_repository_impl.dart';
 import '../../features/student/case_acceptance_request/domain/repositories/case_acceptance_request_repository.dart';
-import '../../features/student/case_acceptance_request/domain/use_cases/get_available_procedures_use_case.dart';
+import '../../features/student/case_acceptance_request/domain/use_cases/get_subject_configuration_use_case.dart';
 import '../../features/student/case_acceptance_request/domain/use_cases/submit_case_acceptance_request_use_case.dart';
 import '../../features/student/clinical_courses/data/data_source/clinical_courses_remote_data_source.dart';
 import '../../features/student/clinical_courses/data/repositories/clinical_courses_repository_impl.dart';
@@ -173,8 +173,8 @@ void configureDependencies() {
   sl.registerFactory<BookAppointmentUseCase>(
     () => BookAppointmentUseCase(sl<AppointmentRepository>()),
   );
-  sl.registerFactory<GetAvailableProceduresUseCase>(
-    () => GetAvailableProceduresUseCase(sl<CaseAcceptanceRequestRepository>()),
+  sl.registerFactory<GetSubjectConfigurationUseCase>(
+    () => GetSubjectConfigurationUseCase(sl<CaseAcceptanceRequestRepository>()),
   );
   sl.registerFactory<SubmitCaseAcceptanceRequestUseCase>(
     () =>

@@ -1,73 +1,86 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/entities/available_procedure_entity.dart';
 import '../../../domain/entities/case_acceptance_request_entity.dart';
-import '../../../domain/entities/tooth_procedure_entity.dart';
-import '../../../domain/use_cases/get_available_procedures_use_case.dart';
+import '../../../domain/entities/procedure_request_entity.dart';
+import '../../../domain/entities/question_answer_entity.dart';
+import '../../../domain/use_cases/get_subject_configuration_use_case.dart';
 import '../../../domain/use_cases/submit_case_acceptance_request_use_case.dart';
 import '../../models/case_acceptance_request_args.dart';
 import 'case_acceptance_request_state.dart';
 
 class CaseAcceptanceRequestCubit extends Cubit<CaseAcceptanceRequestState> {
   CaseAcceptanceRequestCubit({
-    required GetAvailableProceduresUseCase getAvailableProcedures,
+    required GetSubjectConfigurationUseCase getSubjectConfiguration,
     required SubmitCaseAcceptanceRequestUseCase submitAcceptanceRequest,
     required this.args,
-  })  : _getAvailableProcedures = getAvailableProcedures,
+  })  : _getSubjectConfiguration = getSubjectConfiguration,
         _submitAcceptanceRequest = submitAcceptanceRequest,
         super(const CaseAcceptanceRequestState());
 
-  final GetAvailableProceduresUseCase _getAvailableProcedures;
+  final GetSubjectConfigurationUseCase _getSubjectConfiguration;
   final SubmitCaseAcceptanceRequestUseCase _submitAcceptanceRequest;
   final CaseAcceptanceRequestArgs args;
 
-
-  Future<void> loadProcedures({bool force = false}) async {
+  Future<void> loadConfiguration({bool force = false}) async {
     if (!force &&
-        (state.proceduresStatus == ProceduresStatus.loaded ||
-            state.proceduresStatus == ProceduresStatus.loading)) {
+        (state.configStatus == ConfigStatus.loaded ||
+            state.configStatus == ConfigStatus.loading)) {
       return;
     }
-    emit(state.copyWith(proceduresStatus: ProceduresStatus.loading));
-    final result = await _getAvailableProcedures(args.subjectId);
+    emit(state.copyWith(configStatus: ConfigStatus.loading));
+    final result = await _getSubjectConfiguration(args.subjectId);
     result.fold(
       (failure) => emit(
         state.copyWith(
-          proceduresStatus: ProceduresStatus.error,
-          proceduresError: failure.message,
+          configStatus: ConfigStatus.error,
+          configError: failure.message,
         ),
       ),
-      (procedures) => emit(
+      (config) => emit(
         state.copyWith(
-          proceduresStatus: procedures.isEmpty
-              ? ProceduresStatus.empty
-              : ProceduresStatus.loaded,
-          procedures: procedures,
+          configStatus: ConfigStatus.loaded,
+          config: config,
         ),
       ),
     );
   }
 
 
-  void assignProcedure(int toothNumber, AvailableProcedureEntity procedure) {
+  void saveProcedureRequest({
+    int? toothNumber,
+    String? existingId,
+    required AvailableProcedureEntity procedure,
+    required List<QuestionAnswerEntity> answers,
+    required String notes,
+  }) {
+    final localId = existingId ??
+        (toothNumber != null ? 'tooth-$toothNumber' : _generateLocalId());
+
+    final request = ProcedureRequestEntity(
+      localId: localId,
+      toothNumber: toothNumber,
+      procedureId: procedure.id,
+      procedureName: procedure.name,
+      notes: notes.trim(),
+      answers: answers,
+    );
+
+    final updated = [...state.requests];
+    final index = updated.indexWhere((r) => r.localId == localId);
+    if (index >= 0) {
+      updated[index] = request;
+    } else {
+      updated.add(request);
+    }
+    emit(state.copyWith(requests: updated));
+  }
+
+  void removeRequest(String localId) {
+    if (!state.requests.any((r) => r.localId == localId)) return;
     final updated =
-        Map<int, AvailableProcedureEntity>.from(state.selections)
-          ..[toothNumber] = procedure;
-    emit(state.copyWith(selections: updated));
+        state.requests.where((r) => r.localId != localId).toList();
+    emit(state.copyWith(requests: updated));
   }
-
-
-  void removeSelection(int toothNumber) {
-    if (!state.selections.containsKey(toothNumber)) return;
-    final updated =
-        Map<int, AvailableProcedureEntity>.from(state.selections)
-          ..remove(toothNumber);
-    emit(state.copyWith(selections: updated));
-  }
-
-  void diagnosisChanged(String value) {
-    emit(state.copyWith(diagnosis: value));
-  }
-
 
   Future<void> submit() async {
     if (!state.canSubmit) return;
@@ -76,15 +89,7 @@ class CaseAcceptanceRequestCubit extends Cubit<CaseAcceptanceRequestState> {
     final request = CaseAcceptanceRequestEntity(
       patientId: args.patientId,
       subjectId: args.subjectId,
-      diagnosis: state.diagnosis.trim(),
-      selections: [
-        for (final entry in state.orderedSelections)
-          ToothProcedureEntity(
-            toothNumber: entry.key,
-            procedureId: entry.value.id,
-            procedureName: entry.value.name,
-          ),
-      ],
+      procedureRequests: state.orderedRequests,
     );
 
     final result = await _submitAcceptanceRequest(request);
@@ -98,4 +103,7 @@ class CaseAcceptanceRequestCubit extends Cubit<CaseAcceptanceRequestState> {
       (_) => emit(state.copyWith(submission: RequestSubmission.success)),
     );
   }
+
+  String _generateLocalId() =>
+      DateTime.now().microsecondsSinceEpoch.toString();
 }

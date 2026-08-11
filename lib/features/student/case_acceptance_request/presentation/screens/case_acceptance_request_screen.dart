@@ -6,7 +6,7 @@ import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../../home/presentation/screens/main_screen.dart';
 import '../../../patient_case/presentation/widgets/case_details_top_bar.dart';
-import '../../domain/use_cases/get_available_procedures_use_case.dart';
+import '../../domain/use_cases/get_subject_configuration_use_case.dart';
 import '../../domain/use_cases/submit_case_acceptance_request_use_case.dart';
 import '../manager/case_acceptance_request/case_acceptance_request_cubit.dart';
 import '../manager/case_acceptance_request/case_acceptance_request_state.dart';
@@ -22,10 +22,10 @@ class CaseAcceptanceRequestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<CaseAcceptanceRequestCubit>(
       create: (_) => CaseAcceptanceRequestCubit(
-        getAvailableProcedures: sl<GetAvailableProceduresUseCase>(),
+        getSubjectConfiguration: sl<GetSubjectConfigurationUseCase>(),
         submitAcceptanceRequest: sl<SubmitCaseAcceptanceRequestUseCase>(),
         args: args,
-      ),
+      )..loadConfiguration(),
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(

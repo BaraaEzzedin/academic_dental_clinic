@@ -22,6 +22,8 @@ class AssignedPatientDetailsContent extends StatelessWidget {
         subjectId: details.subjectId,
         subjectName: details.subjectName,
         chiefComplaint: details.chiefComplaint,
+        supervisorName: details.assignedSupervisorName,
+        section: details.clinic,
       ),
     );
   }
