@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 
 class CaseAcceptanceRequestArgs extends Equatable {
   const CaseAcceptanceRequestArgs({
+    required this.clinicalCaseId,
     required this.patientId,
     required this.patientName,
     required this.subjectId,
@@ -12,6 +13,8 @@ class CaseAcceptanceRequestArgs extends Equatable {
     this.section = '',
   });
 
+  /// Clinical case this request is submitted against (backend `clinicalCaseId`).
+  final int clinicalCaseId;
   final int patientId;
   final String patientName;
   final int subjectId;
@@ -24,6 +27,7 @@ class CaseAcceptanceRequestArgs extends Equatable {
 
   @override
   List<Object?> get props => [
+        clinicalCaseId,
         patientId,
         patientName,
         subjectId,

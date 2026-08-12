@@ -1,26 +1,16 @@
 import 'package:equatable/equatable.dart';
 import 'procedure_request_entity.dart';
 
+/// Payload submitted to the supervisor: the planned procedures for a case.
 class CaseAcceptanceRequestEntity extends Equatable {
   const CaseAcceptanceRequestEntity({
-    required this.patientId,
-    required this.subjectId,
-    required this.procedureRequests,
-    this.media = const [],
+    required this.clinicalCaseId,
+    required this.plannedProcedures,
   });
 
-  final int patientId;
-  final int subjectId;
-  final List<ProcedureRequestEntity> procedureRequests;
-
-  /// Media belongs to the whole request (not to individual procedures).
-  final List<String> media;
+  final int clinicalCaseId;
+  final List<ProcedureRequestEntity> plannedProcedures;
 
   @override
-  List<Object?> get props => [
-        patientId,
-        subjectId,
-        procedureRequests,
-        media,
-      ];
+  List<Object?> get props => [clinicalCaseId, plannedProcedures];
 }

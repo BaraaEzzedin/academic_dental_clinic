@@ -17,6 +17,7 @@ class AssignedPatientDetailsContent extends StatelessWidget {
     openCaseAcceptanceRequest(
       context,
       CaseAcceptanceRequestArgs(
+        clinicalCaseId: details.id,
         patientId: details.patientId,
         patientName: details.patientName,
         subjectId: details.subjectId,

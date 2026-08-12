@@ -126,11 +126,10 @@ class _LoadedContent extends StatelessWidget {
           buildWhen: (p, c) =>
               p.canSubmit != c.canSubmit || p.submission != c.submission,
           builder: (context, state) => AppPrimaryButton(
-            label: state.isSubmitting
-                ? 'Submitting…'
-                : 'Submit Acceptance Request',
+            label: state.isSubmitting ? 'Submitting…' : 'Submit Request',
+            isLoading: state.isSubmitting,
             onPressed: state.canSubmit ? cubit.submit : null,
-            trailingIcon: state.isSubmitting ? null : Icons.send_rounded,
+            trailingIcon: Icons.send_rounded,
           ),
         ),
       ],

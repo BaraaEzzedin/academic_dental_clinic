@@ -28,7 +28,7 @@ class ApiConstants {
       '/subjects/$subjectId/procedures';
 
   // Case acceptance requests — student
-  static const String caseAcceptanceRequests = '/case-acceptance-requests';
+  static const String diagnosisSubmission = '/diagnosis-submission';
 
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 60);

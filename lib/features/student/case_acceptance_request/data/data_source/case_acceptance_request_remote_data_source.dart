@@ -34,16 +34,13 @@ class CaseAcceptanceRequestRemoteDataSourceImpl
   Future<void> submitAcceptanceRequest(
     CaseAcceptanceRequestModel request,
   ) async {
-    // TODO(backend): replace the mock below with the real request once the
-    // acceptance-request endpoint is finalised:
-    //
-    //   await apiClient.post<Map<String, dynamic>>(
-    //     ApiConstants.caseAcceptanceRequests,
-    //     data: request.toJson(),
-    //   );
-    //
-    // Wrap in `try/on DioException` and rethrow via `mapDioException`.
-    // `request.toJson()` already emits the per-type answer payload.
-    await Future<void>.delayed(const Duration(milliseconds: 900));
+    try {
+      await apiClient.post<Map<String, dynamic>>(
+        ApiConstants.diagnosisSubmission,
+        data: request.toJson(),
+      );
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
   }
 }

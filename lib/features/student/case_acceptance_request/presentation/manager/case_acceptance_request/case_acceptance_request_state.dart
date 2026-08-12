@@ -51,7 +51,11 @@ class CaseAcceptanceRequestState extends Equatable {
 
   bool get isSubmitting => submission == RequestSubmission.submitting;
 
-  bool get canSubmit => hasRequests && !isSubmitting;
+  /// Dental-chart subjects require every planned procedure to have a tooth.
+  bool get _teethAssigned =>
+      !requiresDentalChart || requests.every((r) => r.toothNumber != null);
+
+  bool get canSubmit => hasRequests && _teethAssigned && !isSubmitting;
 
 
   List<ProcedureRequestEntity> get orderedRequests {

@@ -64,7 +64,7 @@ class CaseAcceptanceRequestScreen extends StatelessWidget {
       case RequestSubmission.success:
         _showSnack(
           context,
-          message: 'Acceptance request sent to your supervisor.',
+          message: 'Request submitted successfully.',
           icon: Icons.check_circle_rounded,
           background: AppColors.success,
         );
@@ -76,7 +76,7 @@ class CaseAcceptanceRequestScreen extends StatelessWidget {
         _showSnack(
           context,
           message: state.submissionError ??
-              'Could not send the request. Please try again.',
+              'Unable to submit request. Please try again.',
           icon: Icons.error_outline_rounded,
           background: AppColors.error,
         );

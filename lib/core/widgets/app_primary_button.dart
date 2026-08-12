@@ -10,11 +10,15 @@ class AppPrimaryButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.trailingIcon,
+    this.isLoading = false,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final IconData? trailingIcon;
+
+  /// When true the button is disabled and shows a loading indicator.
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,7 @@ class AppPrimaryButton extends StatelessWidget {
       width: double.infinity,
       height: AppDimensions.buttonHeight,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
@@ -35,8 +39,19 @@ class AppPrimaryButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            if (isLoading) ...[
+              const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+                ),
+              ),
+              const SizedBox(width: AppDimensions.sm),
+            ],
             Text(label, style: AppTextStyles.button),
-            if (trailingIcon != null) ...[
+            if (!isLoading && trailingIcon != null) ...[
               const SizedBox(width: AppDimensions.sm),
               Icon(
                 trailingIcon,

@@ -1,58 +1,75 @@
 import '../../domain/entities/case_acceptance_request_entity.dart';
+import '../../domain/entities/procedure_request_entity.dart';
 import '../../domain/entities/question_answer_entity.dart';
 import '../../domain/entities/question_type.dart';
 
 class CaseAcceptanceRequestModel extends CaseAcceptanceRequestEntity {
   const CaseAcceptanceRequestModel({
-    required super.patientId,
-    required super.subjectId,
-    required super.procedureRequests,
-    super.media,
+    required super.clinicalCaseId,
+    required super.plannedProcedures,
   });
 
   factory CaseAcceptanceRequestModel.fromEntity(
     CaseAcceptanceRequestEntity entity,
   ) {
     return CaseAcceptanceRequestModel(
-      patientId: entity.patientId,
-      subjectId: entity.subjectId,
-      procedureRequests: entity.procedureRequests,
-      media: entity.media,
+      clinicalCaseId: entity.clinicalCaseId,
+      plannedProcedures: entity.plannedProcedures,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'patientId': patientId,
-      'subjectId': subjectId,
-      'media': media,
-      'procedureRequests': [
-        for (final request in procedureRequests)
-          {
-            // `null` for subjects that do not require a dental chart.
-            'toothNumber': request.toothNumber,
-            'procedureId': request.procedureId,
-            'notes': request.notes,
-            'answers': [
-              for (final answer in request.answers) _answerToJson(answer),
-            ],
-          },
+      'clinicalCaseId': clinicalCaseId,
+      'plannedProcedures': [
+        for (final procedure in plannedProcedures) _procedureToJson(procedure),
       ],
     };
   }
 
-  /// Serializes an answer to the shape the backend expects for its type.
+  static Map<String, dynamic> _procedureToJson(ProcedureRequestEntity p) {
+    return {
+      'subjectProcedureId': p.procedureId,
+      // `null` for subjects that do not require a dental chart.
+      'toothNumber': p.toothNumber,
+      'answers': [
+        for (final answer in p.answers) _answerToJson(answer),
+      ],
+      // Notes are optional; omit the key entirely when empty.
+      if (p.notes.trim().isNotEmpty) 'notes': p.notes.trim(),
+    };
+  }
+
+  /// Serializes an answer to the shape the backend expects for its type:
+  /// direct string `answer` for boolean/number, `optionIds` for choices.
   static Map<String, dynamic> _answerToJson(QuestionAnswerEntity answer) {
     switch (answer.type) {
       case QuestionType.boolean:
-        return {'questionId': answer.questionId, 'value': answer.boolValue};
+        return {
+          'questionId': answer.questionId,
+          'answer': (answer.boolValue ?? false).toString(),
+        };
       case QuestionType.number:
-        return {'questionId': answer.questionId, 'value': answer.numberValue};
+        return {
+          'questionId': answer.questionId,
+          'answer': _numberToString(answer.numberValue),
+        };
       case QuestionType.singleChoice:
       case QuestionType.multipleChoice:
-        return {'questionId': answer.questionId, 'optionIds': answer.optionIds};
+        return {
+          'questionId': answer.questionId,
+          'optionIds': answer.optionIds,
+        };
       case QuestionType.unknown:
         return {'questionId': answer.questionId};
     }
+  }
+
+  static String _numberToString(num? value) {
+    if (value == null) return '';
+    if (value is int || value == value.roundToDouble()) {
+      return value.toInt().toString();
+    }
+    return value.toString();
   }
 }

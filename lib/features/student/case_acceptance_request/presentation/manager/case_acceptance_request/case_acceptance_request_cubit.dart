@@ -87,9 +87,8 @@ class CaseAcceptanceRequestCubit extends Cubit<CaseAcceptanceRequestState> {
     emit(state.copyWith(submission: RequestSubmission.submitting));
 
     final request = CaseAcceptanceRequestEntity(
-      patientId: args.patientId,
-      subjectId: args.subjectId,
-      procedureRequests: state.orderedRequests,
+      clinicalCaseId: args.clinicalCaseId,
+      plannedProcedures: state.orderedRequests,
     );
 
     final result = await _submitAcceptanceRequest(request);
