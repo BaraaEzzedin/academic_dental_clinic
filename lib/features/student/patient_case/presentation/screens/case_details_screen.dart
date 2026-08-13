@@ -62,7 +62,10 @@ class CaseDetailsScreen extends StatelessWidget {
                             context.read<CaseDetailsCubit>().load(caseId),
                       );
                     }
-                    return CaseDetailsBody(details: state.details!);
+                    return CaseDetailsBody(
+                      details: state.details!,
+                      caseId: caseId,
+                    );
                   },
                 ),
               ),
@@ -75,9 +78,14 @@ class CaseDetailsScreen extends StatelessWidget {
 }
 
 class CaseDetailsBody extends StatelessWidget {
-  const CaseDetailsBody({super.key, required this.details});
+  const CaseDetailsBody({
+    super.key,
+    required this.details,
+    required this.caseId,
+  });
 
   final CaseDetailsEntity details;
+  final int caseId;
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +125,12 @@ class CaseDetailsBody extends StatelessWidget {
           const ApprovalPendingCard(),
         ],
         const SizedBox(height: AppDimensions.lg),
-        DiagnosticMediaCard(media: details.media),
+        DiagnosticMediaCard(
+          media: details.media,
+          caseId: caseId,
+          // Uploads are allowed only while the case is in treatment.
+          canUpload: canEdit,
+        ),
         if (!isPending) ...[
           const SizedBox(height: AppDimensions.lg),
           ProgressTimelineCard(

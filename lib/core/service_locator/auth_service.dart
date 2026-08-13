@@ -24,6 +24,7 @@ import '../../features/student/patient_case/data/data_source/case_details_remote
 import '../../features/student/patient_case/data/repositories/case_details_repository_impl.dart';
 import '../../features/student/patient_case/domain/repositories/case_details_repository.dart';
 import '../../features/student/patient_case/domain/use_cases/get_case_details_use_case.dart';
+import '../../features/student/patient_case/domain/use_cases/upload_case_media_use_case.dart';
 import '../../features/student/clinical_courses/data/data_source/clinical_courses_remote_data_source.dart';
 import '../../features/student/clinical_courses/data/repositories/clinical_courses_repository_impl.dart';
 import '../../features/student/clinical_courses/domain/repositories/clinical_courses_repository.dart';
@@ -200,5 +201,8 @@ void configureDependencies() {
   );
   sl.registerFactory<GetCaseDetailsUseCase>(
     () => GetCaseDetailsUseCase(sl<CaseDetailsRepository>()),
+  );
+  sl.registerFactory<UploadCaseMediaUseCase>(
+    () => UploadCaseMediaUseCase(sl<CaseDetailsRepository>()),
   );
 }
