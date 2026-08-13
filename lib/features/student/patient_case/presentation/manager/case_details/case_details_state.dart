@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../models/case_details.dart';
+import '../../../domain/entities/case_details_entity.dart';
 
 enum CaseDetailsStatus { initial, loading, loaded, error }
 
@@ -11,22 +11,24 @@ class CaseDetailsState extends Equatable {
   });
 
   final CaseDetailsStatus status;
-  final CaseDetails? details;
+  final CaseDetailsEntity? details;
   final String? errorMessage;
 
   bool get isLoading =>
       status == CaseDetailsStatus.initial ||
       status == CaseDetailsStatus.loading;
 
+  bool get hasError => status == CaseDetailsStatus.error;
+
   CaseDetailsState copyWith({
     CaseDetailsStatus? status,
-    CaseDetails? details,
+    CaseDetailsEntity? details,
     String? errorMessage,
   }) {
     return CaseDetailsState(
       status: status ?? this.status,
       details: details ?? this.details,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: errorMessage,
     );
   }
 

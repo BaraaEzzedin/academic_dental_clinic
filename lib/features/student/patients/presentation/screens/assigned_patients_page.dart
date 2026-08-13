@@ -21,7 +21,7 @@ class AssignedPatientsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PatientFilterCubit>(
-      create: (_) => PatientFilterCubit(sl<GetAssignedPatientsUseCase>()),
+      create: (_) => PatientFilterCubit(sl<GetMyPatientsUseCase>()),
       child: BlocListener<BottomNavCubit, BottomNavState>(
         listenWhen: (previous, current) =>
             current.tab == NavTab.patients && previous.tab != current.tab,
@@ -75,8 +75,7 @@ class AssignedPatientsPage extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute<void>(
                               builder: (_) => CaseDetailsScreen(
-                                patientId: patient.id.toString(),
-                                status: patient.status,
+                                caseId: patient.id,
                               ),
                             ),
                           );

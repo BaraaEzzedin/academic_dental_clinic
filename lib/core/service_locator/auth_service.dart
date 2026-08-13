@@ -20,6 +20,10 @@ import '../../features/student/case_acceptance_request/data/repositories/case_ac
 import '../../features/student/case_acceptance_request/domain/repositories/case_acceptance_request_repository.dart';
 import '../../features/student/case_acceptance_request/domain/use_cases/get_subject_configuration_use_case.dart';
 import '../../features/student/case_acceptance_request/domain/use_cases/submit_case_acceptance_request_use_case.dart';
+import '../../features/student/patient_case/data/data_source/case_details_remote_data_source.dart';
+import '../../features/student/patient_case/data/repositories/case_details_repository_impl.dart';
+import '../../features/student/patient_case/domain/repositories/case_details_repository.dart';
+import '../../features/student/patient_case/domain/use_cases/get_case_details_use_case.dart';
 import '../../features/student/clinical_courses/data/data_source/clinical_courses_remote_data_source.dart';
 import '../../features/student/clinical_courses/data/repositories/clinical_courses_repository_impl.dart';
 import '../../features/student/clinical_courses/domain/repositories/clinical_courses_repository.dart';
@@ -94,6 +98,9 @@ void configureDependencies() {
   sl.registerLazySingleton<AssignedPatientsRemoteDataSource>(
     () => AssignedPatientsRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<CaseDetailsRemoteDataSource>(
+    () => CaseDetailsRemoteDataSourceImpl(sl<ApiClient>()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<StaffAuthRepository>(
@@ -141,6 +148,11 @@ void configureDependencies() {
       sl<AssignedPatientsRemoteDataSource>(),
     ),
   );
+  sl.registerLazySingleton<CaseDetailsRepository>(
+    () => CaseDetailsRepositoryImpl(
+      sl<CaseDetailsRemoteDataSource>(),
+    ),
+  );
 
   // ---------- Use cases ----------
   sl.registerFactory<StaffLoginUseCase>(
@@ -152,8 +164,8 @@ void configureDependencies() {
   sl.registerFactory<VerifyOtpUseCase>(
     () => VerifyOtpUseCase(sl<PatientAuthRepository>()),
   );
-  sl.registerFactory<GetAssignedPatientsUseCase>(
-    () => GetAssignedPatientsUseCase(sl<PatientsRepository>()),
+  sl.registerFactory<GetMyPatientsUseCase>(
+    () => GetMyPatientsUseCase(sl<PatientsRepository>()),
   );
   sl.registerFactory<GetTodayAppointmentsUseCase>(
     () => GetTodayAppointmentsUseCase(sl<TodayAppointmentsRepository>()),
@@ -185,5 +197,8 @@ void configureDependencies() {
   );
   sl.registerFactory<GetAssignedCaseDetailsUseCase>(
     () => GetAssignedCaseDetailsUseCase(sl<AssignedPatientsRepository>()),
+  );
+  sl.registerFactory<GetCaseDetailsUseCase>(
+    () => GetCaseDetailsUseCase(sl<CaseDetailsRepository>()),
   );
 }

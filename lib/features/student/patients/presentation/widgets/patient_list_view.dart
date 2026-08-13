@@ -13,8 +13,8 @@ class PatientListView extends StatelessWidget {
     this.onViewDetails,
   });
 
-  final List<AssignedPatientEntity> patients;
-  final void Function(AssignedPatientEntity patient)? onViewDetails;
+  final List<MyPatientEntity> patients;
+  final void Function(MyPatientEntity patient)? onViewDetails;
 
   @override
   Widget build(BuildContext context) {

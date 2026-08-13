@@ -12,10 +12,10 @@ class PatientsRepositoryImpl implements PatientsRepository {
   final PatientsRemoteDataSource remote;
 
   @override
-  Future<Either<Failure, List<AssignedPatientEntity>>>
+  Future<Either<Failure, List<MyPatientEntity>>>
       getAssignedPatients() async {
     try {
-      final result = await remote.getAssignedPatients();
+      final result = await remote.getMyPatients();
       return Right(result);
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));

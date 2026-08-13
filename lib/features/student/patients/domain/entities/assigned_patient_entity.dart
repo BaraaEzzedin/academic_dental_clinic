@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 import '../../../../../core/enums/patient_status.dart';
 
 
-class AssignedPatientEntity extends Equatable {
-  const AssignedPatientEntity({
+class MyPatientEntity extends Equatable {
+  const MyPatientEntity({
     required this.id,
     required this.patientName,
     required this.subject,

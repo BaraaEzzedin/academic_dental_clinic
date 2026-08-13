@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/enums/patient_status.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../../../../core/widgets/status_badge.dart';
-import '../models/case_details.dart';
+import '../../domain/entities/case_info_entity.dart';
 import 'case_info_field.dart';
 
 class PatientCaseHeaderCard extends StatelessWidget {
-  const PatientCaseHeaderCard({super.key, required this.details});
+  const PatientCaseHeaderCard({
+    super.key,
+    required this.caseInfo,
+    required this.status,
+  });
 
-  final CaseDetails details;
+  final CaseInfoEntity caseInfo;
+  final PatientStatus status;
 
   @override
   Widget build(BuildContext context) {
-    final accent = details.status.color;
+    final accent = status.color;
     return Material(
       color: AppColors.white,
       borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
@@ -42,21 +48,21 @@ class PatientCaseHeaderCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  details.patientName,
+                                  caseInfo.patientName,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: AppTextStyles.casePatientName,
                                 ),
                                 const SizedBox(height: AppDimensions.xs),
                                 Text(
-                                  'ID: ${details.patientId}',
+                                  'ID: ${caseInfo.patientId}',
                                   style: AppTextStyles.casePatientId,
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(width: AppDimensions.sm),
-                          StatusBadge(status: details.status),
+                          StatusBadge(status: status),
                         ],
                       ),
                       const Padding(
@@ -69,13 +75,13 @@ class PatientCaseHeaderCard extends StatelessWidget {
                           Expanded(
                             child: CaseInfoField(
                               label: 'Age',
-                              value: '${details.age}',
+                              value: '${caseInfo.patientAge}',
                             ),
                           ),
                           Expanded(
                             child: CaseInfoField(
                               label: 'Next Session',
-                              value: details.nextSession,
+                              value: caseInfo.nextSession,
                             ),
                           ),
                         ],
@@ -86,13 +92,13 @@ class PatientCaseHeaderCard extends StatelessWidget {
                           Expanded(
                             child: CaseInfoField(
                               label: 'Subject',
-                              value: details.subject,
+                              value: caseInfo.subjectName,
                             ),
                           ),
                           Expanded(
                             child: CaseInfoField(
                               label: 'Supervisor',
-                              value: details.supervisor,
+                              value: caseInfo.supervisor,
                             ),
                           ),
                         ],

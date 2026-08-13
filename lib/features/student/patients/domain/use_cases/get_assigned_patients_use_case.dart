@@ -4,14 +4,14 @@ import '../../../../../core/error/failures.dart';
 import '../entities/assigned_patient_entity.dart';
 import '../repositories/patients_repository.dart';
 
-class GetAssignedPatientsUseCase
-    extends UseCaseNoParam<List<AssignedPatientEntity>> {
-  GetAssignedPatientsUseCase(this.patientsRepo);
+class GetMyPatientsUseCase
+    extends UseCaseNoParam<List<MyPatientEntity>> {
+  GetMyPatientsUseCase(this.patientsRepo);
 
   final PatientsRepository patientsRepo;
 
   @override
-  Future<Either<Failure, List<AssignedPatientEntity>>> call() {
+  Future<Either<Failure, List<MyPatientEntity>>> call() {
     return patientsRepo.getAssignedPatients();
   }
 }

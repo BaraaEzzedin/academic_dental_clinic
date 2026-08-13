@@ -33,7 +33,7 @@ class ClinicalCourseItem extends StatelessWidget {
             children: [
               _Avatar(icon: clinicalCourseIcon(course)),
               const SizedBox(height: AppDimensions.sm),
-              Text(course.name,textAlign:TextAlign.center,maxLines: 2 , overflow: TextOverflow.ellipsis , style: AppTextStyles.clinicalCourseName,
+              Text(course.displayName,textAlign:TextAlign.center,maxLines: 2 , overflow: TextOverflow.ellipsis , style: AppTextStyles.clinicalCourseName,
               ),
             ],
           ),

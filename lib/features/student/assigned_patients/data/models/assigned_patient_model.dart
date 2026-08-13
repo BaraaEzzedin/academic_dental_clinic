@@ -14,7 +14,8 @@ class AssignedPatientModel extends AssignedPatientEntity {
     return AssignedPatientModel(
       id: (json['id'] as num).toInt(),
       patientName: json['patient'] as String? ?? '',
-      subjectName: json['subject'] as String? ?? '',
+      subjectName:
+          (json['subject'] as Map<String, dynamic>?)?['name'] as String? ?? '',
       chiefComplaint: json['chiefComplaint'] as String? ?? '',
       appointmentDate:
           DateTime.parse(nextAppointment['appointmentDate'] as String),

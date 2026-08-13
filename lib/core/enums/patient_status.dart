@@ -12,4 +12,9 @@ extension PatientStatusX on PatientStatus {
         PatientStatus.finalReview => 'Final Review',
         PatientStatus.completed => 'Completed',
       };
+
+  /// Whether treatment actions (add session, upload media, edit progress,
+  /// add materials, mark completed) are allowed. Only while in treatment;
+  /// pending review and completed cases are read-only.
+  bool get canEditTreatment => this == PatientStatus.inTreatment;
 }

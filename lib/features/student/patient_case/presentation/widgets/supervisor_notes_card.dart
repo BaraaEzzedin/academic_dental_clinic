@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
-import '../models/supervisor_note.dart';
+import '../../domain/entities/supervisor_note_entity.dart';
 import 'progress_timeline_section.dart';
 import 'supervisor_note_item.dart';
 
 class SupervisorNotesCard extends StatelessWidget {
   const SupervisorNotesCard({super.key, required this.notes});
 
-  final List<SupervisorNote> notes;
+  final List<SupervisorNoteEntity> notes;
 
   @override
   Widget build(BuildContext context) {

@@ -14,20 +14,20 @@ class PatientFilterState extends Equatable {
 
   final PatientsStatus status;
   final PatientStatusFilter selectedFilter;
-  final List<AssignedPatientEntity> patients;
+  final List<MyPatientEntity> patients;
   final String? errorMessage;
 
   bool get isLoading => status == PatientsStatus.loading;
   bool get hasError => status == PatientsStatus.error;
 
   /// Patients matching the currently selected filter.
-  List<AssignedPatientEntity> get filteredPatients =>
+  List<MyPatientEntity> get filteredPatients =>
       patients.where((patient) => selectedFilter.matches(patient.status)).toList();
 
   PatientFilterState copyWith({
     PatientsStatus? status,
     PatientStatusFilter? selectedFilter,
-    List<AssignedPatientEntity>? patients,
+    List<MyPatientEntity>? patients,
     String? errorMessage,
   }) {
     return PatientFilterState(

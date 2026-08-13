@@ -16,6 +16,7 @@ class ApiConstants {
   static String openCaseDetails(int id) => '$openCases/$id';
   static const String assignedCases = '/clinical-cases/assigned';
   static String assignedCaseDetails(int id) => '/clinical-cases/my/$id/assigned';
+  static String myCaseDetails(int id) => '/clinical-cases/my/$id';
 
   // Clinical appointments — student
   static const String clinicalAppointments = '/clinical-appointments';

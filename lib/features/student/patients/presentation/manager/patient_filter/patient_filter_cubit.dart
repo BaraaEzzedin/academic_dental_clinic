@@ -8,7 +8,7 @@ class PatientFilterCubit extends Cubit<PatientFilterState> {
   PatientFilterCubit(this._getAssignedPatients)
       : super(const PatientFilterState());
 
-  final GetAssignedPatientsUseCase _getAssignedPatients;
+  final GetMyPatientsUseCase _getAssignedPatients;
 
   Future<void> loadPatients() async {
     emit(state.copyWith(status: PatientsStatus.loading));

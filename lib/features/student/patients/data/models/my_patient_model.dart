@@ -1,8 +1,8 @@
 import '../../domain/entities/assigned_patient_entity.dart';
 import '../mapper/patient_status_mapper.dart';
 
-class AssignedPatientModel extends AssignedPatientEntity {
-  const AssignedPatientModel({
+class MyPatientModel extends MyPatientEntity {
+  const MyPatientModel({
     required super.id,
     required super.patientName,
     required super.subject,
@@ -10,11 +10,11 @@ class AssignedPatientModel extends AssignedPatientEntity {
     required super.status,
   });
 
-  factory AssignedPatientModel.fromJson(Map<String, dynamic> json) {
-    return AssignedPatientModel(
+  factory MyPatientModel.fromJson(Map<String, dynamic> json) {
+    return MyPatientModel(
       id: (json['id'] as num).toInt(),
       patientName: json['patientName'] as String,
-      subject: json['subjectName'] as String,
+      subject: (json['subject'] as Map<String, dynamic>?)?['name'] as String? ?? '',
       sessionNumber: switch (json['sessionCount']) {
         final num n => n.toInt(),
         _ => null,

@@ -2,19 +2,34 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
+import '../../domain/entities/planned_procedure_entity.dart';
 import '../models/tooth.dart';
+import '../utils/procedure_status.dart';
 import '../widgets/case_details_top_bar.dart';
 import '../widgets/dental_chart/dental_chart.dart';
 import '../widgets/dental_chart/dental_chart_legend.dart';
-import '../widgets/dental_chart/tooth_detail_sheet.dart';
+import '../widgets/dental_chart/planned_procedure_sheet.dart';
+import '../widgets/procedure_answers_view.dart';
+import '../widgets/progress_timeline_section.dart';
 
 class DentalChartScreen extends StatelessWidget {
-  const DentalChartScreen({super.key, required this.records});
+  const DentalChartScreen({super.key, required this.procedures});
 
-  final Map<int, ToothRecord> records;
+  final List<PlannedProcedureEntity> procedures;
 
   @override
   Widget build(BuildContext context) {
+    // Planned procedures that target a real tooth, keyed by FDI number.
+    final planned = <int, PlannedProcedureEntity>{
+      for (final p in procedures)
+        if (p.tooth != null) p.tooth!: p,
+    };
+    final selected = planned.keys.toSet();
+    final statusOverrides = <int, ToothStatus>{
+      for (final entry in planned.entries)
+        entry.key: procedureToothStatus(entry.value.rawStatus),
+    };
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
@@ -38,6 +53,7 @@ class DentalChartScreen extends StatelessWidget {
                   AppDimensions.xl,
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       padding: const EdgeInsets.fromLTRB(
@@ -55,12 +71,17 @@ class DentalChartScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           DentalChart(
-                            records: records,
-                            onToothTap: (fdi) => showToothDetailSheet(
-                              context,
-                              fdi: fdi,
-                              record: records[fdi],
-                            ),
+                            selected: selected,
+                            statusOverrides: statusOverrides,
+                            onToothTap: (fdi) {
+                              final procedure = planned[fdi];
+                              if (procedure != null) {
+                                showPlannedProcedureSheet(
+                                  context,
+                                  procedure: procedure,
+                                );
+                              }
+                            },
                           ),
                           const SizedBox(height: AppDimensions.lg),
                           const DentalChartLegend(),
@@ -68,16 +89,74 @@ class DentalChartScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: AppDimensions.md),
-                    Text(
-                      'Tap a tooth to open its treatment record',
-                      style: AppTextStyles.helperText,
+                    Center(
+                      child: Text(
+                        'Tap a highlighted tooth to view its procedure',
+                        style: AppTextStyles.helperText,
+                      ),
                     ),
+                    const SizedBox(height: AppDimensions.xl),
+                    Text('Planned Procedures',
+                        style: AppTextStyles.sectionTitle),
+                    const SizedBox(height: AppDimensions.md),
+                    if (procedures.isEmpty)
+                      Text('No planned procedures.',
+                          style: AppTextStyles.subtitle)
+                    else
+                      for (var i = 0; i < procedures.length; i++) ...[
+                        if (i > 0) const SizedBox(height: AppDimensions.md),
+                        _PlannedProcedureCard(procedure: procedures[i]),
+                      ],
                   ],
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _PlannedProcedureCard extends StatelessWidget {
+  const _PlannedProcedureCard({required this.procedure});
+
+  final PlannedProcedureEntity procedure;
+
+  @override
+  Widget build(BuildContext context) {
+    final notes = procedure.notes?.trim() ?? '';
+    return ProgressTimelineSection(
+      padding: const EdgeInsets.all(AppDimensions.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              if (procedure.tooth != null)
+                Text('Tooth #${procedure.tooth}',
+                    style: AppTextStyles.caseToothLabel),
+              const Spacer(),
+              Text(
+                procedureStatusLabel(procedure.rawStatus),
+                style: AppTextStyles.statusBadge
+                    .copyWith(color: procedureStatusColor(procedure.rawStatus)),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppDimensions.xs),
+          Text(procedure.procedure, style: AppTextStyles.caseProcedure),
+          if (procedure.answers.isNotEmpty) ...[
+            const SizedBox(height: AppDimensions.md),
+            ProcedureAnswersView(answers: procedure.answers),
+          ],
+          if (notes.isNotEmpty) ...[
+            const SizedBox(height: AppDimensions.md),
+            Text('NOTES', style: AppTextStyles.caseFieldLabel),
+            const SizedBox(height: AppDimensions.xs),
+            Text(notes, style: AppTextStyles.caseToothLabel),
+          ],
+        ],
       ),
     );
   }

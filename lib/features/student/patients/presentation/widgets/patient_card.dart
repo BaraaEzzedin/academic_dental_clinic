@@ -9,7 +9,7 @@ import '../../domain/entities/assigned_patient_entity.dart';
 class PatientCard extends StatelessWidget {
   const PatientCard({super.key, required this.patient, this.onViewDetails});
 
-  final AssignedPatientEntity patient;
+  final MyPatientEntity patient;
   final VoidCallback? onViewDetails;
 
   @override
