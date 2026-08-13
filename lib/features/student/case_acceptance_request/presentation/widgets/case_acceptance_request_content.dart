@@ -24,9 +24,12 @@ class CaseAcceptanceRequestContent extends StatelessWidget {
     int? toothNumber,
     ProcedureRequestEntity? existing,
   }) {
+    final cubit = context.read<CaseAcceptanceRequestCubit>();
     showProcedurePickerSheet(
       context,
-      cubit: context.read<CaseAcceptanceRequestCubit>(),
+      procedures: cubit.state.procedures,
+      questions: cubit.state.questions,
+      onSave: cubit.saveProcedureRequest,
       toothNumber: toothNumber,
       existing: existing,
     );

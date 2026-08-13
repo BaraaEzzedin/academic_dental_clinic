@@ -14,12 +14,12 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   @override
   Future<Either<Failure, AvailableAppointmentsEntity>> getAvailableAppointments({
     required DateTime date,
-    required int clinicalCaseId,
+    required int subjectId,
   }) async {
     try {
       final result = await remote.getAvailableAppointments(
         date: date,
-        clinicalCaseId: clinicalCaseId,
+        subjectId: subjectId,
       );
       return Right(result);
     } on AppException catch (e) {

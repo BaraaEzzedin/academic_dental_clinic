@@ -30,6 +30,7 @@ class AppointmentResult {
 Future<AppointmentResult?> showAppointmentSheet(
   BuildContext context, {
   required int clinicalCaseId,
+  required int subjectId,
 }) {
   return showModalBottomSheet<AppointmentResult>(
     context: context,
@@ -40,6 +41,7 @@ Future<AppointmentResult?> showAppointmentSheet(
         getAvailableAppointments: sl<GetAvailableAppointmentsUseCase>(),
         bookAppointment: sl<BookAppointmentUseCase>(),
         clinicalCaseId: clinicalCaseId,
+        subjectId: subjectId,
       ),
       child: const AppointmentSheet(),
     ),

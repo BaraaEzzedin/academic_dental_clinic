@@ -1,3 +1,4 @@
+import '../../../../../core/utils/date_formatter.dart';
 import '../../domain/entities/case_info_entity.dart';
 
 class CaseInfoModel extends CaseInfoEntity {
@@ -10,7 +11,8 @@ class CaseInfoModel extends CaseInfoEntity {
     required super.subjectName,
     required super.requiresDentalChart,
     required super.supervisor,
-    required super.nextSession,
+    required super.nextSessionDate,
+    required super.nextSessionTime,
     required super.rawStatus,
   });
 
@@ -29,8 +31,29 @@ class CaseInfoModel extends CaseInfoEntity {
           json['requiresDentalChart'] as bool? ??
           false,
       supervisor: json['supervisor'] as String? ?? '',
-      nextSession: json['nextSession'] as String? ?? '',
+      nextSessionDate: _nextSessionDate(json['nextSession']),
+      nextSessionTime: _nextSessionTime(json['nextSession']),
       rawStatus: json['status'] as String? ?? '',
     );
+  }
+
+  /// `nextSession` may arrive as a preformatted string, `null`, or an object
+  /// (`{ appointmentDate, startTime }`). Returns the formatted date part
+  /// (e.g. "Aug 16, 2026"); falls back to a plain string or empty.
+  static String _nextSessionDate(dynamic raw) {
+    if (raw is String) return raw;
+    if (raw is Map<String, dynamic>) {
+      return DateFormatter.mediumDateFromIso(raw['appointmentDate'] as String?);
+    }
+    return '';
+  }
+
+  /// Returns the formatted time part of `nextSession` (e.g. "11:00 AM"), or an
+  /// empty string when the payload carries no time.
+  static String _nextSessionTime(dynamic raw) {
+    if (raw is Map<String, dynamic>) {
+      return DateFormatter.toTimeOfDay(raw['startTime'] as String?);
+    }
+    return '';
   }
 }

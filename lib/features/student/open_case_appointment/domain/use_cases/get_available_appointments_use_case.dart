@@ -18,7 +18,7 @@ class GetAvailableAppointmentsUseCase extends UseCase<
   ) {
     return repository.getAvailableAppointments(
       date: params.date,
-      clinicalCaseId: params.clinicalCaseId,
+      subjectId: params.subjectId,
     );
   }
 }
@@ -26,12 +26,12 @@ class GetAvailableAppointmentsUseCase extends UseCase<
 class GetAvailableAppointmentsParams extends Equatable {
   const GetAvailableAppointmentsParams({
     required this.date,
-    required this.clinicalCaseId,
+    required this.subjectId,
   });
 
   final DateTime date;
-  final int clinicalCaseId;
+  final int subjectId;
 
   @override
-  List<Object?> get props => [date, clinicalCaseId];
+  List<Object?> get props => [date, subjectId];
 }

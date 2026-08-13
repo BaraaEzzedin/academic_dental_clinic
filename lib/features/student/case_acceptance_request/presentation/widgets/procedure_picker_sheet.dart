@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
@@ -11,28 +10,40 @@ import '../../domain/entities/procedure_request_entity.dart';
 import '../../domain/entities/question_answer_entity.dart';
 import '../../domain/entities/question_type.dart';
 import '../../domain/entities/subject_question_entity.dart';
-import '../manager/case_acceptance_request/case_acceptance_request_cubit.dart';
 import 'question_input.dart';
 
+/// Called when the student saves the picked procedure. Matches the
+/// `saveProcedureRequest` method on the case-acceptance / add-patient cubits so
+/// it can be passed as a tear-off.
+typedef SaveProcedureRequest = void Function({
+  int? toothNumber,
+  String? existingId,
+  required AvailableProcedureEntity procedure,
+  required List<QuestionAnswerEntity> answers,
+  required String notes,
+});
+
+/// Cubit-agnostic procedure picker. The caller supplies the subject's
+/// [procedures] / [questions] and an [onSave] callback, so this sheet is shared
+/// by the case-acceptance flow and the Add Patient (walk-in) flow.
 Future<void> showProcedurePickerSheet(
   BuildContext context, {
-  required CaseAcceptanceRequestCubit cubit,
+  required List<AvailableProcedureEntity> procedures,
+  required List<SubjectQuestionEntity> questions,
+  required SaveProcedureRequest onSave,
   int? toothNumber,
   ProcedureRequestEntity? existing,
 }) {
-  final state = cubit.state;
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => BlocProvider.value(
-      value: cubit,
-      child: _ProcedurePickerSheet(
-        toothNumber: toothNumber,
-        existing: existing,
-        procedures: state.procedures,
-        questions: state.questions,
-      ),
+    builder: (_) => _ProcedurePickerSheet(
+      toothNumber: toothNumber,
+      existing: existing,
+      procedures: procedures,
+      questions: questions,
+      onSave: onSave,
     ),
   );
 }
@@ -43,12 +54,14 @@ class _ProcedurePickerSheet extends StatefulWidget {
     required this.existing,
     required this.procedures,
     required this.questions,
+    required this.onSave,
   });
 
   final int? toothNumber;
   final ProcedureRequestEntity? existing;
   final List<AvailableProcedureEntity> procedures;
   final List<SubjectQuestionEntity> questions;
+  final SaveProcedureRequest onSave;
 
   @override
   State<_ProcedurePickerSheet> createState() => _ProcedurePickerSheetState();
@@ -183,13 +196,13 @@ class _ProcedurePickerSheetState extends State<_ProcedurePickerSheet> {
       for (final question in widget.questions) ?_buildAnswer(question),
     ];
 
-    context.read<CaseAcceptanceRequestCubit>().saveProcedureRequest(
-          toothNumber: widget.toothNumber,
-          existingId: widget.existing?.localId,
-          procedure: procedure,
-          answers: answers,
-          notes: _notesController.text,
-        );
+    widget.onSave(
+      toothNumber: widget.toothNumber,
+      existingId: widget.existing?.localId,
+      procedure: procedure,
+      answers: answers,
+      notes: _notesController.text,
+    );
     Navigator.of(context).maybePop();
   }
 

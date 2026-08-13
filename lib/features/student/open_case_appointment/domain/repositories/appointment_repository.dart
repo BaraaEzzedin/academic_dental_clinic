@@ -6,7 +6,7 @@ import '../entities/available_appointments_entity.dart';
 abstract class AppointmentRepository {
   Future<Either<Failure, AvailableAppointmentsEntity>> getAvailableAppointments({
     required DateTime date,
-    required int clinicalCaseId,
+    required int subjectId,
   });
 
   Future<Either<Failure, Unit>> bookAppointment({

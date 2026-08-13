@@ -13,7 +13,8 @@ class CaseInfoEntity extends Equatable {
     required this.subjectName,
     required this.requiresDentalChart,
     required this.supervisor,
-    required this.nextSession,
+    required this.nextSessionDate,
+    required this.nextSessionTime,
     required this.rawStatus,
   });
 
@@ -30,7 +31,12 @@ class CaseInfoEntity extends Equatable {
   final bool requiresDentalChart;
 
   final String supervisor;
-  final String nextSession;
+
+  /// Next session's date (e.g. "Aug 16, 2026") and time (e.g. "11:00 AM"),
+  /// shown stacked in the case header. Empty when no session is booked.
+  final String nextSessionDate;
+  final String nextSessionTime;
+
   final String rawStatus;
 
   @override
@@ -43,7 +49,8 @@ class CaseInfoEntity extends Equatable {
         subjectName,
         requiresDentalChart,
         supervisor,
-        nextSession,
+        nextSessionDate,
+        nextSessionTime,
         rawStatus,
       ];
 }

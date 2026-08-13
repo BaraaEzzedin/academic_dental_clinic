@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 class OpenCaseDetailsEntity extends Equatable {
   const OpenCaseDetailsEntity({
     required this.id,
+    required this.subjectId,
     required this.patientName,
     required this.subject,
     required this.dateOfBirth,
@@ -16,6 +17,10 @@ class OpenCaseDetailsEntity extends Equatable {
   });
 
   final int id;
+
+  /// The subject the case belongs to; drives the available-times query when
+  /// booking the initial examination.
+  final int subjectId;
   final String patientName;
   final String subject;
   final String dateOfBirth;
@@ -33,6 +38,7 @@ class OpenCaseDetailsEntity extends Equatable {
   @override
   List<Object?> get props => [
         id,
+        subjectId,
         patientName,
         subject,
         dateOfBirth,

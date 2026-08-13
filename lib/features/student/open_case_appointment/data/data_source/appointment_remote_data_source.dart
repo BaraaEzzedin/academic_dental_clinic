@@ -8,7 +8,7 @@ import '../models/available_appointments_model.dart';
 abstract class AppointmentRemoteDataSource {
   Future<AvailableAppointmentsModel> getAvailableAppointments({
     required DateTime date,
-    required int clinicalCaseId,
+    required int subjectId,
   });
 
   Future<void> bookAppointment({
@@ -26,14 +26,14 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
   @override
   Future<AvailableAppointmentsModel> getAvailableAppointments({
     required DateTime date,
-    required int clinicalCaseId,
+    required int subjectId,
   }) async {
     try {
       final response = await apiClient.get<Map<String, dynamic>>(
         ApiConstants.availableAppointments,
         queryParameters: {
           'date': DateFormatter.toIsoDate(date),
-          'clinicalCaseId': clinicalCaseId,
+          'subjectId': subjectId,
         },
       );
       final data = response.data?['data'] as Map<String, dynamic>? ?? const {};

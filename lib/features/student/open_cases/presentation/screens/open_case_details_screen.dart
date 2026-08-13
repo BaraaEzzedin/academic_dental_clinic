@@ -81,7 +81,11 @@ class OpenCaseDetailsScreen extends StatelessWidget {
     OpenCaseDetailsEntity details,
   ) async {
     final result =
-        await showAppointmentSheet(context, clinicalCaseId: details.id);
+        await showAppointmentSheet(
+      context,
+      clinicalCaseId: details.id,
+      subjectId: details.subjectId,
+    );
     if (result == null || !context.mounted) return;
 
     ScaffoldMessenger.of(context)

@@ -15,6 +15,10 @@ import '../../features/student/assigned_patients/data/repositories/assigned_pati
 import '../../features/student/assigned_patients/domain/repositories/assigned_patients_repository.dart';
 import '../../features/student/assigned_patients/domain/use_cases/get_assigned_case_details_use_case.dart';
 import '../../features/student/assigned_patients/domain/use_cases/get_assigned_cases_use_case.dart';
+import '../../features/student/add_patient/data/data_source/add_patient_remote_data_source.dart';
+import '../../features/student/add_patient/data/repositories/add_patient_repository_impl.dart';
+import '../../features/student/add_patient/domain/repositories/add_patient_repository.dart';
+import '../../features/student/add_patient/domain/use_cases/create_walk_in_case_use_case.dart';
 import '../../features/student/case_acceptance_request/data/data_source/case_acceptance_request_remote_data_source.dart';
 import '../../features/student/case_acceptance_request/data/repositories/case_acceptance_request_repository_impl.dart';
 import '../../features/student/case_acceptance_request/domain/repositories/case_acceptance_request_repository.dart';
@@ -102,6 +106,9 @@ void configureDependencies() {
   sl.registerLazySingleton<CaseDetailsRemoteDataSource>(
     () => CaseDetailsRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<AddPatientRemoteDataSource>(
+    () => AddPatientRemoteDataSourceImpl(sl<ApiClient>()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<StaffAuthRepository>(
@@ -154,6 +161,11 @@ void configureDependencies() {
       sl<CaseDetailsRemoteDataSource>(),
     ),
   );
+  sl.registerLazySingleton<AddPatientRepository>(
+    () => AddPatientRepositoryImpl(
+      sl<AddPatientRemoteDataSource>(),
+    ),
+  );
 
   // ---------- Use cases ----------
   sl.registerFactory<StaffLoginUseCase>(
@@ -204,5 +216,8 @@ void configureDependencies() {
   );
   sl.registerFactory<UploadCaseMediaUseCase>(
     () => UploadCaseMediaUseCase(sl<CaseDetailsRepository>()),
+  );
+  sl.registerFactory<CreateWalkInCaseUseCase>(
+    () => CreateWalkInCaseUseCase(sl<AddPatientRepository>()),
   );
 }

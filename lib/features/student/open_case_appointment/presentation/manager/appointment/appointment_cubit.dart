@@ -12,6 +12,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     required GetAvailableAppointmentsUseCase getAvailableAppointments,
     required BookAppointmentUseCase bookAppointment,
     required this.clinicalCaseId,
+    required this.subjectId,
     DateTime? initialMonth,
   })  : _getAvailableAppointments = getAvailableAppointments,
         _bookAppointment = bookAppointment,
@@ -24,6 +25,10 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   final GetAvailableAppointmentsUseCase _getAvailableAppointments;
   final BookAppointmentUseCase _bookAppointment;
   final int clinicalCaseId;
+
+  /// Drives the available-times query (availability is per subject, not per
+  /// case), while [clinicalCaseId] is used when booking.
+  final int subjectId;
 
   static DateTime _monthStart(DateTime date) => DateTime(date.year, date.month);
 
@@ -56,7 +61,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     final result = await _getAvailableAppointments(
       GetAvailableAppointmentsParams(
         date: normalized,
-        clinicalCaseId: clinicalCaseId,
+        subjectId: subjectId,
       ),
     );
 

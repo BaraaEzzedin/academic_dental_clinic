@@ -4,6 +4,7 @@ import '../../domain/entities/open_case_details_entity.dart';
 class OpenCaseDetailsModel extends OpenCaseDetailsEntity {
   const OpenCaseDetailsModel({
     required super.id,
+    required super.subjectId,
     required super.patientName,
     required super.subject,
     required super.dateOfBirth,
@@ -23,6 +24,7 @@ class OpenCaseDetailsModel extends OpenCaseDetailsEntity {
 
     return OpenCaseDetailsModel(
       id: (json['id'] as num).toInt(),
+      subjectId: (subject?['id'] as num?)?.toInt() ?? 0,
       patientName: patient?['fullName'] as String? ?? '',
       subject: subject?['name'] as String? ?? '',
       dateOfBirth:
