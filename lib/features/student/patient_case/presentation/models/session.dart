@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 
+// Session lifecycle statuses, mirroring the backend exactly:
+// `active` (in progress), `upcoming` (scheduled), `completed`.
 enum SessionStatus {
-  planned,
-  inProgress,
+  active,
+  upcoming,
   completed,
 }
 
 extension SessionStatusX on SessionStatus {
   String get label => switch (this) {
-        SessionStatus.planned => 'Planned',
-        SessionStatus.inProgress => 'In Progress',
+        SessionStatus.active => 'Active',
+        SessionStatus.upcoming => 'Upcoming',
         SessionStatus.completed => 'Completed',
       };
 
   Color get color => switch (this) {
-        SessionStatus.planned => AppColors.warning,
-        SessionStatus.inProgress => AppColors.primary,
+        SessionStatus.active => AppColors.primary,
+        SessionStatus.upcoming => AppColors.warning,
         SessionStatus.completed => AppColors.success,
       };
 
   IconData get icon => switch (this) {
-        SessionStatus.planned => Icons.schedule_rounded,
-        SessionStatus.inProgress => Icons.play_arrow_rounded,
+        SessionStatus.active => Icons.play_arrow_rounded,
+        SessionStatus.upcoming => Icons.schedule_rounded,
         SessionStatus.completed => Icons.check_rounded,
       };
 }
@@ -64,12 +66,23 @@ class Session {
     required this.date,
     required this.status,
     required this.items,
+    this.id = 0,
+    this.time = '',
+    this.appointmentDate,
+    this.startTimeRaw = '',
     this.treatmentItems = const [],
     this.note,
   });
 
+  /// Backend `sessionId`, used to load/complete the session.
+  final int id;
   final String title;
   final String date;
+  // Formatted appointment start time (e.g. "10:30 AM"); empty when unscheduled.
+  final String time;
+  // Raw appointment values, used to pre-fill the edit-schedule sheet.
+  final DateTime? appointmentDate;
+  final String startTimeRaw;
   final SessionStatus status;
   final List<SessionItem> items;
   // Tooth/procedure lines whose status is edited from the "Edit Session" sheet.
@@ -87,8 +100,12 @@ class Session {
     String? Function()? note,
   }) =>
       Session(
+        id: id,
         title: title,
         date: date,
+        time: time,
+        appointmentDate: appointmentDate,
+        startTimeRaw: startTimeRaw,
         status: status ?? this.status,
         items: items,
         treatmentItems: treatmentItems ?? this.treatmentItems,

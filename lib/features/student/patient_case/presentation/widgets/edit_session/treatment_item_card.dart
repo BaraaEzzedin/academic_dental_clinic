@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
-import '../../models/session.dart';
+import '../../../domain/entities/session_procedure_entity.dart';
+import '../../models/session_procedure_status.dart';
 import 'status_selector.dart';
 
 class TreatmentItemCard extends StatelessWidget {
   const TreatmentItemCard({
     super.key,
-    required this.item,
+    required this.procedure,
+    required this.selected,
     required this.onStatusChanged,
   });
 
-  final SessionTreatmentItem item;
-  final ValueChanged<SessionStatus> onStatusChanged;
+  final SessionProcedureEntity procedure;
+  final SessionProcedureStatus selected;
+  final ValueChanged<SessionProcedureStatus> onStatusChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class TreatmentItemCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  item.tooth,
+                  'Tooth #${procedure.toothNumber}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -40,20 +43,22 @@ class TreatmentItemCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppDimensions.sm),
-              Text(
-                item.procedure,
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textDark,
+              Flexible(
+                child: Text(
+                  procedure.name,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textDark,
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: AppDimensions.md),
           StatusSelector(
-            selected: item.status,
+            selected: selected,
             onChanged: onStatusChanged,
           ),
         ],

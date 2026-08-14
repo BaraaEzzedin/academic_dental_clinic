@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
-import '../../models/session.dart';
+import '../../../domain/entities/session_procedure_entity.dart';
 
 class CompletedItemCard extends StatelessWidget {
-  const CompletedItemCard({super.key, required this.item});
+  const CompletedItemCard({super.key, required this.procedure});
 
-  final SessionTreatmentItem item;
+  final SessionProcedureEntity procedure;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class CompletedItemCard extends StatelessWidget {
               const SizedBox(width: AppDimensions.sm),
               Expanded(
                 child: Text(
-                  item.tooth,
+                  'Tooth #${procedure.toothNumber}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -41,13 +41,15 @@ class CompletedItemCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppDimensions.sm),
-              Text(
-                item.procedure,
-                textAlign: TextAlign.right,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textDark,
+              Flexible(
+                child: Text(
+                  procedure.name,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textDark,
+                  ),
                 ),
               ),
             ],

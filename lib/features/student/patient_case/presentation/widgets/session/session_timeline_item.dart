@@ -12,17 +12,21 @@ class SessionTimelineItem extends StatelessWidget {
     required this.isLast,
     this.onViewSummary,
     this.onEdit,
+    this.onStart,
+    this.onEditSchedule,
   });
 
   final Session session;
   final bool isLast;
   final VoidCallback? onViewSummary;
   final VoidCallback? onEdit;
+  final VoidCallback? onStart;
+  final VoidCallback? onEditSchedule;
 
   @override
   Widget build(BuildContext context) {
     final color = session.status.color;
-    final isActive = session.status == SessionStatus.inProgress;
+    final isActive = session.status == SessionStatus.active;
 
     return IntrinsicHeight(
       child: Row(
@@ -70,6 +74,8 @@ class SessionTimelineItem extends StatelessWidget {
                 session: session,
                 onViewSummary: onViewSummary,
                 onEdit: onEdit,
+                onStart: onStart,
+                onEditSchedule: onEditSchedule,
               ),
             ),
           ),

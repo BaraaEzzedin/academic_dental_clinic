@@ -14,6 +14,7 @@ class CaseAcceptanceRequestState extends Equatable {
     this.config,
     this.configError,
     this.requests = const [],
+    this.imagePaths = const [],
     this.submission = RequestSubmission.idle,
     this.submissionError,
   });
@@ -24,6 +25,9 @@ class CaseAcceptanceRequestState extends Equatable {
 
   /// Locally saved procedure requests (mock state, not yet submitted).
   final List<ProcedureRequestEntity> requests;
+
+  /// Local file paths of the attached case images.
+  final List<String> imagePaths;
 
   final RequestSubmission submission;
   final String? submissionError;
@@ -79,6 +83,7 @@ class CaseAcceptanceRequestState extends Equatable {
     SubjectConfigEntity? config,
     String? configError,
     List<ProcedureRequestEntity>? requests,
+    List<String>? imagePaths,
     RequestSubmission? submission,
     String? submissionError,
   }) {
@@ -87,6 +92,7 @@ class CaseAcceptanceRequestState extends Equatable {
       config: config ?? this.config,
       configError: configError,
       requests: requests ?? this.requests,
+      imagePaths: imagePaths ?? this.imagePaths,
       submission: submission ?? this.submission,
       submissionError: submissionError,
     );
@@ -98,6 +104,7 @@ class CaseAcceptanceRequestState extends Equatable {
         config,
         configError,
         requests,
+        imagePaths,
         submission,
         submissionError,
       ];

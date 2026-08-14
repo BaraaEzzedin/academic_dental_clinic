@@ -17,7 +17,7 @@ class TimelinePhaseItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = phase.status.color;
-    final isCurrent = phase.status == PhaseStatus.upcoming;
+    final isCurrent = phase.status == PhaseStatus.active;
 
     return IntrinsicHeight(
       child: Row(

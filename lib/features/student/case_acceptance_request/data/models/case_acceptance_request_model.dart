@@ -5,6 +5,7 @@ class CaseAcceptanceRequestModel extends CaseAcceptanceRequestEntity {
   const CaseAcceptanceRequestModel({
     required super.clinicalCaseId,
     required super.plannedProcedures,
+    super.imagePaths,
   });
 
   factory CaseAcceptanceRequestModel.fromEntity(
@@ -13,6 +14,7 @@ class CaseAcceptanceRequestModel extends CaseAcceptanceRequestEntity {
     return CaseAcceptanceRequestModel(
       clinicalCaseId: entity.clinicalCaseId,
       plannedProcedures: entity.plannedProcedures,
+      imagePaths: entity.imagePaths,
     );
   }
 

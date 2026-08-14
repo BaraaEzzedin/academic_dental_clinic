@@ -124,6 +124,7 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
               children: [
                 const SheetGrabber(),
                 _Header(
+                  isFirstSession: state.isFirstSession,
                   onClose: state.isSubmitting
                       ? null
                       : () => Navigator.of(context).pop(),
@@ -169,6 +170,7 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
                   ),
                 ),
                 _Footer(
+                  isFirstSession: state.isFirstSession,
                   canSubmit: state.canSubmit,
                   isSubmitting: state.isSubmitting,
                   onSubmit: () => _submit(context),
@@ -183,8 +185,9 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.onClose});
+  const _Header({required this.isFirstSession, required this.onClose});
 
+  final bool isFirstSession;
   final VoidCallback? onClose;
 
   @override
@@ -208,10 +211,10 @@ class _Header extends StatelessWidget {
             child: const Icon(Icons.add_rounded, color: AppColors.primary),
           ),
           const SizedBox(width: AppDimensions.md),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Add New Session',
-              style: TextStyle(
+              isFirstSession ? 'Add First Session' : 'Add Session',
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary,
@@ -268,11 +271,13 @@ class _NextAppointmentBanner extends StatelessWidget {
 
 class _Footer extends StatelessWidget {
   const _Footer({
+    required this.isFirstSession,
     required this.canSubmit,
     required this.isSubmitting,
     required this.onSubmit,
   });
 
+  final bool isFirstSession;
   final bool canSubmit;
   final bool isSubmitting;
   final VoidCallback onSubmit;
@@ -315,7 +320,9 @@ class _Footer extends StatelessWidget {
                     valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
                   ),
                 )
-              : const Text('Add Session'),
+              : Text(
+                  isFirstSession ? 'Create First Session' : 'Create Session',
+                ),
         ),
       ),
     );

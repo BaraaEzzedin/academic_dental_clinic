@@ -28,11 +28,20 @@ import '../../features/student/patient_case/data/data_source/case_details_remote
 import '../../features/student/patient_case/data/repositories/case_details_repository_impl.dart';
 import '../../features/student/patient_case/domain/repositories/case_details_repository.dart';
 import '../../features/student/patient_case/data/data_source/treatment_sessions_remote_data_source.dart';
+import '../../features/student/patient_case/data/data_source/materials_remote_data_source.dart';
 import '../../features/student/patient_case/data/repositories/treatment_sessions_repository_impl.dart';
+import '../../features/student/patient_case/data/repositories/materials_repository_impl.dart';
 import '../../features/student/patient_case/domain/repositories/treatment_sessions_repository.dart';
+import '../../features/student/patient_case/domain/repositories/materials_repository.dart';
 import '../../features/student/patient_case/domain/use_cases/create_treatment_session_use_case.dart';
+import '../../features/student/patient_case/domain/use_cases/complete_treatment_session_use_case.dart';
+import '../../features/student/patient_case/domain/use_cases/edit_treatment_session_use_case.dart';
 import '../../features/student/patient_case/domain/use_cases/get_case_details_use_case.dart';
+import '../../features/student/patient_case/domain/use_cases/get_materials_use_case.dart';
+import '../../features/student/patient_case/domain/use_cases/get_planned_procedures_use_case.dart';
+import '../../features/student/patient_case/domain/use_cases/get_session_summary_use_case.dart';
 import '../../features/student/patient_case/domain/use_cases/get_treatment_sessions_use_case.dart';
+import '../../features/student/patient_case/domain/use_cases/start_treatment_session_use_case.dart';
 import '../../features/student/patient_case/domain/use_cases/upload_case_media_use_case.dart';
 import '../../features/student/clinical_courses/data/data_source/clinical_courses_remote_data_source.dart';
 import '../../features/student/clinical_courses/data/data_source/subject_details_remote_data_source.dart';
@@ -121,6 +130,9 @@ void configureDependencies() {
   sl.registerLazySingleton<TreatmentSessionsRemoteDataSource>(
     () => TreatmentSessionsRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<MaterialsRemoteDataSource>(
+    () => MaterialsRemoteDataSourceImpl(sl<ApiClient>()),
+  );
   sl.registerLazySingleton<AddPatientRemoteDataSource>(
     () => AddPatientRemoteDataSourceImpl(sl<ApiClient>()),
   );
@@ -186,6 +198,9 @@ void configureDependencies() {
       sl<TreatmentSessionsRemoteDataSource>(),
     ),
   );
+  sl.registerLazySingleton<MaterialsRepository>(
+    () => MaterialsRepositoryImpl(sl<MaterialsRemoteDataSource>()),
+  );
   sl.registerLazySingleton<AddPatientRepository>(
     () => AddPatientRepositoryImpl(
       sl<AddPatientRemoteDataSource>(),
@@ -247,6 +262,24 @@ void configureDependencies() {
   );
   sl.registerFactory<CreateTreatmentSessionUseCase>(
     () => CreateTreatmentSessionUseCase(sl<TreatmentSessionsRepository>()),
+  );
+  sl.registerFactory<GetPlannedProceduresUseCase>(
+    () => GetPlannedProceduresUseCase(sl<TreatmentSessionsRepository>()),
+  );
+  sl.registerFactory<GetSessionSummaryUseCase>(
+    () => GetSessionSummaryUseCase(sl<TreatmentSessionsRepository>()),
+  );
+  sl.registerFactory<StartTreatmentSessionUseCase>(
+    () => StartTreatmentSessionUseCase(sl<TreatmentSessionsRepository>()),
+  );
+  sl.registerFactory<EditTreatmentSessionUseCase>(
+    () => EditTreatmentSessionUseCase(sl<TreatmentSessionsRepository>()),
+  );
+  sl.registerFactory<CompleteTreatmentSessionUseCase>(
+    () => CompleteTreatmentSessionUseCase(sl<TreatmentSessionsRepository>()),
+  );
+  sl.registerFactory<GetMaterialsUseCase>(
+    () => GetMaterialsUseCase(sl<MaterialsRepository>()),
   );
   sl.registerFactory<UploadCaseMediaUseCase>(
     () => UploadCaseMediaUseCase(sl<CaseDetailsRepository>()),

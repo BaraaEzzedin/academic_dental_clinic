@@ -13,15 +13,19 @@ class SessionDetailCard extends StatelessWidget {
     required this.session,
     this.onViewSummary,
     this.onEdit,
+    this.onStart,
+    this.onEditSchedule,
   });
 
   final Session session;
   final VoidCallback? onViewSummary;
   final VoidCallback? onEdit;
+  final VoidCallback? onStart;
+  final VoidCallback? onEditSchedule;
 
   @override
   Widget build(BuildContext context) {
-    final isActive = session.status == SessionStatus.inProgress;
+    final isActive = session.status == SessionStatus.active;
 
     return Container(
       width: double.infinity,
@@ -53,7 +57,7 @@ class SessionDetailCard extends StatelessWidget {
                 child: Text(
                   session.title,
                   style: AppTextStyles.sessionTitle.copyWith(
-                    fontSize: 15.5,
+                    fontSize: 14.5,
                     color: isActive ? AppColors.primary : AppColors.textPrimary,
                   ),
                 ),
@@ -66,9 +70,21 @@ class SessionDetailCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppDimensions.sm),
-          _MetaChip(
-            icon: Icons.calendar_today_rounded,
-            label: session.date,
+          Wrap(
+            spacing: AppDimensions.lg,
+            runSpacing: AppDimensions.xs,
+            children: [
+              if (session.date.isNotEmpty)
+                _MetaChip(
+                  icon: Icons.calendar_today_rounded,
+                  label: session.date,
+                ),
+              if (session.time.isNotEmpty)
+                _MetaChip(
+                  icon: Icons.access_time_rounded,
+                  label: session.time,
+                ),
+            ],
           ),
           if (session.note != null) ...[
             const SizedBox(height: AppDimensions.md),
@@ -92,6 +108,8 @@ class SessionDetailCard extends StatelessWidget {
             status: session.status,
             onViewSummary: onViewSummary,
             onEdit: onEdit,
+            onStart: onStart,
+            onEditSchedule: onEditSchedule,
           ),
         ],
       ),

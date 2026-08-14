@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../domain/entities/available_procedure_entity.dart';
 import '../../../domain/entities/case_acceptance_request_entity.dart';
 import '../../../domain/entities/procedure_request_entity.dart';
@@ -13,13 +14,16 @@ class CaseAcceptanceRequestCubit extends Cubit<CaseAcceptanceRequestState> {
     required GetSubjectConfigurationUseCase getSubjectConfiguration,
     required SubmitCaseAcceptanceRequestUseCase submitAcceptanceRequest,
     required this.args,
+    ImagePicker? imagePicker,
   })  : _getSubjectConfiguration = getSubjectConfiguration,
         _submitAcceptanceRequest = submitAcceptanceRequest,
+        _imagePicker = imagePicker ?? ImagePicker(),
         super(const CaseAcceptanceRequestState());
 
   final GetSubjectConfigurationUseCase _getSubjectConfiguration;
   final SubmitCaseAcceptanceRequestUseCase _submitAcceptanceRequest;
   final CaseAcceptanceRequestArgs args;
+  final ImagePicker _imagePicker;
 
   Future<void> loadConfiguration({bool force = false}) async {
     if (!force &&
@@ -82,6 +86,36 @@ class CaseAcceptanceRequestCubit extends Cubit<CaseAcceptanceRequestState> {
     emit(state.copyWith(requests: updated));
   }
 
+  Future<void> pickImagesFromGallery() async {
+    final files = await _imagePicker.pickMultiImage(imageQuality: 80);
+    if (files.isEmpty) return;
+    _appendImages(files.map((f) => f.path));
+  }
+
+  Future<void> captureImage() async {
+    final file = await _imagePicker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+    );
+    if (file == null) return;
+    _appendImages([file.path]);
+  }
+
+  void removeImage(String path) {
+    if (!state.imagePaths.contains(path)) return;
+    emit(state.copyWith(
+      imagePaths: state.imagePaths.where((p) => p != path).toList(),
+    ));
+  }
+
+  void _appendImages(Iterable<String> paths) {
+    final merged = [...state.imagePaths];
+    for (final p in paths) {
+      if (!merged.contains(p)) merged.add(p);
+    }
+    emit(state.copyWith(imagePaths: merged));
+  }
+
   Future<void> submit() async {
     if (!state.canSubmit) return;
     emit(state.copyWith(submission: RequestSubmission.submitting));
@@ -89,6 +123,7 @@ class CaseAcceptanceRequestCubit extends Cubit<CaseAcceptanceRequestState> {
     final request = CaseAcceptanceRequestEntity(
       clinicalCaseId: args.clinicalCaseId,
       plannedProcedures: state.orderedRequests,
+      imagePaths: state.imagePaths,
     );
 
     final result = await _submitAcceptanceRequest(request);

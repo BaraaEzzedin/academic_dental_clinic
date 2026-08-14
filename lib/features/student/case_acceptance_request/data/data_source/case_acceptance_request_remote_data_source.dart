@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import '../../../../../core/network/api_client.dart';
 import '../../../../../core/network/api_constants.dart';
@@ -35,9 +37,27 @@ class CaseAcceptanceRequestRemoteDataSourceImpl
     CaseAcceptanceRequestModel request,
   ) async {
     try {
+      // Multipart contract (same shape as the walk-in request):
+      //   images -> one file part per selected case image (repeated field)
+      //   data   -> JSON string of the request (clinicalCaseId + procedures)
+      final formData = FormData();
+      for (final path in request.imagePaths) {
+        formData.files.add(
+          MapEntry(
+            'images',
+            await MultipartFile.fromFile(
+              path,
+              filename: path.split(RegExp(r'[\\/]')).last,
+            ),
+          ),
+        );
+      }
+      formData.fields.add(MapEntry('data', jsonEncode(request.toJson())));
+
       await apiClient.post<Map<String, dynamic>>(
         ApiConstants.diagnosisSubmission,
-        data: request.toJson(),
+        data: formData,
+        options: Options(contentType: 'multipart/form-data'),
       );
     } on DioException catch (e) {
       throw mapDioException(e);

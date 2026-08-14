@@ -24,7 +24,31 @@ class ApiConstants {
   static const String treatmentSessions = '/treatment-sessions/student';
 
   // Treatment session — create (POST)
-  static const String createTreatmentSession = '/treatment-session';
+  static const String createTreatmentSession = '/treatment-sessions';
+
+  // Treatment session — planned procedures (GET)
+  static String plannedProcedures(int treatmentSessionId) =>
+      '/treatment-sessions/$treatmentSessionId/planned-procedures';
+
+  // Treatment session — summary of a completed session (GET)
+  static String sessionSummary(int sessionId) =>
+      '/treatment-sessions/summary/$sessionId';
+
+  // Treatment session — complete (PATCH)
+  static String completeTreatmentSession(int treatmentSessionId) =>
+      '/treatment-sessions/$treatmentSessionId/complete';
+
+  // Treatment session — start (PATCH)
+  static String startTreatmentSession(int treatmentSessionId) =>
+      '/treatment-sessions/$treatmentSessionId/start';
+
+  // Treatment session — edit schedule (PATCH)
+  static String editTreatmentSession(int treatmentSessionId) =>
+      '/treatment-sessions/$treatmentSessionId/edit';
+
+  // Materials for a subject (GET)
+  static String subjectMaterials(int subjectId) =>
+      '/subjects/$subjectId/materials';
 
   // Clinical appointments — student
   static const String clinicalAppointments = '/clinical-appointments';

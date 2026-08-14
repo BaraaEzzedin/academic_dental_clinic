@@ -1,33 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
+import '../../../../../../core/service_locator/auth_service.dart';
 import '../../../../../../core/theme/app_text_style.dart';
+import '../../../../../../core/widgets/error_retry_view.dart';
 import '../../../../../../core/widgets/sheet_grabber.dart';
+import '../../../domain/use_cases/complete_treatment_session_use_case.dart';
+import '../../../domain/use_cases/get_materials_use_case.dart';
+import '../../../domain/use_cases/get_planned_procedures_use_case.dart';
+import '../../manager/edit_session/edit_session_cubit.dart';
+import '../../manager/edit_session/edit_session_state.dart';
 import '../../models/session.dart';
 import 'clinical_notes_field.dart';
 import 'completed_item_card.dart';
 import 'edit_session_footer.dart';
 import 'edit_session_header.dart';
+import 'edit_session_shimmer.dart';
+import 'materials_selector.dart';
 import 'treatment_item_card.dart';
 
-class EditSessionResult {
-  const EditSessionResult({required this.treatmentItems, required this.note});
-
-  final List<SessionTreatmentItem> treatmentItems;
-  final String note;
-}
-
-// Opens the "Edit Session" bottom sheet and resolves with the edited values,
-// or `null` if the student cancels / dismisses it.
-Future<EditSessionResult?> showEditSessionSheet(
+/// Opens the "Edit Session" sheet for [session]. Loads the session's planned
+/// procedures and the subject's materials, then lets the student update
+/// statuses, pick materials and add a note before completing the session.
+/// Resolves with `true` when the session was completed.
+Future<bool?> showEditSessionSheet(
   BuildContext context, {
   required Session session,
+  required int subjectId,
 }) {
-  return showModalBottomSheet<EditSessionResult>(
+  return showModalBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => EditSessionSheet(session: session),
+    builder: (_) => BlocProvider(
+      create: (_) => EditSessionCubit(
+        getPlannedProcedures: sl<GetPlannedProceduresUseCase>(),
+        getMaterials: sl<GetMaterialsUseCase>(),
+        completeSession: sl<CompleteTreatmentSessionUseCase>(),
+        treatmentSessionId: session.id,
+        subjectId: subjectId,
+      )..load(),
+      child: EditSessionSheet(session: session),
+    ),
   );
 }
 
@@ -41,11 +56,7 @@ class EditSessionSheet extends StatefulWidget {
 }
 
 class _EditSessionSheetState extends State<EditSessionSheet> {
-  late final List<SessionTreatmentItem> _items =
-      List.of(widget.session.treatmentItems);
-  late final TextEditingController _noteController =
-      TextEditingController(text: widget.session.note ?? '');
-  bool _isSubmitting = false;
+  final TextEditingController _noteController = TextEditingController();
 
   @override
   void dispose() {
@@ -53,43 +64,35 @@ class _EditSessionSheetState extends State<EditSessionSheet> {
     super.dispose();
   }
 
-  void _setStatus(int index, SessionStatus status) {
-    setState(() => _items[index] = _items[index].copyWith(status: status));
-  }
-
-  // Simulates the "end session" backend request. Replace the delay with the
-  // real repository call once the endpoint exists.
-  Future<void> _submit() async {
-    setState(() => _isSubmitting = true);
-    // TODO(backend): await repository.completeSession(sessionId, ...).
-    await Future<void>.delayed(const Duration(milliseconds: 1200));
-    if (!mounted) return;
-    Navigator.of(context).pop(
-      EditSessionResult(
-        treatmentItems: List.of(_items),
-        note: _noteController.text.trim(),
-      ),
-    );
+  Future<void> _submit(BuildContext context) async {
+    final cubit = context.read<EditSessionCubit>();
+    final succeeded = await cubit.submit(_noteController.text);
+    if (!context.mounted) return;
+    if (!succeeded) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: AppColors.error,
+            content: Text(
+              cubit.state.submitError ?? 'Could not complete the session.',
+              style: const TextStyle(color: AppColors.white),
+            ),
+          ),
+        );
+      return;
+    }
+    Navigator.of(context).pop(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Active items stay editable; completed ones move to a read-only section.
-    final active = <MapEntry<int, SessionTreatmentItem>>[];
-    final completed = <SessionTreatmentItem>[];
-    for (var i = 0; i < _items.length; i++) {
-      if (_items[i].status == SessionStatus.completed) {
-        completed.add(_items[i]);
-      } else {
-        active.add(MapEntry(i, _items[i]));
-      }
-    }
-
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.9,
+          maxHeight: MediaQuery.of(context).size.height * 0.92,
         ),
         decoration: const BoxDecoration(
           color: AppColors.white,
@@ -97,91 +100,131 @@ class _EditSessionSheetState extends State<EditSessionSheet> {
             top: Radius.circular(AppDimensions.radiusXl),
           ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SheetGrabber(),
-            EditSessionHeader(
-              title: widget.session.title,
-              date: widget.session.date,
-              onClose:
-                  _isSubmitting ? null : () => Navigator.of(context).pop(),
+        child: BlocBuilder<EditSessionCubit, EditSessionState>(
+          builder: (context, state) {
+            final cubit = context.read<EditSessionCubit>();
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SheetGrabber(),
+                EditSessionHeader(
+                  title: widget.session.title,
+                  date: widget.session.date,
+                  onClose: state.isSubmitting
+                      ? null
+                      : () => Navigator.of(context).pop(),
+                ),
+                const Divider(height: 1, color: AppColors.dividerLine),
+                Flexible(
+                  child: _buildBody(context, state, cubit),
+                ),
+                if (state.status == EditSessionStatus.loaded)
+                  EditSessionFooter(
+                    onCancel: () => Navigator.of(context).pop(),
+                    onUpdate: () => _submit(context),
+                    isSubmitting: state.isSubmitting,
+                  ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBody(
+    BuildContext context,
+    EditSessionState state,
+    EditSessionCubit cubit,
+  ) {
+    if (state.isLoading) {
+      return const EditSessionShimmer();
+    }
+    if (state.hasError || state.data == null) {
+      return SizedBox(
+        height: 240,
+        child: ErrorRetryView(
+          message: state.errorMessage ?? 'Could not load the session.',
+          onRetry: cubit.load,
+        ),
+      );
+    }
+
+    final editable = state.editableProcedures;
+    final completed = state.completedProcedures;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppDimensions.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (editable.isNotEmpty) ...[
+            const _SectionHeader(
+              icon: Icons.checklist_rounded,
+              title: 'Treatment Items',
             ),
-            const Divider(height: 1, color: AppColors.dividerLine),
-            Flexible(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(AppDimensions.xl),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (active.isNotEmpty) ...[
-                      const _SectionHeader(
-                        icon: Icons.checklist_rounded,
-                        title: 'Treatment Items',
-                      ),
-                      const SizedBox(height: AppDimensions.sm),
-                      Text(
-                        'Teeth are set by the treatment plan — update the '
-                        'status of each item.',
-                        style: AppTextStyles.subtitle
-                            .copyWith(color: AppColors.textHint),
-                      ),
-                      const SizedBox(height: AppDimensions.lg),
-                      for (var j = 0; j < active.length; j++)
-                        Padding(
-                          padding: EdgeInsets.only(
-                            bottom:
-                                j == active.length - 1 ? 0 : AppDimensions.lg,
-                          ),
-                          child: TreatmentItemCard(
-                            item: active[j].value,
-                            onStatusChanged: (status) =>
-                                _setStatus(active[j].key, status),
-                          ),
-                        ),
-                      const SizedBox(height: AppDimensions.xl),
-                    ],
-                    if (completed.isNotEmpty) ...[
-                      const _SectionHeader(
-                        icon: Icons.verified_rounded,
-                        title: 'Completed Treatment Items',
-                      ),
-                      const SizedBox(height: AppDimensions.sm),
-                      Text(
-                        'Finished treatment work — read-only and preserved '
-                        'for historical reference.',
-                        style: AppTextStyles.subtitle
-                            .copyWith(color: AppColors.textHint),
-                      ),
-                      const SizedBox(height: AppDimensions.lg),
-                      for (var k = 0; k < completed.length; k++)
-                        Padding(
-                          padding: EdgeInsets.only(
-                            bottom: k == completed.length - 1
-                                ? 0
-                                : AppDimensions.lg,
-                          ),
-                          child: CompletedItemCard(item: completed[k]),
-                        ),
-                      const SizedBox(height: AppDimensions.xl),
-                    ],
-                    const _SectionHeader(
-                      icon: Icons.notes_rounded,
-                      title: 'Clinical Notes',
-                    ),
-                    const SizedBox(height: AppDimensions.md),
-                    ClinicalNotesField(controller: _noteController),
-                  ],
+            const SizedBox(height: AppDimensions.sm),
+            Text(
+              'Update the status of each item.',
+              style: AppTextStyles.subtitle.copyWith(color: AppColors.textHint),
+            ),
+            const SizedBox(height: AppDimensions.lg),
+            for (var i = 0; i < editable.length; i++)
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: i == editable.length - 1 ? 0 : AppDimensions.lg,
+                ),
+                child: TreatmentItemCard(
+                  procedure: editable[i],
+                  selected: state.statusFor(editable[i]),
+                  onStatusChanged: (status) =>
+                      cubit.setStatus(editable[i].id, status),
                 ),
               ),
-            ),
-            EditSessionFooter(
-              onCancel: () => Navigator.of(context).pop(),
-              onUpdate: _submit,
-              isSubmitting: _isSubmitting,
-            ),
+            const SizedBox(height: AppDimensions.xl),
           ],
-        ),
+          if (completed.isNotEmpty) ...[
+            const _SectionHeader(
+              icon: Icons.verified_rounded,
+              title: 'Completed Treatment Items',
+            ),
+            const SizedBox(height: AppDimensions.sm),
+            Text(
+              'Finished treatment work — read-only and preserved for '
+              'historical reference.',
+              style: AppTextStyles.subtitle.copyWith(color: AppColors.textHint),
+            ),
+            const SizedBox(height: AppDimensions.lg),
+            for (var i = 0; i < completed.length; i++)
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: i == completed.length - 1 ? 0 : AppDimensions.lg,
+                ),
+                child: CompletedItemCard(procedure: completed[i]),
+              ),
+            const SizedBox(height: AppDimensions.xl),
+          ],
+          const _SectionHeader(
+            icon: Icons.science_rounded,
+            title: 'Materials',
+          ),
+          const SizedBox(height: AppDimensions.md),
+          MaterialsSelector(
+            materials: state.materials,
+            selectedIds: state.selectedMaterialIds,
+            isLoading: state.isLoadingMaterials,
+            hasError: state.hasMaterialsError,
+            onToggle: cubit.toggleMaterial,
+            onRetry: cubit.retryMaterials,
+          ),
+          const SizedBox(height: AppDimensions.xl),
+          const _SectionHeader(
+            icon: Icons.notes_rounded,
+            title: 'Clinical Notes',
+          ),
+          const SizedBox(height: AppDimensions.md),
+          ClinicalNotesField(controller: _noteController),
+        ],
       ),
     );
   }

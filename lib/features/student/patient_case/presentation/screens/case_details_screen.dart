@@ -8,9 +8,12 @@ import '../../../../../core/theme/app_text_style.dart';
 import '../../../patients/data/mapper/patient_status_mapper.dart';
 import '../../domain/entities/case_details_entity.dart';
 import '../../domain/use_cases/get_case_details_use_case.dart';
+import '../../domain/use_cases/get_treatment_sessions_use_case.dart';
 import '../manager/case_details/case_details_cubit.dart';
 import '../manager/case_details/case_details_state.dart';
+import '../models/session.dart';
 import '../widgets/add_session/add_session_sheet.dart';
+import '../widgets/case_details_shimmer.dart';
 import '../widgets/case_details_top_bar.dart';
 import '../widgets/diagnostic_media_card.dart';
 import '../widgets/patient_case_header_card.dart';
@@ -29,7 +32,10 @@ class CaseDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CaseDetailsCubit>(
-      create: (_) => CaseDetailsCubit(sl<GetCaseDetailsUseCase>())..load(caseId),
+      create: (_) => CaseDetailsCubit(
+        sl<GetCaseDetailsUseCase>(),
+        sl<GetTreatmentSessionsUseCase>(),
+      )..load(caseId),
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
@@ -48,11 +54,7 @@ class CaseDetailsScreen extends StatelessWidget {
                 child: BlocBuilder<CaseDetailsCubit, CaseDetailsState>(
                   builder: (context, state) {
                     if (state.isLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
-                        ),
-                      );
+                      return const CaseDetailsShimmer();
                     }
                     if (state.hasError || state.details == null) {
                       return ErrorView(
@@ -64,6 +66,7 @@ class CaseDetailsScreen extends StatelessWidget {
                     }
                     return CaseDetailsBody(
                       details: state.details!,
+                      sessions: state.sessions,
                       caseId: caseId,
                     );
                   },
@@ -81,10 +84,12 @@ class CaseDetailsBody extends StatelessWidget {
   const CaseDetailsBody({
     super.key,
     required this.details,
+    required this.sessions,
     required this.caseId,
   });
 
   final CaseDetailsEntity details;
+  final List<Session> sessions;
   final int caseId;
 
   @override
@@ -93,7 +98,7 @@ class CaseDetailsBody extends StatelessWidget {
     final status = patientStatusFromApi(caseInfo.rawStatus);
     final isPending = status == PatientStatus.waitingApproval;
     final canEdit = status.canEditTreatment;
-    final timelineExists = details.timeline.isNotEmpty;
+    final hasSessions = sessions.isNotEmpty;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(
@@ -132,7 +137,7 @@ class CaseDetailsBody extends StatelessWidget {
           // Uploads are allowed only while the case is in treatment.
           canUpload: canEdit,
         ),
-        ..._sessionsRegion(context, status, timelineExists),
+        ..._sessionsRegion(context, status, hasSessions),
         if (!isPending) ...[
           const SizedBox(height: AppDimensions.lg),
           SupervisorNotesCard(notes: details.supervisorNotes),
@@ -142,32 +147,32 @@ class CaseDetailsBody extends StatelessWidget {
   }
 
   /// The timeline / sessions area, driven by the case status:
-  /// - in treatment with no timeline yet → empty state + "Add Session"
-  /// - any status that has timeline data → read-only timeline; the
+  /// - in treatment with no sessions yet → empty state + "Add Session"
+  /// - any status that has sessions → read-only timeline; the
   ///   "View Sessions" action only appears while in treatment
   /// - otherwise nothing (pending review with no data, etc.)
   List<Widget> _sessionsRegion(
     BuildContext context,
     PatientStatus status,
-    bool timelineExists,
+    bool hasSessions,
   ) {
-    if (status == PatientStatus.inTreatment && !timelineExists) {
+    if (status == PatientStatus.inTreatment && !hasSessions) {
       return [
         const SizedBox(height: AppDimensions.lg),
         NoSessionsCard(onAddSession: () => _addSession(context)),
       ];
     }
-    if (timelineExists) {
+    if (hasSessions) {
       return [
         const SizedBox(height: AppDimensions.lg),
         ProgressTimelineCard(
-          timeline: details.timeline,
+          sessions: sessions,
           // "View Sessions" is available in every status except pending review
           // (in treatment it edits; completed/final review it's read-only).
           onViewSessions: status == PatientStatus.waitingApproval
               ? null
-              : () {
-                  Navigator.of(context).push(
+              : () async {
+                  await Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (_) => SessionsScreen(
                         clinicalCaseId: caseId,
@@ -178,6 +183,11 @@ class CaseDetailsBody extends StatelessWidget {
                       ),
                     ),
                   );
+                  // Sessions may have been created inside; refresh so the
+                  // timeline and case-details preview reflect the changes.
+                  if (context.mounted) {
+                    context.read<CaseDetailsCubit>().load(caseId);
+                  }
                 },
         ),
       ];
@@ -195,16 +205,16 @@ class CaseDetailsBody extends StatelessWidget {
       context,
       clinicalCaseId: caseId,
       subjectId: details.caseInfo.subjectId,
-      isFirstSession: details.timeline.isEmpty,
+      isFirstSession: sessions.isEmpty,
     );
     if (result == null || !context.mounted) return;
-    await cubit.load(caseId);
-    if (!context.mounted) return;
+    // Confirm first, then refresh the case details (which shows the shimmer).
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(content: Text('Session added')),
+        const SnackBar(content: Text('First session created')),
       );
+    await cubit.load(caseId);
   }
 }
 
@@ -258,7 +268,7 @@ class NoSessionsCard extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: onAddSession,
             icon: const Icon(Icons.add_rounded, size: 18),
-            label: const Text('Add Session'),
+            label: const Text('Add First Session'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: AppColors.white,

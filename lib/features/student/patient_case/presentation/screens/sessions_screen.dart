@@ -6,13 +6,17 @@ import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../../../../core/widgets/error_retry_view.dart';
 import '../../domain/use_cases/get_treatment_sessions_use_case.dart';
+import '../../domain/use_cases/start_treatment_session_use_case.dart';
 import '../manager/sessions/sessions_cubit.dart';
 import '../manager/sessions/sessions_state.dart';
 import '../models/session.dart';
 import '../widgets/add_session/add_session_sheet.dart';
 import '../widgets/case_details_top_bar.dart';
+import '../widgets/edit_schedule/edit_schedule_sheet.dart';
+import '../widgets/edit_session/edit_session_sheet.dart';
 import '../widgets/progress_timeline_section.dart';
 import '../widgets/session/session_timeline_item.dart';
+import '../widgets/session/sessions_shimmer.dart';
 import '../widgets/session_summary/session_summary_sheet.dart';
 
 class SessionsScreen extends StatelessWidget {
@@ -35,8 +39,10 @@ class SessionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SessionsCubit>(
-      create: (_) => SessionsCubit(sl<GetTreatmentSessionsUseCase>())
-        ..load(clinicalCaseId),
+      create: (_) => SessionsCubit(
+        sl<GetTreatmentSessionsUseCase>(),
+        sl<StartTreatmentSessionUseCase>(),
+      )..load(clinicalCaseId),
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
@@ -55,11 +61,7 @@ class SessionsScreen extends StatelessWidget {
                 child: BlocBuilder<SessionsCubit, SessionsState>(
                   builder: (context, state) {
                     if (state.isLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
-                        ),
-                      );
+                      return const SessionsShimmer();
                     }
                     if (state.hasError) {
                       return ErrorRetryView(
@@ -132,12 +134,22 @@ class _SessionsBody extends StatelessWidget {
                     SessionTimelineItem(
                       session: sessions[i],
                       isLast: i == sessions.length - 1,
-                      // Read-only: completed sessions can view their summary;
-                      // editing is not available until the create/edit backend
-                      // is wired up.
+                      // Status-driven actions: completed → view its summary;
+                      // active → edit; upcoming → start. Edit/Start are
+                      // placeholders until their backends are wired up.
                       onViewSummary: sessions[i].status ==
                               SessionStatus.completed
                           ? () => _viewSummary(context, sessions[i])
+                          : null,
+                      onEdit: sessions[i].status == SessionStatus.active
+                          ? () => _editSession(context, sessions[i])
+                          : null,
+                      onStart: sessions[i].status == SessionStatus.upcoming
+                          ? () => _startSession(context, sessions[i])
+                          : null,
+                      onEditSchedule: sessions[i].status ==
+                              SessionStatus.upcoming
+                          ? () => _editSchedule(context, sessions[i])
                           : null,
                     ),
               ],
@@ -157,7 +169,9 @@ class _SessionsBody extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () => _addSession(context),
                 icon: const Icon(Icons.add_rounded),
-                label: const Text('Create New Session'),
+                label: Text(
+                  sessions.isEmpty ? 'Add First Session' : 'Add Session',
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: AppColors.white,
@@ -177,14 +191,66 @@ class _SessionsBody extends StatelessWidget {
     );
   }
 
-  Future<void> _viewSummary(BuildContext context, Session session) async {
-    final shared = await showSessionSummarySheet(context, session: session);
-    if (shared == true && context.mounted) {
-      _comingSoon(context, 'Share summary');
-    }
+  Future<void> _editSchedule(BuildContext context, Session session) async {
+    final cubit = context.read<SessionsCubit>();
+    final updated = await showEditScheduleSheet(
+      context,
+      session: session,
+      subjectId: subjectId,
+    );
+    if (updated != true || !context.mounted) return;
+    // Confirm first, then reload (shows the sessions shimmer).
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(content: Text('Session updated successfully')),
+      );
+    await cubit.load(clinicalCaseId);
+  }
+
+  Future<void> _editSession(BuildContext context, Session session) async {
+    final cubit = context.read<SessionsCubit>();
+    final completed = await showEditSessionSheet(
+      context,
+      session: session,
+      subjectId: subjectId,
+    );
+    if (completed != true || !context.mounted) return;
+    // Confirm first, then refresh so its status/timeline update.
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(content: Text('Session completed successfully')),
+      );
+    await cubit.load(clinicalCaseId);
+  }
+
+  Future<void> _viewSummary(BuildContext context, Session session) {
+    return showSessionSummarySheet(context, session: session);
   }
 
   Future<void> _addSession(BuildContext context) async {
+    // A new session can only be created once every existing session is
+    // completed. This is order-independent and equivalent to "the latest
+    // session is completed" given the sequential lifecycle.
+    final canCreate = sessions.isEmpty ||
+        sessions.every((s) => s.status == SessionStatus.completed);
+    if (!canCreate) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: AppColors.error,
+            content: Text(
+              'You must complete the current session before creating a new one.',
+              style: TextStyle(color: AppColors.white),
+            ),
+          ),
+        );
+      return;
+    }
+
     final cubit = context.read<SessionsCubit>();
     final result = await showAddSessionSheet(
       context,
@@ -203,11 +269,32 @@ class _SessionsBody extends StatelessWidget {
       );
   }
 
-  void _comingSoon(BuildContext context, String action) {
+  Future<void> _startSession(BuildContext context, Session session) async {
+    final cubit = context.read<SessionsCubit>();
+    final error = await cubit.startSession(session.id);
+    if (!context.mounted) return;
+    if (error != null) {
+      // Failure (e.g. 409 window message) — surface the backend message.
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: AppColors.error,
+            content: Text(
+              error,
+              style: const TextStyle(color: AppColors.white),
+            ),
+          ),
+        );
+      return;
+    }
+    // Confirm first, then reload (shows the sessions shimmer).
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        SnackBar(content: Text('$action — coming soon')),
+        const SnackBar(content: Text('Session started successfully')),
       );
+    await cubit.load(clinicalCaseId);
   }
 }

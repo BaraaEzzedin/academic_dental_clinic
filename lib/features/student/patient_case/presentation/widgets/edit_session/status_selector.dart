@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
-import '../../models/session.dart';
+import '../../models/session_procedure_status.dart';
 
 class StatusSelector extends StatelessWidget {
   const StatusSelector({
@@ -10,8 +10,8 @@ class StatusSelector extends StatelessWidget {
     required this.onChanged,
   });
 
-  final SessionStatus selected;
-  final ValueChanged<SessionStatus> onChanged;
+  final SessionProcedureStatus selected;
+  final ValueChanged<SessionProcedureStatus> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class StatusSelector extends StatelessWidget {
       ),
       child: Row(
         children: [
-          for (final status in SessionStatus.values)
+          for (final status in SessionProcedureStatus.values)
             Expanded(
               child: _StatusSegment(
                 status: status,
@@ -45,7 +45,7 @@ class _StatusSegment extends StatelessWidget {
     required this.onTap,
   });
 
-  final SessionStatus status;
+  final SessionProcedureStatus status;
   final bool isSelected;
   final VoidCallback onTap;
 

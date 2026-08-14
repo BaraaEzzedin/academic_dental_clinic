@@ -1,12 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/use_cases/get_treatment_sessions_use_case.dart';
+import '../../../domain/use_cases/start_treatment_session_use_case.dart';
 import '../../mapper/session_ui_mapper.dart';
 import 'sessions_state.dart';
 
 class SessionsCubit extends Cubit<SessionsState> {
-  SessionsCubit(this._getTreatmentSessions) : super(const SessionsState());
+  SessionsCubit(this._getTreatmentSessions, this._startSession)
+      : super(const SessionsState());
 
   final GetTreatmentSessionsUseCase _getTreatmentSessions;
+  final StartTreatmentSessionUseCase _startSession;
 
   /// Loads the treatment sessions for the clinical case [clinicalCaseId].
   Future<void> load(int clinicalCaseId) async {
@@ -26,5 +29,13 @@ class SessionsCubit extends Cubit<SessionsState> {
         ),
       ),
     );
+  }
+
+  /// Starts the upcoming session [sessionId]. Returns `null` on success or the
+  /// backend error message (e.g. the 409 window message) on failure. The caller
+  /// controls the snackbar → reload order.
+  Future<String?> startSession(int sessionId) async {
+    final result = await _startSession(sessionId);
+    return result.fold((failure) => failure.message, (_) => null);
   }
 }

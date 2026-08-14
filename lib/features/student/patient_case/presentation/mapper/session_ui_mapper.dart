@@ -3,12 +3,13 @@ import '../../domain/entities/treatment_session_entity.dart';
 import '../models/session.dart';
 
 /// Maps the backend session status string to the presentation [SessionStatus].
+/// The backend returns exactly `active` / `upcoming` / `completed`.
 SessionStatus sessionStatusFromApi(String? value) {
-  return switch (value?.toUpperCase()) {
-    'COMPLETED' => SessionStatus.completed,
-    'IN_PROGRESS' => SessionStatus.inProgress,
-    'PLANNED' => SessionStatus.planned,
-    _ => SessionStatus.planned,
+  return switch (value?.toLowerCase()) {
+    'active' => SessionStatus.active,
+    'upcoming' => SessionStatus.upcoming,
+    'completed' => SessionStatus.completed,
+    _ => SessionStatus.upcoming,
   };
 }
 
@@ -18,8 +19,12 @@ SessionStatus sessionStatusFromApi(String? value) {
 Session sessionFromEntity(TreatmentSessionEntity entity) {
   final date = entity.appointmentDate;
   return Session(
+    id: entity.id,
     title: entity.title,
     date: date != null ? DateFormatter.toMediumDate(date) : '',
+    time: DateFormatter.toTimeOfDay(entity.startTime),
+    appointmentDate: date,
+    startTimeRaw: entity.startTime,
     status: sessionStatusFromApi(entity.rawStatus),
     items: const [],
     note: entity.notes.isEmpty ? null : entity.notes,

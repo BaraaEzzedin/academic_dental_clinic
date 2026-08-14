@@ -2,27 +2,28 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
-import '../../../../../core/utils/date_formatter.dart';
-import '../../domain/entities/timeline_entry_entity.dart';
 import '../models/progress_phase.dart';
+import '../models/session.dart';
 import 'progress_timeline_section.dart';
 import 'timeline_phase_item.dart';
 
 class ProgressTimelineCard extends StatelessWidget {
   const ProgressTimelineCard({
     super.key,
-    required this.timeline,
+    required this.sessions,
     this.onViewSessions,
   });
 
-  final List<TimelineEntryEntity> timeline;
+  /// The treatment sessions rendered as timeline phases (same data as the
+  /// Sessions screen).
+  final List<Session> sessions;
 
   /// When `null` the "View Sessions" affordances are hidden (read-only states).
   final VoidCallback? onViewSessions;
 
   @override
   Widget build(BuildContext context) {
-    final phases = timeline.map(_toPhase).toList(growable: false);
+    final phases = sessions.map(_toPhase).toList(growable: false);
     return ProgressTimelineSection(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,12 +65,17 @@ class ProgressTimelineCard extends StatelessWidget {
     );
   }
 
-  ProgressPhase _toPhase(TimelineEntryEntity entry) {
-    final completed = (entry.rawStatus ?? '').toLowerCase() == 'completed';
+  ProgressPhase _toPhase(Session session) {
+    // SessionStatus and PhaseStatus share the same backend vocabulary.
+    final status = switch (session.status) {
+      SessionStatus.active => PhaseStatus.active,
+      SessionStatus.upcoming => PhaseStatus.upcoming,
+      SessionStatus.completed => PhaseStatus.completed,
+    };
     return ProgressPhase(
-      title: entry.title,
-      date: entry.date != null ? DateFormatter.toMediumDate(entry.date!) : '',
-      status: completed ? PhaseStatus.completed : PhaseStatus.upcoming,
+      title: session.title,
+      date: session.date,
+      status: status,
     );
   }
 }

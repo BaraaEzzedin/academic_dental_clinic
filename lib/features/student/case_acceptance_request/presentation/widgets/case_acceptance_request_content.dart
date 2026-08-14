@@ -9,6 +9,7 @@ import '../manager/case_acceptance_request/case_acceptance_request_state.dart';
 import '../models/case_acceptance_request_args.dart';
 import 'add_procedure_card.dart';
 import 'case_acceptance_request_shimmer.dart';
+import 'case_images_section.dart';
 import 'dental_chart_card.dart';
 import 'patient_summary_card.dart';
 import 'procedure_picker_sheet.dart';
@@ -124,6 +125,8 @@ class _LoadedContent extends StatelessWidget {
             onRemove: cubit.removeRequest,
           ),
         ),
+        const SizedBox(height: AppDimensions.xl),
+        const CaseImagesSection(),
         const SizedBox(height: AppDimensions.xl),
         BlocBuilder<CaseAcceptanceRequestCubit, CaseAcceptanceRequestState>(
           buildWhen: (p, c) =>
