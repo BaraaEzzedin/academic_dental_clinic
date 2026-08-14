@@ -10,7 +10,7 @@ import '../../domain/entities/case_details_entity.dart';
 import '../../domain/use_cases/get_case_details_use_case.dart';
 import '../manager/case_details/case_details_cubit.dart';
 import '../manager/case_details/case_details_state.dart';
-import '../models/demo_sessions.dart';
+import '../widgets/add_session/add_session_sheet.dart';
 import '../widgets/case_details_top_bar.dart';
 import '../widgets/diagnostic_media_card.dart';
 import '../widgets/patient_case_header_card.dart';
@@ -93,6 +93,7 @@ class CaseDetailsBody extends StatelessWidget {
     final status = patientStatusFromApi(caseInfo.rawStatus);
     final isPending = status == PatientStatus.waitingApproval;
     final canEdit = status.canEditTreatment;
+    final timelineExists = details.timeline.isNotEmpty;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(
@@ -131,26 +132,146 @@ class CaseDetailsBody extends StatelessWidget {
           // Uploads are allowed only while the case is in treatment.
           canUpload: canEdit,
         ),
+        ..._sessionsRegion(context, status, timelineExists),
         if (!isPending) ...[
-          const SizedBox(height: AppDimensions.lg),
-          ProgressTimelineCard(
-            timeline: details.timeline,
-            // Sessions are editable only while in treatment.
-            onViewSessions: canEdit
-                ? () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) =>
-                            SessionsScreen(sessions: demoSessions()),
-                      ),
-                    );
-                  }
-                : null,
-          ),
           const SizedBox(height: AppDimensions.lg),
           SupervisorNotesCard(notes: details.supervisorNotes),
         ],
       ],
+    );
+  }
+
+  /// The timeline / sessions area, driven by the case status:
+  /// - in treatment with no timeline yet → empty state + "Add Session"
+  /// - any status that has timeline data → read-only timeline; the
+  ///   "View Sessions" action only appears while in treatment
+  /// - otherwise nothing (pending review with no data, etc.)
+  List<Widget> _sessionsRegion(
+    BuildContext context,
+    PatientStatus status,
+    bool timelineExists,
+  ) {
+    if (status == PatientStatus.inTreatment && !timelineExists) {
+      return [
+        const SizedBox(height: AppDimensions.lg),
+        NoSessionsCard(onAddSession: () => _addSession(context)),
+      ];
+    }
+    if (timelineExists) {
+      return [
+        const SizedBox(height: AppDimensions.lg),
+        ProgressTimelineCard(
+          timeline: details.timeline,
+          // "View Sessions" is available in every status except pending review
+          // (in treatment it edits; completed/final review it's read-only).
+          onViewSessions: status == PatientStatus.waitingApproval
+              ? null
+              : () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => SessionsScreen(
+                        clinicalCaseId: caseId,
+                        subjectId: details.caseInfo.subjectId,
+                        // Creating sessions is allowed only while in treatment.
+                        canCreateSession:
+                            status == PatientStatus.inTreatment,
+                      ),
+                    ),
+                  );
+                },
+        ),
+      ];
+    }
+    return const [];
+  }
+
+  /// Opens the "Add New Session" sheet for the in-treatment case. The empty
+  /// state only shows while no sessions exist, so this always creates the first
+  /// session (title only). Refreshes the case details on success so the new
+  /// session appears in the timeline.
+  Future<void> _addSession(BuildContext context) async {
+    final cubit = context.read<CaseDetailsCubit>();
+    final result = await showAddSessionSheet(
+      context,
+      clinicalCaseId: caseId,
+      subjectId: details.caseInfo.subjectId,
+      isFirstSession: details.timeline.isEmpty,
+    );
+    if (result == null || !context.mounted) return;
+    await cubit.load(caseId);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(content: Text('Session added')),
+      );
+  }
+}
+
+/// Empty-state card shown while a case is in treatment but has no sessions yet.
+/// [onAddSession] currently wires only the navigation/callback scaffolding.
+class NoSessionsCard extends StatelessWidget {
+  const NoSessionsCard({super.key, required this.onAddSession});
+
+  final VoidCallback onAddSession;
+
+  @override
+  Widget build(BuildContext context) {
+    return ProgressTimelineSection(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(AppDimensions.sm),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                ),
+                child: const Icon(
+                  Icons.event_note_rounded,
+                  color: AppColors.primary,
+                  size: AppDimensions.iconSize,
+                ),
+              ),
+              const SizedBox(width: AppDimensions.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('No sessions yet',
+                        style: AppTextStyles.sectionTitle),
+                    const SizedBox(height: AppDimensions.xs),
+                    Text(
+                      'No sessions have been created yet. Add the first '
+                      'treatment session to start tracking progress.',
+                      style: AppTextStyles.subtitle,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppDimensions.lg),
+          ElevatedButton.icon(
+            onPressed: onAddSession,
+            icon: const Icon(Icons.add_rounded, size: 18),
+            label: const Text('Add Session'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: AppDimensions.md),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+              ),
+              textStyle: AppTextStyles.button,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

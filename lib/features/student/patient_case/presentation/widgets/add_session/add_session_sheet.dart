@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
+import '../../../../../../core/service_locator/auth_service.dart';
 import '../../../../../../core/theme/app_text_style.dart';
 import '../../../../../../core/widgets/sheet_grabber.dart';
+import '../../../../open_case_appointment/domain/use_cases/get_available_appointments_use_case.dart';
+import '../../../domain/use_cases/create_treatment_session_use_case.dart';
 import '../../manager/add_session/add_session_cubit.dart';
 import '../../manager/add_session/add_session_state.dart';
 import 'available_times_section.dart';
@@ -13,23 +16,42 @@ import 'session_title_field.dart';
 class AddSessionResult {
   const AddSessionResult({
     required this.title,
-    required this.date,
-    required this.time,
+    this.date,
+    this.time,
   });
 
   final String title;
-  final DateTime date;
-  final String time;
+
+  /// Null for the first session (no appointment scheduled yet).
+  final DateTime? date;
+  final String? time;
 }
 
 
-Future<AddSessionResult?> showAddSessionSheet(BuildContext context) {
+/// Shows the "Add New Session" sheet for the case [clinicalCaseId].
+///
+/// When [isFirstSession] is true the sheet collects only a title (the first
+/// session has no appointment yet); otherwise the calendar and available times
+/// (loaded per [subjectId]) are shown. Returns the created session's details on
+/// success, or `null` if dismissed.
+Future<AddSessionResult?> showAddSessionSheet(
+  BuildContext context, {
+  required int clinicalCaseId,
+  required int subjectId,
+  required bool isFirstSession,
+}) {
   return showModalBottomSheet<AddSessionResult>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => BlocProvider(
-      create: (_) => AddSessionCubit(),
+      create: (_) => AddSessionCubit(
+        getAvailableAppointments: sl<GetAvailableAppointmentsUseCase>(),
+        createTreatmentSession: sl<CreateTreatmentSessionUseCase>(),
+        clinicalCaseId: clinicalCaseId,
+        subjectId: subjectId,
+        isFirstSession: isFirstSession,
+      ),
       child: const AddSessionSheet(),
     ),
   );
@@ -53,15 +75,29 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
 
   Future<void> _submit(BuildContext context) async {
     final cubit = context.read<AddSessionCubit>();
-    await cubit.submit();
+    final succeeded = await cubit.submit();
     if (!context.mounted) return;
     final state = cubit.state;
-    if (state.selectedDate == null || state.selectedTime == null) return;
+    if (!succeeded) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: AppColors.error,
+            content: Text(
+              state.submitError ?? 'Could not add the session.',
+              style: const TextStyle(color: AppColors.white),
+            ),
+          ),
+        );
+      return;
+    }
     Navigator.of(context).pop(
       AddSessionResult(
         title: state.title.trim(),
-        date: state.selectedDate!,
-        time: state.selectedTime!,
+        date: state.selectedDate,
+        time: state.selectedTime,
       ),
     );
   }
@@ -99,30 +135,35 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const _NextAppointmentBanner(),
-                        const SizedBox(height: AppDimensions.lg),
+                        if (!state.isFirstSession) ...[
+                          const _NextAppointmentBanner(),
+                          const SizedBox(height: AppDimensions.lg),
+                        ],
                         SessionTitleField(
                           controller: _titleController,
                           enabled: !state.isSubmitting,
                           onChanged: cubit.setTitle,
                         ),
-                        const SizedBox(height: AppDimensions.lg),
-                        SessionCalendar(
-                          focusedMonth: state.focusedMonth,
-                          selectedDate: state.selectedDate,
-                          enabled: !state.isSubmitting,
-                          onSelectDate: cubit.selectDate,
-                          onPreviousMonth: cubit.previousMonth,
-                          onNextMonth: cubit.nextMonth,
-                        ),
-                        const SizedBox(height: AppDimensions.xl),
-                        AvailableTimesSection(
-                          selectedDate: state.selectedDate,
-                          status: state.timesStatus,
-                          times: state.availableTimes,
-                          selectedTime: state.selectedTime,
-                          onSelectTime: cubit.selectTime,
-                        ),
+                        // The first session has no appointment: title only.
+                        if (!state.isFirstSession) ...[
+                          const SizedBox(height: AppDimensions.lg),
+                          SessionCalendar(
+                            focusedMonth: state.focusedMonth,
+                            selectedDate: state.selectedDate,
+                            enabled: !state.isSubmitting,
+                            onSelectDate: cubit.selectDate,
+                            onPreviousMonth: cubit.previousMonth,
+                            onNextMonth: cubit.nextMonth,
+                          ),
+                          const SizedBox(height: AppDimensions.xl),
+                          AvailableTimesSection(
+                            selectedDate: state.selectedDate,
+                            status: state.timesStatus,
+                            times: state.availableTimes,
+                            selectedTime: state.selectedTime,
+                            onSelectTime: cubit.selectTime,
+                          ),
+                        ],
                       ],
                     ),
                   ),

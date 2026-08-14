@@ -7,7 +7,6 @@ import '../models/tooth.dart';
 import '../utils/procedure_status.dart';
 import '../widgets/case_details_top_bar.dart';
 import '../widgets/dental_chart/dental_chart.dart';
-import '../widgets/dental_chart/dental_chart_legend.dart';
 import '../widgets/dental_chart/planned_procedure_sheet.dart';
 import '../widgets/procedure_answers_view.dart';
 import '../widgets/progress_timeline_section.dart';
@@ -83,8 +82,6 @@ class DentalChartScreen extends StatelessWidget {
                               }
                             },
                           ),
-                          const SizedBox(height: AppDimensions.lg),
-                          const DentalChartLegend(),
                         ],
                       ),
                     ),

@@ -7,6 +7,7 @@ import '../../../../../core/theme/app_text_style.dart';
 import '../../domain/use_cases/get_clinical_courses_use_case.dart';
 import '../manager/clinical_courses/clinical_courses_cubit.dart';
 import '../manager/clinical_courses/clinical_courses_state.dart';
+import '../screens/subject_details_screen.dart';
 import 'clinical_course_item.dart';
 import 'clinical_courses_shimmer.dart';
 
@@ -69,8 +70,11 @@ class _SectionContent extends StatelessWidget {
           final course = state.courses[index];
           return ClinicalCourseItem(
             course: course,
-            // TODO(feature): open the Course Details screen for [course].
-            onTap: () {},
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => SubjectDetailsScreen(subjectId: course.id),
+              ),
+            ),
           );
         },
       ),

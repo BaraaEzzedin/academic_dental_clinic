@@ -53,6 +53,7 @@ class SessionDetailCard extends StatelessWidget {
                 child: Text(
                   session.title,
                   style: AppTextStyles.sessionTitle.copyWith(
+                    fontSize: 15.5,
                     color: isActive ? AppColors.primary : AppColors.textPrimary,
                   ),
                 ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
-import '../../../../../core/widgets/app_primary_button.dart';
 import 'progress_timeline_section.dart';
 
 /// Shared media section card. Used by Case Details ("Diagnostic Media") and the
@@ -34,10 +33,24 @@ class MediaSectionCard extends StatelessWidget {
           body,
           if (onAddMedia != null) ...[
             const SizedBox(height: AppDimensions.lg),
-            AppPrimaryButton(
-              label: addLabel,
-              trailingIcon: Icons.add_rounded,
-              onPressed: onAddMedia,
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: onAddMedia,
+                icon: const Icon(Icons.add_rounded, size: 18),
+                label: Text(addLabel),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: AppColors.white,
+                  elevation: 0,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: AppDimensions.md),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                  ),
+                  textStyle: AppTextStyles.button,
+                ),
+              ),
             ),
           ],
         ],

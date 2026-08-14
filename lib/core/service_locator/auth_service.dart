@@ -27,12 +27,21 @@ import '../../features/student/case_acceptance_request/domain/use_cases/submit_c
 import '../../features/student/patient_case/data/data_source/case_details_remote_data_source.dart';
 import '../../features/student/patient_case/data/repositories/case_details_repository_impl.dart';
 import '../../features/student/patient_case/domain/repositories/case_details_repository.dart';
+import '../../features/student/patient_case/data/data_source/treatment_sessions_remote_data_source.dart';
+import '../../features/student/patient_case/data/repositories/treatment_sessions_repository_impl.dart';
+import '../../features/student/patient_case/domain/repositories/treatment_sessions_repository.dart';
+import '../../features/student/patient_case/domain/use_cases/create_treatment_session_use_case.dart';
 import '../../features/student/patient_case/domain/use_cases/get_case_details_use_case.dart';
+import '../../features/student/patient_case/domain/use_cases/get_treatment_sessions_use_case.dart';
 import '../../features/student/patient_case/domain/use_cases/upload_case_media_use_case.dart';
 import '../../features/student/clinical_courses/data/data_source/clinical_courses_remote_data_source.dart';
+import '../../features/student/clinical_courses/data/data_source/subject_details_remote_data_source.dart';
 import '../../features/student/clinical_courses/data/repositories/clinical_courses_repository_impl.dart';
+import '../../features/student/clinical_courses/data/repositories/subject_details_repository_impl.dart';
 import '../../features/student/clinical_courses/domain/repositories/clinical_courses_repository.dart';
+import '../../features/student/clinical_courses/domain/repositories/subject_details_repository.dart';
 import '../../features/student/clinical_courses/domain/use_cases/get_clinical_courses_use_case.dart';
+import '../../features/student/clinical_courses/domain/use_cases/get_subject_details_use_case.dart';
 import '../../features/student/open_case_appointment/data/data_source/appointment_remote_data_source.dart';
 import '../../features/student/open_case_appointment/data/repositories/appointment_repository_impl.dart';
 import '../../features/student/open_case_appointment/domain/repositories/appointment_repository.dart';
@@ -94,6 +103,9 @@ void configureDependencies() {
   sl.registerLazySingleton<ClinicalCoursesRemoteDataSource>(
     () => ClinicalCoursesRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<SubjectDetailsRemoteDataSource>(
+    () => SubjectDetailsRemoteDataSourceImpl(sl<ApiClient>()),
+  );
   sl.registerLazySingleton<OpenCasesRemoteDataSource>(
     () => OpenCasesRemoteDataSourceImpl(sl<ApiClient>()),
   );
@@ -105,6 +117,9 @@ void configureDependencies() {
   );
   sl.registerLazySingleton<CaseDetailsRemoteDataSource>(
     () => CaseDetailsRemoteDataSourceImpl(sl<ApiClient>()),
+  );
+  sl.registerLazySingleton<TreatmentSessionsRemoteDataSource>(
+    () => TreatmentSessionsRemoteDataSourceImpl(sl<ApiClient>()),
   );
   sl.registerLazySingleton<AddPatientRemoteDataSource>(
     () => AddPatientRemoteDataSourceImpl(sl<ApiClient>()),
@@ -141,6 +156,11 @@ void configureDependencies() {
       sl<ClinicalCoursesRemoteDataSource>(),
     ),
   );
+  sl.registerLazySingleton<SubjectDetailsRepository>(
+    () => SubjectDetailsRepositoryImpl(
+      sl<SubjectDetailsRemoteDataSource>(),
+    ),
+  );
   sl.registerLazySingleton<OpenCasesRepository>(
     () => OpenCasesRepositoryImpl(
       sl<OpenCasesRemoteDataSource>(),
@@ -159,6 +179,11 @@ void configureDependencies() {
   sl.registerLazySingleton<CaseDetailsRepository>(
     () => CaseDetailsRepositoryImpl(
       sl<CaseDetailsRemoteDataSource>(),
+    ),
+  );
+  sl.registerLazySingleton<TreatmentSessionsRepository>(
+    () => TreatmentSessionsRepositoryImpl(
+      sl<TreatmentSessionsRemoteDataSource>(),
     ),
   );
   sl.registerLazySingleton<AddPatientRepository>(
@@ -185,6 +210,9 @@ void configureDependencies() {
   );
   sl.registerFactory<GetClinicalCoursesUseCase>(
     () => GetClinicalCoursesUseCase(sl<ClinicalCoursesRepository>()),
+  );
+  sl.registerFactory<GetSubjectDetailsUseCase>(
+    () => GetSubjectDetailsUseCase(sl<SubjectDetailsRepository>()),
   );
   sl.registerFactory<GetOpenCasesUseCase>(
     () => GetOpenCasesUseCase(sl<OpenCasesRepository>()),
@@ -213,6 +241,12 @@ void configureDependencies() {
   );
   sl.registerFactory<GetCaseDetailsUseCase>(
     () => GetCaseDetailsUseCase(sl<CaseDetailsRepository>()),
+  );
+  sl.registerFactory<GetTreatmentSessionsUseCase>(
+    () => GetTreatmentSessionsUseCase(sl<TreatmentSessionsRepository>()),
+  );
+  sl.registerFactory<CreateTreatmentSessionUseCase>(
+    () => CreateTreatmentSessionUseCase(sl<TreatmentSessionsRepository>()),
   );
   sl.registerFactory<UploadCaseMediaUseCase>(
     () => UploadCaseMediaUseCase(sl<CaseDetailsRepository>()),

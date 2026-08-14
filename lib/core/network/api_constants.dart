@@ -20,6 +20,12 @@ class ApiConstants {
   static String myCaseDetails(int id) => '/clinical-cases/my/$id';
   static String caseMedia(int id) => '/clinical-cases/$id/media';
 
+  // Treatment sessions — student (query param: clinicalCaseId)
+  static const String treatmentSessions = '/treatment-sessions/student';
+
+  // Treatment session — create (POST)
+  static const String createTreatmentSession = '/treatment-session';
+
   // Clinical appointments — student
   static const String clinicalAppointments = '/clinical-appointments';
   static const String todayAppointments = '/clinical-appointments/today';
@@ -27,6 +33,7 @@ class ApiConstants {
 
   // Subjects (clinical courses) — student
   static const String mySubjects = '/students/me/subjects';
+  static String subjectDetails(int subjectId) => '$mySubjects/$subjectId';
   static String subjectProcedures(int subjectId) =>
       '/subjects/$subjectId/procedures';
 

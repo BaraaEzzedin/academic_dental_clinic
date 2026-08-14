@@ -27,22 +27,7 @@ class ProgressTimelineCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SectionTitle(
-            'Progress Timeline',
-            trailing: onViewSessions == null
-                ? null
-                : IconButton(
-                    onPressed: onViewSessions,
-                    icon: const Icon(
-                      Icons.chevron_right_rounded,
-                      color: AppColors.primary,
-                    ),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    splashRadius: 20,
-                    tooltip: 'View sessions',
-                  ),
-          ),
+          const SectionTitle('Progress Timeline'),
           const SizedBox(height: AppDimensions.lg),
           if (phases.isEmpty)
             Text('No progress recorded yet.', style: AppTextStyles.subtitle)
@@ -56,8 +41,10 @@ class ProgressTimelineCard extends StatelessWidget {
             const SizedBox(height: AppDimensions.lg),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: ElevatedButton.icon(
                 onPressed: onViewSessions,
+                icon: const Icon(Icons.event_note_rounded, size: 18),
+                label: const Text('View Sessions'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: AppColors.white,
@@ -69,7 +56,6 @@ class ProgressTimelineCard extends StatelessWidget {
                   ),
                   textStyle: AppTextStyles.button,
                 ),
-                child: const Text('View Sessions'),
               ),
             ),
           ],

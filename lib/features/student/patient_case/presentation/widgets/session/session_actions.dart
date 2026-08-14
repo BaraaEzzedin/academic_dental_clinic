@@ -20,6 +20,8 @@ class SessionActions extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (status) {
       case SessionStatus.completed:
+        // No summary callback (read-only without a summary) → no action.
+        if (onViewSummary == null) return const SizedBox.shrink();
         return SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
@@ -30,6 +32,8 @@ class SessionActions extends StatelessWidget {
           ),
         );
       case SessionStatus.inProgress:
+        // Editing is unavailable in read-only mode.
+        if (onEdit == null) return const SizedBox.shrink();
         return SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
