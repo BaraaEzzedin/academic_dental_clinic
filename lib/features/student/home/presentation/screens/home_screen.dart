@@ -1,5 +1,6 @@
 import 'package:academic_dental_clinic/core/constants/app_colors.dart';
 import 'package:academic_dental_clinic/features/student/add_patient/presentation/screens/add_patient_screen.dart';
+import 'package:academic_dental_clinic/features/student/ai_analysis/presentation/screens/ai_analysis_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_dimensions.dart';
@@ -48,6 +49,18 @@ class HomeScreen extends StatelessWidget {
                       MaterialPageRoute<void>(
                           builder: (_) =>
                               AddPatientScreen(),),);
+                },
+              ),
+              const SizedBox(height: AppDimensions.md),
+              AppPrimaryButton(
+                label: 'AI Assistant',
+                trailingIcon: Icons.auto_awesome_rounded,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const AiAnalysisScreen(),
+                    ),
+                  );
                 },
               ),
             ],

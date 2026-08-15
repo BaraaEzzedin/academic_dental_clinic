@@ -72,6 +72,9 @@ class ApiConstants {
   // TODO: confirm the exact path with the backend team.
   static const String notifications = '/notifications';
 
+  // AI assistant — analyze a dental image (POST, multipart)
+  static const String aiAnalyze = '/ai/analyze';
+
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 60);
   static const Duration receiveTimeout = Duration(seconds: 60);

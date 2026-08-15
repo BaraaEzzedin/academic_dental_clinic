@@ -19,6 +19,10 @@ import '../../features/student/add_patient/data/data_source/add_patient_remote_d
 import '../../features/student/add_patient/data/repositories/add_patient_repository_impl.dart';
 import '../../features/student/add_patient/domain/repositories/add_patient_repository.dart';
 import '../../features/student/add_patient/domain/use_cases/create_walk_in_case_use_case.dart';
+import '../../features/student/ai_analysis/data/data_source/ai_analysis_remote_data_source.dart';
+import '../../features/student/ai_analysis/data/repositories/ai_analysis_repository_impl.dart';
+import '../../features/student/ai_analysis/domain/repositories/ai_analysis_repository.dart';
+import '../../features/student/ai_analysis/domain/use_cases/analyze_image_use_case.dart';
 import '../../features/student/case_acceptance_request/data/data_source/case_acceptance_request_remote_data_source.dart';
 import '../../features/student/case_acceptance_request/data/repositories/case_acceptance_request_repository_impl.dart';
 import '../../features/student/case_acceptance_request/domain/repositories/case_acceptance_request_repository.dart';
@@ -162,6 +166,9 @@ void configureDependencies() {
   sl.registerLazySingleton<AddPatientRemoteDataSource>(
     () => AddPatientRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<AiAnalysisRemoteDataSource>(
+    () => AiAnalysisRemoteDataSourceImpl(sl<ApiClient>()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<StaffAuthRepository>(
@@ -231,6 +238,9 @@ void configureDependencies() {
     () => AddPatientRepositoryImpl(
       sl<AddPatientRemoteDataSource>(),
     ),
+  );
+  sl.registerLazySingleton<AiAnalysisRepository>(
+    () => AiAnalysisRepositoryImpl(sl<AiAnalysisRemoteDataSource>()),
   );
 
   // ---------- Use cases ----------
@@ -318,5 +328,8 @@ void configureDependencies() {
   );
   sl.registerFactory<GetNotificationsUseCase>(
     () => GetNotificationsUseCase(sl<NotificationsRepository>()),
+  );
+  sl.registerFactory<AnalyzeImageUseCase>(
+    () => AnalyzeImageUseCase(sl<AiAnalysisRepository>()),
   );
 }

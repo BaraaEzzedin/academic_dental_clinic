@@ -14,11 +14,12 @@ class OpenCaseModel extends OpenCaseEntity {
 
   factory OpenCaseModel.fromJson(Map<String, dynamic> json) {
     final clinic = json['clinic'] as Map<String, dynamic>?;
+    // `subject` is a nested object: { id, name, requiresDentalChart }.
+    final subject = json['subject'] as Map<String, dynamic>?;
     return OpenCaseModel(
       id: (json['id'] as num).toInt(),
-      subjectId:
-          (json['subjectId'] as num?)?.toInt() ?? CaseSubjectEntity.allId,
-      subject: json['subject'] as String? ?? '',
+      subjectId: (subject?['id'] as num?)?.toInt() ?? CaseSubjectEntity.allId,
+      subject: subject?['name'] as String? ?? '',
       patientName: json['patient'] as String? ?? '',
       chiefComplaint: json['chiefComplaint'] as String? ?? '',
       coordinatorName: json['coordinator'] as String?,
