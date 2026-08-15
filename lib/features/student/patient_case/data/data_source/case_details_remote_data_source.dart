@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import '../../../../../core/error/exceptions.dart';
 import '../../../../../core/network/api_client.dart';
 import '../../../../../core/network/api_constants.dart';
 import '../../../../../core/network/network_exception_mapper.dart';
@@ -31,6 +32,8 @@ class CaseDetailsRemoteDataSourceImpl implements CaseDetailsRemoteDataSource {
       return CaseDetailsModel.fromJson(data);
     } on DioException catch (e) {
       throw mapDioException(e);
+    } on Object catch (e) {
+      throw ServerException('Failed to parse case details: $e');
     }
   }
 

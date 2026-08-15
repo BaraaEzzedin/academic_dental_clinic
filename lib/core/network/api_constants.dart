@@ -65,11 +65,9 @@ class ApiConstants {
   static const String diagnosisSubmission = '/diagnosis-submission';
 
   // Push notifications — device token registration (POST)
-  // TODO: confirm the exact path/payload with the backend team.
-  static const String registerDeviceToken = '/notifications/device-token';
+  static const String registerDeviceToken = '/fcm-tokens';
 
   // Push notifications — notification history/list (GET)
-  // TODO: confirm the exact path with the backend team.
   static const String notifications = '/notifications';
 
   // AI assistant — analyze a dental image (POST, multipart)

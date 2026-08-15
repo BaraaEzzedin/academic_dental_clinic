@@ -23,8 +23,6 @@ Future<void> syncDeviceToken() async {
       return;
     }
 
-    service.listen();
-
     final token = await service.getToken();
     if (token != null) {
       await registerToken(token);

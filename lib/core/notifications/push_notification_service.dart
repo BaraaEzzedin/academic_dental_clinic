@@ -1,28 +1,79 @@
+import 'dart:convert';
 import 'dart:developer' as developer;
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import '../../features/notifications/presentation/screens/notifications_screen.dart';
+
+/// Global navigator key so notification taps can push routes without a
+/// BuildContext. Wired to `MaterialApp.navigatorKey` in main.dart.
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 /// Handles messages received while the app is terminated or in the background.
 ///
 /// Must be a top-level (or static) function annotated with `vm:entry-point`
-/// because the plugin runs it in a separate isolate.
+/// because the plugin runs it in a separate isolate. Messages that carry a
+/// `notification` block are shown in the system tray automatically, so there
+/// is nothing to display here.
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // The system tray already displays the notification. This handler is only
-  // for any data-only processing we may need later.
-  developer.log(
-    'Background message: ${message.messageId}',
-    name: 'FCM',
-  );
+  developer.log('Background message: ${message.messageId}', name: 'FCM');
 }
 
-/// Thin wrapper around [FirebaseMessaging] so the rest of the app depends on a
-/// single, testable surface instead of the plugin directly.
+/// Wraps [FirebaseMessaging] and [FlutterLocalNotificationsPlugin] so the app
+/// depends on a single surface. Responsible for permission, the device token,
+/// and turning every incoming [RemoteMessage] into an on-device notification.
 class PushNotificationService {
-  PushNotificationService([FirebaseMessaging? messaging])
-      : _messaging = messaging ?? FirebaseMessaging.instance;
+  PushNotificationService({
+    FirebaseMessaging? messaging,
+    FlutterLocalNotificationsPlugin? localNotifications,
+  })  : _messaging = messaging ?? FirebaseMessaging.instance,
+        _localNotifications =
+            localNotifications ?? FlutterLocalNotificationsPlugin();
 
   final FirebaseMessaging _messaging;
+  final FlutterLocalNotificationsPlugin _localNotifications;
+
+  /// Must match the backend's `android.notification.channelId`.
+  static const AndroidNotificationChannel _appointmentsChannel =
+      AndroidNotificationChannel(
+    'appointments',
+    'Appointments',
+    description: 'Appointment reminders and clinical updates.',
+    importance: Importance.high,
+  );
+
+  /// Sets up the local-notifications plugin, creates the Android channel, and
+  /// starts listening for foreground messages and taps. Call once at startup.
+  Future<void> initialize() async {
+    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initSettings = InitializationSettings(android: androidInit);
+    await _localNotifications.initialize(
+      settings: initSettings,
+      onDidReceiveNotificationResponse: (response) =>
+          _openNotifications(response.payload),
+    );
+
+    await _localNotifications
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(_appointmentsChannel);
+
+    // Foreground messages: FCM never shows these itself, so we display them.
+    FirebaseMessaging.onMessage.listen(_showNotification);
+
+    // App opened by tapping a tray notification (from background).
+    FirebaseMessaging.onMessageOpenedApp
+        .listen((message) => _openNotifications(jsonEncode(message.data)));
+
+    // App launched from terminated by tapping a notification.
+    final initialMessage = await _messaging.getInitialMessage();
+    if (initialMessage != null) {
+      _openNotifications(jsonEncode(initialMessage.data));
+    }
+  }
 
   /// Asks the user for notification permission (shows the Android 13+ prompt).
   Future<bool> requestPermission() async {
@@ -31,27 +82,49 @@ class PushNotificationService {
         settings.authorizationStatus == AuthorizationStatus.provisional;
   }
 
-  /// The current FCM registration token for this device (may be null if the
-  /// device has no Google Play services or permission was denied).
   Future<String?> getToken() => _messaging.getToken();
 
-  /// Emits a new token whenever Firebase rotates it. Re-send it to the backend.
   Stream<String> get onTokenRefresh => _messaging.onTokenRefresh;
 
-  /// Deletes the token (call on logout so this device stops receiving pushes).
   Future<void> deleteToken() => _messaging.deleteToken();
 
-  /// Wires up runtime listeners. Tray-only display, so foreground messages are
-  /// just logged; taps are where routing would later be added.
-  void listen() {
-    FirebaseMessaging.onMessage.listen((message) {
-      developer.log('Foreground message: ${message.messageId}', name: 'FCM');
-    });
+  /// Parses a [RemoteMessage] and posts it as a local notification.
+  void _showNotification(RemoteMessage message) {
+    final notification = message.notification;
+    // Data-only messages have nothing to display; ignore them here.
+    if (notification == null) return;
 
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      developer.log('Opened from notification: ${message.messageId}',
-          name: 'FCM');
-      // TODO: navigate based on message.data when deep-linking is needed.
-    });
+    final android = notification.android;
+    final channelId = android?.channelId ?? _appointmentsChannel.id;
+
+    _localNotifications.show(
+      id: notification.hashCode,
+      title: notification.title,
+      body: notification.body,
+      notificationDetails: NotificationDetails(
+        android: AndroidNotificationDetails(
+          channelId,
+          _channelNameFor(channelId),
+          channelDescription: _appointmentsChannel.description,
+          importance: Importance.high,
+          priority: Priority.high,
+          icon: '@mipmap/ic_launcher',
+        ),
+      ),
+      // Carry the data payload (notificationId, type, …) so a tap can route.
+      payload: jsonEncode(message.data),
+    );
+  }
+
+  void _openNotifications(String? payload) {
+    developer.log('Notification tapped: $payload', name: 'FCM');
+    rootNavigatorKey.currentState?.push(
+      MaterialPageRoute<void>(builder: (_) => const NotificationsScreen()),
+    );
+  }
+
+  String _channelNameFor(String channelId) {
+    if (channelId == _appointmentsChannel.id) return _appointmentsChannel.name;
+    return 'General';
   }
 }

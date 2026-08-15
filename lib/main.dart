@@ -14,6 +14,9 @@ void main() async {
   );
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   configureDependencies();
+  // Set up local notifications + the "appointments" channel and start
+  // displaying foreground messages / handling taps.
+  await sl<PushNotificationService>().initialize();
   runApp(const MyApp());
 }
 
@@ -24,6 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorKey: rootNavigatorKey,
       home: SelectRole(),
     );
   }
