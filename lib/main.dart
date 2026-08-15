@@ -1,9 +1,18 @@
+import 'package:academic_dental_clinic/core/notifications/push_notification_service.dart';
 import 'package:academic_dental_clinic/core/service_locator/auth_service.dart';
 import 'package:academic_dental_clinic/features/auth/presentation/screens/select_role.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   configureDependencies();
   runApp(const MyApp());
 }

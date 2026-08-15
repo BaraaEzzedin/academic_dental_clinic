@@ -64,6 +64,14 @@ class ApiConstants {
   // Case acceptance requests — student
   static const String diagnosisSubmission = '/diagnosis-submission';
 
+  // Push notifications — device token registration (POST)
+  // TODO: confirm the exact path/payload with the backend team.
+  static const String registerDeviceToken = '/notifications/device-token';
+
+  // Push notifications — notification history/list (GET)
+  // TODO: confirm the exact path with the backend team.
+  static const String notifications = '/notifications';
+
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 60);
   static const Duration receiveTimeout = Duration(seconds: 60);

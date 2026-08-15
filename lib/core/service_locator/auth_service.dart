@@ -69,8 +69,17 @@ import '../../features/student/today_appointments/data/data_source/today_appoint
 import '../../features/student/today_appointments/data/repositories/today_appointments_repository_impl.dart';
 import '../../features/student/today_appointments/domain/repositories/today_appointments_repository.dart';
 import '../../features/student/today_appointments/domain/use_cases/get_today_appointments_use_case.dart';
+import '../../features/notifications/data/data_source/device_token_remote_data_source.dart';
+import '../../features/notifications/data/data_source/notifications_remote_data_source.dart';
+import '../../features/notifications/data/repositories/device_token_repository_impl.dart';
+import '../../features/notifications/data/repositories/notifications_repository_impl.dart';
+import '../../features/notifications/domain/repositories/device_token_repository.dart';
+import '../../features/notifications/domain/repositories/notifications_repository.dart';
+import '../../features/notifications/domain/use_cases/get_notifications_use_case.dart';
+import '../../features/notifications/domain/use_cases/register_device_token_use_case.dart';
 import '../network/api_client.dart';
 import '../network/auth_interceptor.dart';
+import '../notifications/push_notification_service.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -92,6 +101,23 @@ void configureDependencies() {
         AuthInterceptor(() => sl<AuthLocalDataSource>().getToken()),
       ],
     ),
+  );
+
+  // ---------- Notifications ----------
+  sl.registerLazySingleton<PushNotificationService>(
+    () => PushNotificationService(),
+  );
+  sl.registerLazySingleton<DeviceTokenRemoteDataSource>(
+    () => DeviceTokenRemoteDataSourceImpl(sl<ApiClient>()),
+  );
+  sl.registerLazySingleton<DeviceTokenRepository>(
+    () => DeviceTokenRepositoryImpl(sl<DeviceTokenRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<NotificationsRemoteDataSource>(
+    () => NotificationsRemoteDataSourceImpl(sl<ApiClient>()),
+  );
+  sl.registerLazySingleton<NotificationsRepository>(
+    () => NotificationsRepositoryImpl(sl<NotificationsRemoteDataSource>()),
   );
 
   sl.registerLazySingleton<StaffAuthRemoteDataSource>(
@@ -286,5 +312,11 @@ void configureDependencies() {
   );
   sl.registerFactory<CreateWalkInCaseUseCase>(
     () => CreateWalkInCaseUseCase(sl<AddPatientRepository>()),
+  );
+  sl.registerFactory<RegisterDeviceTokenUseCase>(
+    () => RegisterDeviceTokenUseCase(sl<DeviceTokenRepository>()),
+  );
+  sl.registerFactory<GetNotificationsUseCase>(
+    () => GetNotificationsUseCase(sl<NotificationsRepository>()),
   );
 }

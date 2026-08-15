@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../notifications/notification_token_sync.dart';
 import '../../../domain/use_cases/staff_login_use_case.dart';
 import 'staff_login_state.dart';
 
@@ -17,7 +18,10 @@ class StaffLoginCubit extends Cubit<StaffLoginState> {
     );
     result.fold(
       (failure) => emit(StaffLoginFailure(failure.message)),
-      (user) => emit(StaffLoginSuccess(user)),
+      (user) {
+        emit(StaffLoginSuccess(user));
+        syncDeviceToken();
+      },
     );
   }
 }

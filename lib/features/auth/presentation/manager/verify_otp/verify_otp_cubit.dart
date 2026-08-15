@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../notifications/notification_token_sync.dart';
 import '../../../domain/use_cases/verify_otp_use_case.dart';
 import 'verify_otp_state.dart';
 
@@ -18,7 +19,10 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
     );
     result.fold(
       (failure) => emit(VerifyOtpFailure(failure.message)),
-      (user) => emit(VerifyOtpSuccess(user)),
+      (user) {
+        emit(VerifyOtpSuccess(user));
+        syncDeviceToken();
+      },
     );
   }
 }
