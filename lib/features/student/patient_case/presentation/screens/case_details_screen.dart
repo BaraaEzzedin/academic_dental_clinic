@@ -19,6 +19,7 @@ import '../widgets/diagnostic_media_card.dart';
 import '../widgets/patient_case_header_card.dart';
 import '../widgets/progress_timeline_card.dart';
 import '../widgets/progress_timeline_section.dart';
+import '../widgets/supervisor_evaluation_card.dart';
 import '../widgets/supervisor_notes_card.dart';
 import '../widgets/treatment_plan_summary_card.dart';
 import 'dental_chart_screen.dart';
@@ -141,6 +142,16 @@ class CaseDetailsBody extends StatelessWidget {
         if (!isPending) ...[
           const SizedBox(height: AppDimensions.lg),
           SupervisorNotesCard(notes: details.supervisorNotes),
+        ],
+        // The final outcome of the case — shown only once the supervisor has
+        // evaluated it. Absent entirely (no title, card, or placeholder) while
+        // [details.evaluation] is null.
+        if (details.evaluation != null) ...[
+          const SizedBox(height: AppDimensions.lg),
+          SupervisorEvaluationCard(
+            evaluation: details.evaluation!,
+            supervisorName: caseInfo.supervisor,
+          ),
         ],
       ],
     );

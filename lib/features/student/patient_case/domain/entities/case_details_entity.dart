@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'case_info_entity.dart';
 import 'case_media_entity.dart';
 import 'planned_procedure_entity.dart';
+import 'supervisor_evaluation_entity.dart';
 import 'supervisor_note_entity.dart';
 import 'timeline_entry_entity.dart';
 
@@ -14,6 +15,7 @@ class CaseDetailsEntity extends Equatable {
     required this.media,
     required this.timeline,
     required this.supervisorNotes,
+    this.evaluation,
   });
 
   final CaseInfoEntity caseInfo;
@@ -23,6 +25,9 @@ class CaseDetailsEntity extends Equatable {
   final List<TimelineEntryEntity> timeline;
   final List<SupervisorNoteEntity> supervisorNotes;
 
+  /// The supervisor's final evaluation, or `null` until the case is evaluated.
+  final SupervisorEvaluationEntity? evaluation;
+
   @override
   List<Object?> get props => [
         caseInfo,
@@ -31,5 +36,6 @@ class CaseDetailsEntity extends Equatable {
         media,
         timeline,
         supervisorNotes,
+        evaluation,
       ];
 }

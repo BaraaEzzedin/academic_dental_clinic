@@ -2,6 +2,7 @@ import '../../domain/entities/case_details_entity.dart';
 import 'case_info_model.dart';
 import 'case_media_model.dart';
 import 'planned_procedure_model.dart';
+import 'supervisor_evaluation_model.dart';
 import 'supervisor_note_model.dart';
 import 'timeline_entry_model.dart';
 
@@ -13,6 +14,7 @@ class CaseDetailsModel extends CaseDetailsEntity {
     required super.media,
     required super.timeline,
     required super.supervisorNotes,
+    super.evaluation,
   });
 
   factory CaseDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -24,6 +26,8 @@ class CaseDetailsModel extends CaseDetailsEntity {
     final media = json['caseMedia'] as List<dynamic>? ?? const [];
     final timeline = json['timeline'] as List<dynamic>? ?? const [];
     final notes = json['supervisorNotes'] as List<dynamic>? ?? const [];
+    // Present only once a supervisor has evaluated the case; `null` otherwise.
+    final evaluation = json['evaluation'] as Map<String, dynamic>?;
 
     return CaseDetailsModel(
       caseInfo: CaseInfoModel.fromJson(caseInfo),
@@ -44,6 +48,9 @@ class CaseDetailsModel extends CaseDetailsEntity {
           .whereType<Map<String, dynamic>>()
           .map(SupervisorNoteModel.fromJson)
           .toList(),
+      evaluation: evaluation == null
+          ? null
+          : SupervisorEvaluationModel.fromJson(evaluation),
     );
   }
 
