@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/service_locator/auth_service.dart';
+import '../../../../../core/theme/app_text_style.dart';
 import '../../../../../core/widgets/error_retry_view.dart';
+import '../../../../auth/domain/use_cases/logout_use_case.dart';
+import '../../../../auth/presentation/screens/select_role.dart';
 import '../../../home/presentation/manager/bottom_nav/bottom_nav_cubit.dart';
 import '../../../home/presentation/manager/bottom_nav/bottom_nav_state.dart';
 import '../../../home/presentation/widgets/home_top_bar.dart';
@@ -133,7 +136,91 @@ class _DashboardBody extends StatelessWidget {
           const SizedBox(height: AppDimensions.xl),
           SubjectRankingCard(subjects: subjects),
         ],
+
+        const SizedBox(height: AppDimensions.xl),
+        _LogoutButton(onTap: () => _logout(context)),
       ],
+    );
+  }
+
+  /// Confirms, signs out (best-effort backend call + local clear), then returns
+  /// to the role selection screen, clearing the navigation stack.
+  Future<void> _logout(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+        ),
+        title: const Text(
+          'Log Out',
+          style: TextStyle(
+            fontSize: 19,
+            fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to log out?',
+          style: AppTextStyles.subtitle,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('Log Out'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final navigator = Navigator.of(context, rootNavigator: true);
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(color: AppColors.primary),
+      ),
+    );
+    await sl<LogoutUseCase>().call();
+    // Clears the loading dialog and the whole app stack in one step.
+    navigator.pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: (_) => const SelectRole()),
+      (route) => false,
+    );
+  }
+}
+
+class _LogoutButton extends StatelessWidget {
+  const _LogoutButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: onTap,
+        icon: const Icon(Icons.logout_rounded, size: 18),
+        label: const Text('Log Out'),
+        style: OutlinedButton.styleFrom(
+          backgroundColor: AppColors.white,
+          foregroundColor: AppColors.error,
+          side: const BorderSide(color: AppColors.cardBorder),
+          padding: const EdgeInsets.symmetric(vertical: AppDimensions.md),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+          ),
+          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+        ),
+      ),
     );
   }
 }

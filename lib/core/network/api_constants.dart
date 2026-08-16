@@ -5,6 +5,7 @@ class ApiConstants {
 
   // Auth — staff
   static const String staffLogin = '/auth/staff/login';
+  static const String logout = '/auth/logout';
 
   // Auth — patient
   static const String requestOtp = '/auth/login/send-otp';

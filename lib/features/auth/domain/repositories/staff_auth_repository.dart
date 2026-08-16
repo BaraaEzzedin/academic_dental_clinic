@@ -8,4 +8,7 @@ abstract class StaffAuthRepository {
     required String email,
     required String password,
   });
+
+  /// Signs out: calls the backend (best-effort) and clears the local session.
+  Future<Either<Failure, Unit>> logout();
 }

@@ -8,6 +8,7 @@ import '../../features/auth/data/repositories/staff_auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/patient_auth_repository.dart';
 import '../../features/auth/domain/repositories/staff_auth_repository.dart';
 import '../../features/auth/domain/use_cases/request_otp_use_case.dart';
+import '../../features/auth/domain/use_cases/logout_use_case.dart';
 import '../../features/auth/domain/use_cases/staff_login_use_case.dart';
 import '../../features/auth/domain/use_cases/verify_otp_use_case.dart';
 import '../../features/student/assigned_patients/data/data_source/assigned_patients_remote_data_source.dart';
@@ -258,6 +259,9 @@ void configureDependencies() {
   // ---------- Use cases ----------
   sl.registerFactory<StaffLoginUseCase>(
     () => StaffLoginUseCase(sl<StaffAuthRepository>()),
+  );
+  sl.registerFactory<LogoutUseCase>(
+    () => LogoutUseCase(sl<StaffAuthRepository>()),
   );
   sl.registerFactory<RequestOtpUseCase>(
     () => RequestOtpUseCase(sl<PatientAuthRepository>()),

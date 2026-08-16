@@ -11,6 +11,8 @@ abstract class StaffAuthRemoteDataSource {
     required String email,
     required String password,
   });
+
+  Future<void> logout();
 }
 
 class StaffAuthRemoteDataSourceImpl implements StaffAuthRemoteDataSource {
@@ -41,6 +43,15 @@ class StaffAuthRemoteDataSourceImpl implements StaffAuthRemoteDataSource {
         'Staff login error status code: ${e.response?.statusCode}',
         name: 'AUTH',
       );
+      throw mapDioException(e);
+    }
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      await apiClient.post<Map<String, dynamic>>(ApiConstants.logout);
+    } on DioException catch (e) {
       throw mapDioException(e);
     }
   }

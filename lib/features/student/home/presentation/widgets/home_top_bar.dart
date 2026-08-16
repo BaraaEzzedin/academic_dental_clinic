@@ -34,12 +34,8 @@ class HomeTopBar extends StatelessWidget {
         children: [
           const CircleAvatar(
             radius: 22,
-            backgroundColor: AppColors.logoBorder,
-            child: Icon(
-              Icons.person_rounded,
-              color: AppColors.primary,
-              size: 26,
-            ),
+            backgroundColor: AppColors.white,
+            backgroundImage: AssetImage('assets/images/logo.png'),
           ),
           const SizedBox(width: AppDimensions.md),
           Expanded(

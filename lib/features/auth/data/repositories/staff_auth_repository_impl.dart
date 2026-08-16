@@ -34,4 +34,21 @@ class StaffAuthRepositoryImpl implements StaffAuthRepository {
       return Left(mapExceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> logout() async {
+    // Best-effort: tell the backend, but always clear the local session so the
+    // user is signed out even if the network call fails.
+    try {
+      await remote.logout();
+    } on AppException {
+      // Ignore — proceed to clear the local session.
+    }
+    try {
+      await local.clearToken();
+    } on AppException {
+      // Ignore — the token may already be gone.
+    }
+    return const Right(unit);
+  }
 }

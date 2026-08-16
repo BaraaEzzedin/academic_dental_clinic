@@ -4,13 +4,18 @@ import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../domain/entities/student_dashboard_entity.dart';
 
-/// Section 1 — the student's academic identity. Styled as a distinctive teal
-/// accent card (matching the Home identity card) so the dashboard opens with a
-/// clear "who am I / what year" answer, not a profile page.
+/// Section 1 — the student's academic identity. Styled as a teal gradient card
+/// (primary → secondary, matching the Home identity card) so the dashboard
+/// opens with a clear "who am I / what year" answer, not a profile page.
 class DashboardIdentityCard extends StatelessWidget {
   const DashboardIdentityCard({super.key, required this.student});
 
   final DashboardStudentEntity student;
+
+  // Light-on-gradient variants of the shared identity styles.
+  static final TextStyle _nameStyle =
+      AppTextStyles.studentCardName.copyWith(color: AppColors.white);
+  static const Color _mutedOnGradient = Color(0xFFCDECEC);
 
   @override
   Widget build(BuildContext context) {
@@ -22,23 +27,29 @@ class DashboardIdentityCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppDimensions.xl),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-        border: Border.all(color: AppColors.cardBorder),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primary, AppColors.secondary],
+        ),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.28),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CircleAvatar(
-            radius: 26,
-            backgroundColor: AppColors.logoBorder,
-            child: Icon(
-              Icons.school_rounded,
-              color: AppColors.primary,
-              size: 28,
-            ),
+          const Icon(
+            Icons.school_rounded,
+            color: AppColors.white,
+            size: 24,
           ),
-          const SizedBox(width: AppDimensions.lg),
+          const SizedBox(width: AppDimensions.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,13 +58,14 @@ class DashboardIdentityCard extends StatelessWidget {
                   student.fullName,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.studentCardName,
+                  style: _nameStyle,
                 ),
                 if (universityId.isNotEmpty) ...[
                   const SizedBox(height: AppDimensions.xs),
                   Text(
                     'University ID · $universityId',
-                    style: AppTextStyles.studentCardAcademicYear,
+                    style: AppTextStyles.studentCardAcademicYear
+                        .copyWith(color: _mutedOnGradient),
                   ),
                 ],
                 if (studyYear.isNotEmpty) ...[
@@ -64,7 +76,8 @@ class DashboardIdentityCard extends StatelessWidget {
                   const SizedBox(height: AppDimensions.sm),
                   Text(
                     'Academic Year $academicYear',
-                    style: AppTextStyles.studentCardAcademicYear,
+                    style: AppTextStyles.studentCardAcademicYear
+                        .copyWith(color: _mutedOnGradient),
                   ),
                 ],
               ],
@@ -89,11 +102,15 @@ class _Pill extends StatelessWidget {
         vertical: 6,
       ),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.10),
+        color: AppColors.white.withValues(alpha: 0.16),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.22)),
+        border: Border.all(color: AppColors.white.withValues(alpha: 0.22)),
       ),
-      child: Text(label, style: AppTextStyles.studentCardStudyYear),
+      child: Text(
+        label,
+        style: AppTextStyles.studentCardStudyYear
+            .copyWith(color: AppColors.white),
+      ),
     );
   }
 }
