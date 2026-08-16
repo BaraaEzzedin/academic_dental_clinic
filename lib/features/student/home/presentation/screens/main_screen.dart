@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../open_cases/presentation/screens/open_cases_page.dart';
 import '../../../patients/presentation/screens/assigned_patients_page.dart';
+import '../../../student_dashboard/presentation/screens/student_dashboard_screen.dart';
 import '../manager/bottom_nav/bottom_nav_cubit.dart';
 import '../manager/bottom_nav/bottom_nav_state.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -15,7 +16,7 @@ class MainScreen extends StatelessWidget {
     HomeScreen(),
     OpenCasesPage(),
     AssignedPatientsPage(),
-    TabPlaceholder(label: 'Patients'),
+    StudentDashboardScreen(),
   ];
 
   @override
@@ -37,26 +38,6 @@ class MainScreen extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: const AppBottomNavBar(),
-      ),
-    );
-  }
-}
-
-class TabPlaceholder extends StatelessWidget {
-  const TabPlaceholder({super.key, required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
-        ),
       ),
     );
   }

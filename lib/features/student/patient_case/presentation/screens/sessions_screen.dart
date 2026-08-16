@@ -4,7 +4,9 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/theme/app_text_style.dart';
+import '../../../../../core/utils/date_formatter.dart';
 import '../../../../../core/widgets/error_retry_view.dart';
+import '../../../../auth/data/data_source/auth_local_data_source.dart';
 import '../../domain/use_cases/get_treatment_sessions_use_case.dart';
 import '../../domain/use_cases/start_treatment_session_use_case.dart';
 import '../manager/sessions/sessions_cubit.dart';
@@ -13,6 +15,7 @@ import '../models/session.dart';
 import '../widgets/add_session/add_session_sheet.dart';
 import '../widgets/case_details_top_bar.dart';
 import '../widgets/edit_schedule/edit_schedule_sheet.dart';
+import '../widgets/edit_schedule/session_updated_dialog.dart';
 import '../widgets/edit_session/edit_session_sheet.dart';
 import '../widgets/progress_timeline_section.dart';
 import '../widgets/session/session_timeline_item.dart';
@@ -193,18 +196,26 @@ class _SessionsBody extends StatelessWidget {
 
   Future<void> _editSchedule(BuildContext context, Session session) async {
     final cubit = context.read<SessionsCubit>();
-    final updated = await showEditScheduleSheet(
+    final result = await showEditScheduleSheet(
       context,
       session: session,
       subjectId: subjectId,
     );
-    if (updated != true || !context.mounted) return;
-    // Confirm first, then reload (shows the sessions shimmer).
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(content: Text('Session updated successfully')),
-      );
+    if (result == null || !context.mounted) return;
+
+    // Confirm with a shareable summary of the new schedule.
+    final studentName = await sl<AuthLocalDataSource>().getUserName() ?? '';
+    if (!context.mounted) return;
+    await showSessionUpdatedDialog(
+      context,
+      title: result.title,
+      date: result.date,
+      time: DateFormatter.toTimeOfDay(result.startTime),
+      studentName: studentName,
+    );
+    if (!context.mounted) return;
+
+    // Reload so the timeline reflects the new schedule (shows the shimmer).
     await cubit.load(clinicalCaseId);
   }
 

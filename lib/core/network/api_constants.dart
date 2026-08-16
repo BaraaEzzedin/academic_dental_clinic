@@ -58,6 +58,9 @@ class ApiConstants {
   static const String studentUpcomingAppointments =
       '/clinical-appointments/student-upcoming';
 
+  // Student dashboard / academic profile
+  static const String studentProfile = '/students/profile';
+
   // Subjects (clinical courses) — student
   static const String mySubjects = '/students/me/subjects';
   static String subjectDetails(int subjectId) => '$mySubjects/$subjectId';

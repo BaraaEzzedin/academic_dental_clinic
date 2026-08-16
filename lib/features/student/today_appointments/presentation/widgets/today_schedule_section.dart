@@ -5,6 +5,8 @@ import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/theme/app_text_style.dart';
 import '../../domain/use_cases/get_today_appointments_use_case.dart';
+import '../../../patient_case/presentation/screens/case_details_screen.dart';
+import '../../domain/entities/today_appointment_entity.dart';
 import '../manager/today_appointments/today_appointments_cubit.dart';
 import '../manager/today_appointments/today_appointments_state.dart';
 import '../screens/all_appointments_screen.dart';
@@ -78,7 +80,11 @@ class _SectionContent extends StatelessWidget {
 
     // Today takes priority; fall back to a short preview of upcoming.
     if (state.today.isNotEmpty) {
-      return ScheduleGroup(label: 'Today', items: state.today);
+      return ScheduleGroup(
+        label: 'Today',
+        items: state.today,
+        onItemTap: (item) => _openCase(context, item),
+      );
     }
     return ScheduleGroup(
       label: 'Upcoming',
@@ -86,6 +92,16 @@ class _SectionContent extends StatelessWidget {
           .take(TodayScheduleSection._upcomingPreviewLimit)
           .toList(),
       showDate: true,
+      onItemTap: (item) => _openCase(context, item),
+    );
+  }
+
+  /// Opens the case behind a tapped appointment.
+  void _openCase(BuildContext context, AppointmentEntity item) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CaseDetailsScreen(caseId: item.clinicalCaseId),
+      ),
     );
   }
 }

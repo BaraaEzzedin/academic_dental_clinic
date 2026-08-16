@@ -4,7 +4,9 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/service_locator/auth_service.dart';
 import '../../../../../core/theme/app_text_style.dart';
+import '../../../patient_case/presentation/screens/case_details_screen.dart';
 import '../../../patient_case/presentation/widgets/case_details_top_bar.dart';
+import '../../domain/entities/today_appointment_entity.dart';
 import '../../domain/use_cases/get_today_appointments_use_case.dart';
 import '../manager/today_appointments/today_appointments_cubit.dart';
 import '../manager/today_appointments/today_appointments_state.dart';
@@ -87,7 +89,11 @@ class _Content extends StatelessWidget {
       ),
       children: [
         if (state.today.isNotEmpty)
-          ScheduleGroup(label: 'Today', items: state.today),
+          ScheduleGroup(
+            label: 'Today',
+            items: state.today,
+            onItemTap: (item) => _openCase(context, item),
+          ),
         if (state.today.isNotEmpty && state.upcoming.isNotEmpty)
           const SizedBox(height: AppDimensions.xl),
         if (state.upcoming.isNotEmpty)
@@ -95,8 +101,18 @@ class _Content extends StatelessWidget {
             label: 'Upcoming',
             items: state.upcoming,
             showDate: true,
+            onItemTap: (item) => _openCase(context, item),
           ),
       ],
+    );
+  }
+
+  /// Opens the case behind a tapped appointment.
+  void _openCase(BuildContext context, AppointmentEntity item) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CaseDetailsScreen(caseId: item.clinicalCaseId),
+      ),
     );
   }
 }

@@ -73,6 +73,10 @@ import '../../features/student/today_appointments/data/data_source/today_appoint
 import '../../features/student/today_appointments/data/repositories/today_appointments_repository_impl.dart';
 import '../../features/student/today_appointments/domain/repositories/today_appointments_repository.dart';
 import '../../features/student/today_appointments/domain/use_cases/get_today_appointments_use_case.dart';
+import '../../features/student/student_dashboard/data/data_source/student_dashboard_remote_data_source.dart';
+import '../../features/student/student_dashboard/data/repositories/student_dashboard_repository_impl.dart';
+import '../../features/student/student_dashboard/domain/repositories/student_dashboard_repository.dart';
+import '../../features/student/student_dashboard/domain/use_cases/get_student_dashboard_use_case.dart';
 import '../../features/notifications/data/data_source/device_token_remote_data_source.dart';
 import '../../features/notifications/data/data_source/notifications_remote_data_source.dart';
 import '../../features/notifications/data/repositories/device_token_repository_impl.dart';
@@ -139,6 +143,9 @@ void configureDependencies() {
   sl.registerLazySingleton<TodayAppointmentsRemoteDataSource>(
     () => TodayAppointmentsRemoteDataSourceImpl(sl<ApiClient>()),
   );
+  sl.registerLazySingleton<StudentDashboardRemoteDataSource>(
+    () => StudentDashboardRemoteDataSourceImpl(sl<ApiClient>()),
+  );
   sl.registerLazySingleton<ClinicalCoursesRemoteDataSource>(
     () => ClinicalCoursesRemoteDataSourceImpl(sl<ApiClient>()),
   );
@@ -194,6 +201,11 @@ void configureDependencies() {
   sl.registerLazySingleton<TodayAppointmentsRepository>(
     () => TodayAppointmentsRepositoryImpl(
       sl<TodayAppointmentsRemoteDataSource>(),
+    ),
+  );
+  sl.registerLazySingleton<StudentDashboardRepository>(
+    () => StudentDashboardRepositoryImpl(
+      sl<StudentDashboardRemoteDataSource>(),
     ),
   );
   sl.registerLazySingleton<ClinicalCoursesRepository>(
@@ -258,6 +270,9 @@ void configureDependencies() {
   );
   sl.registerFactory<GetTodayAppointmentsUseCase>(
     () => GetTodayAppointmentsUseCase(sl<TodayAppointmentsRepository>()),
+  );
+  sl.registerFactory<GetStudentDashboardUseCase>(
+    () => GetStudentDashboardUseCase(sl<StudentDashboardRepository>()),
   );
   sl.registerFactory<GetClinicalCoursesUseCase>(
     () => GetClinicalCoursesUseCase(sl<ClinicalCoursesRepository>()),

@@ -110,26 +110,26 @@ class AppTextStyles {
   );
 
   // ---------- Student home: identity card ----------
-  // Rendered on the teal accent card, so these use light-on-dark colors while
-  // keeping the weights/sizes of the rest of the home hierarchy.
+  // Rendered on the standard white card, matching the app's dark-on-white
+  // hierarchy.
   static const TextStyle studentCardName = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.w800,
-    color: AppColors.white,
+    color: AppColors.textPrimary,
     height: 1.15,
   );
 
   static const TextStyle studentCardStudyYear = TextStyle(
     fontSize: 13,
     fontWeight: FontWeight.w800,
-    color: AppColors.white,
+    color: AppColors.primary,
     letterSpacing: 0.4,
   );
 
   static const TextStyle studentCardAcademicYear = TextStyle(
     fontSize: 13.5,
     fontWeight: FontWeight.w500,
-    color: Color(0xFFCDECEC),
+    color: AppColors.textSecondary,
     letterSpacing: 0.2,
   );
 

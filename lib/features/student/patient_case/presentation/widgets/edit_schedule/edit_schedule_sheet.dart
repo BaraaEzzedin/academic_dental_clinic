@@ -14,15 +14,33 @@ import '../add_session/available_times_section.dart';
 import '../add_session/session_calendar.dart';
 import '../add_session/session_title_field.dart';
 
+/// The new schedule after a successful edit, returned by the sheet so the
+/// caller can confirm/share it.
+class EditScheduleResult {
+  const EditScheduleResult({
+    required this.title,
+    required this.date,
+    required this.startTime,
+  });
+
+  final String title;
+
+  /// The new appointment day (may be null if it was never scheduled).
+  final DateTime? date;
+
+  /// The new start time as `HH:mm`.
+  final String startTime;
+}
+
 /// Opens the "Edit Session" (reschedule) sheet for an upcoming [session].
-/// Returns `true` when the session was updated.
-Future<bool?> showEditScheduleSheet(
+/// Returns the new [EditScheduleResult] when the session was updated.
+Future<EditScheduleResult?> showEditScheduleSheet(
   BuildContext context, {
   required Session session,
   required int subjectId,
 }) {
   final initialTime = _normalizeTime(session.startTimeRaw);
-  return showModalBottomSheet<bool>(
+  return showModalBottomSheet<EditScheduleResult>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
@@ -83,7 +101,14 @@ class _EditScheduleSheetState extends State<EditScheduleSheet> {
         );
       return;
     }
-    Navigator.of(context).pop(true);
+    final s = cubit.state;
+    Navigator.of(context).pop(
+      EditScheduleResult(
+        title: s.title.trim(),
+        date: s.selectedDate ?? s.originalDate,
+        startTime: s.selectedTime ?? s.originalTime,
+      ),
+    );
   }
 
   @override
