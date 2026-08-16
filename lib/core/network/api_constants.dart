@@ -54,6 +54,9 @@ class ApiConstants {
   static const String clinicalAppointments = '/clinical-appointments';
   static const String todayAppointments = '/clinical-appointments/today';
   static const String availableAppointments = '/clinical-appointments/available';
+  // Grouped schedule for the Home screen: { today: [...], upcoming: [...] }.
+  static const String studentUpcomingAppointments =
+      '/clinical-appointments/student-upcoming';
 
   // Subjects (clinical courses) — student
   static const String mySubjects = '/students/me/subjects';

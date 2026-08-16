@@ -25,6 +25,10 @@ class StaffAuthRepositoryImpl implements StaffAuthRepository {
       );
       await local.saveToken(result.accessToken);
       await local.saveUserName(result.user.fullName);
+      await local.saveStudentProfile(
+        studyYear: result.user.studyYear,
+        academicYear: result.user.academicYear,
+      );
       return Right(result.user);
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));

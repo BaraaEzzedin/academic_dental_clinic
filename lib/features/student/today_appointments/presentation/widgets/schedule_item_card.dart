@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/enums/clinical_appointment_status.dart';
+import '../../../../../core/utils/date_formatter.dart';
 import '../../domain/entities/today_appointment_entity.dart';
 import 'appointment_card.dart';
 
@@ -11,12 +12,17 @@ class ScheduleItemCard extends StatelessWidget {
     required this.item,
     this.isFirst = false,
     this.isLast = false,
+    this.showDate = false,
     this.onTap,
   });
 
-  final TodayAppointmentEntity item;
+  final AppointmentEntity item;
   final bool isFirst;
   final bool isLast;
+
+  /// Whether to surface the appointment's date as the third line — used for the
+  /// "upcoming" group, where the day matters. Hidden for today's items.
+  final bool showDate;
   final VoidCallback? onTap;
 
   Color get accent => switch (item.status) {
@@ -25,6 +31,16 @@ class ScheduleItemCard extends StatelessWidget {
         ClinicalAppointmentStatus.cancelled => AppColors.error,
         ClinicalAppointmentStatus.noShow => AppColors.warning,
       };
+
+  String get _startTime => DateFormatter.toTimeOfDay(item.start);
+
+  String get _subtitle {
+    final supervisor = item.supervisorName.trim();
+    return supervisor.isEmpty ? '' : 'Dr. $supervisor';
+  }
+
+  String get _dateLabel =>
+      (showDate && item.date != null) ? DateFormatter.toMediumDate(item.date!) : '';
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +60,10 @@ class ScheduleItemCard extends StatelessWidget {
               child: AppointmentCard(
                 accent: accent,
                 title: item.patientName,
-                subject: item.subject,
-                clinic: item.clinic,
-                time: item.start,
+                subject: _subtitle,
+                time: _startTime,
+                meta: _dateLabel,
+                metaIcon: Icons.event_outlined,
                 badgeLabel: item.status.label,
                 onTap: onTap,
               ),

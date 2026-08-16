@@ -10,6 +10,12 @@ abstract class AuthLocalDataSource {
   /// (e.g. the "created patient" appointment summary) without re-fetching.
   Future<void> saveUserName(String name);
   Future<String?> getUserName();
+
+  /// Persists the student's academic profile (study year / academic year) so
+  /// the Home identity card can render it without re-fetching.
+  Future<void> saveStudentProfile({String? studyYear, String? academicYear});
+  Future<String?> getStudyYear();
+  Future<String?> getAcademicYear();
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
@@ -19,6 +25,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   static const String tokenKey = 'access_token';
   static const String userNameKey = 'user_full_name';
+  static const String studyYearKey = 'user_study_year';
+  static const String academicYearKey = 'user_academic_year';
 
   @override
   Future<void> saveToken(String token) async {
@@ -43,6 +51,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     try {
       await storage.delete(key: tokenKey);
       await storage.delete(key: userNameKey);
+      await storage.delete(key: studyYearKey);
+      await storage.delete(key: academicYearKey);
     } catch (e) {
       throw const CacheException('Failed to clear the session token.');
     }
@@ -63,6 +73,41 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       return await storage.read(key: userNameKey);
     } catch (e) {
       throw const CacheException('Failed to read the user name.');
+    }
+  }
+
+  @override
+  Future<void> saveStudentProfile({
+    String? studyYear,
+    String? academicYear,
+  }) async {
+    try {
+      if (studyYear != null) {
+        await storage.write(key: studyYearKey, value: studyYear);
+      }
+      if (academicYear != null) {
+        await storage.write(key: academicYearKey, value: academicYear);
+      }
+    } catch (e) {
+      throw const CacheException('Failed to save the student profile.');
+    }
+  }
+
+  @override
+  Future<String?> getStudyYear() async {
+    try {
+      return await storage.read(key: studyYearKey);
+    } catch (e) {
+      throw const CacheException('Failed to read the study year.');
+    }
+  }
+
+  @override
+  Future<String?> getAcademicYear() async {
+    try {
+      return await storage.read(key: academicYearKey);
+    } catch (e) {
+      throw const CacheException('Failed to read the academic year.');
     }
   }
 }

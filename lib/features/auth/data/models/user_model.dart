@@ -6,13 +6,18 @@ class UserModel extends User {
     required super.id,
     required super.fullName,
     required super.role,
+    super.academicYear,
+    super.studyYear,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: (json['id'] as num).toInt(),
-      fullName: json['full_name'] as String,
+      // Prefer `full_name`, falling back to `name` when present.
+      fullName: (json['full_name'] as String?) ?? (json['name'] as String?) ?? '',
       role: userRoleFromApi(json['role'] as String?),
+      academicYear: json['academicYear'] as String?,
+      studyYear: json['studyYear'] as String?,
     );
   }
 
@@ -21,6 +26,8 @@ class UserModel extends User {
       'id': id,
       'full_name': fullName,
       'role': userRoleToApi(role),
+      'academicYear': academicYear,
+      'studyYear': studyYear,
     };
   }
 }

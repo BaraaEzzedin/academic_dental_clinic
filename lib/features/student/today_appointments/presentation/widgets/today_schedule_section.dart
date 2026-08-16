@@ -7,11 +7,20 @@ import '../../../../../core/theme/app_text_style.dart';
 import '../../domain/use_cases/get_today_appointments_use_case.dart';
 import '../manager/today_appointments/today_appointments_cubit.dart';
 import '../manager/today_appointments/today_appointments_state.dart';
-import 'schedule_item_card.dart';
+import '../screens/all_appointments_screen.dart';
+import 'schedule_group.dart';
 import 'today_schedule_shimmer.dart';
 
+/// Home screen's "Your Schedule" section.
+///
+/// Prioritises today's appointments: when any exist they are all shown as a
+/// timeline. Otherwise it previews up to two upcoming appointments. A friendly
+/// empty state appears only when there is nothing in either group.
 class TodayScheduleSection extends StatelessWidget {
   const TodayScheduleSection({super.key});
+
+  /// How many upcoming appointments to preview on Home when today is empty.
+  static const int _upcomingPreviewLimit = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +30,22 @@ class TodayScheduleSection extends StatelessWidget {
             ..loadAppointments(),
       child: BlocBuilder<TodayAppointmentsCubit, TodayAppointmentsState>(
         builder: (context, state) {
+          // "View All" is only meaningful once there is something to browse.
+          final showViewAll = !state.isLoading &&
+              !state.hasError &&
+              !state.isEmpty;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Today's Schedule", style: AppTextStyles.sectionTitle),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('Your Schedule',
+                        style: AppTextStyles.sectionTitle),
+                  ),
+                  if (showViewAll) const _ViewAllButton(),
+                ],
+              ),
               const SizedBox(height: AppDimensions.lg),
               _SectionContent(state: state),
             ],
@@ -47,7 +68,7 @@ class _SectionContent extends StatelessWidget {
     }
     if (state.hasError) {
       return _CompactError(
-        message: state.errorMessage ?? "Failed to load today's schedule.",
+        message: state.errorMessage ?? 'Failed to load your schedule.',
         onRetry: context.read<TodayAppointmentsCubit>().loadAppointments,
       );
     }
@@ -55,19 +76,49 @@ class _SectionContent extends StatelessWidget {
       return const _CompactEmpty();
     }
 
-    final appointments = state.appointments;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (var i = 0; i < appointments.length; i++)
-          ScheduleItemCard(
-            item: appointments[i],
-            isFirst: i == 0,
-            isLast: i == appointments.length - 1,
-            // TODO(feature): open the appointment details screen.
-            onTap: () {},
-          ),
-      ],
+    // Today takes priority; fall back to a short preview of upcoming.
+    if (state.today.isNotEmpty) {
+      return ScheduleGroup(label: 'Today', items: state.today);
+    }
+    return ScheduleGroup(
+      label: 'Upcoming',
+      items: state.upcoming
+          .take(TodayScheduleSection._upcomingPreviewLimit)
+          .toList(),
+      showDate: true,
+    );
+  }
+}
+
+class _ViewAllButton extends StatelessWidget {
+  const _ViewAllButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => const AllAppointmentsScreen(),
+        ),
+      ),
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.primary,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.sm,
+          vertical: AppDimensions.xs,
+        ),
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textStyle: AppTextStyles.viewDetailsButton,
+      ),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('View All'),
+          SizedBox(width: 2),
+          Icon(Icons.chevron_right_rounded, size: 18),
+        ],
+      ),
     );
   }
 }
@@ -81,7 +132,7 @@ class _CompactEmpty extends StatelessWidget {
       icon: Icons.event_available_outlined,
       iconColor: AppColors.textHint,
       child: Text(
-        'No appointments scheduled for today.',
+        'No scheduled appointments.',
         style: AppTextStyles.subtitle,
       ),
     );

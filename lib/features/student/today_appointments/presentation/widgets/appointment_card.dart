@@ -9,16 +9,20 @@ class AppointmentCard extends StatelessWidget {
     required this.accent,
     required this.title,
     required this.subject,
-    required this.clinic,
+    required this.meta,
     required this.time,
     required this.badgeLabel,
+    this.metaIcon = Icons.medical_services_outlined,
     this.onTap,
   });
 
   final Color accent;
   final String title;
   final String subject;
-  final String clinic;
+
+  /// Optional third line (e.g. the appointment date). Hidden when empty.
+  final String meta;
+  final IconData metaIcon;
   final String time;
   final String badgeLabel;
   final VoidCallback? onTap;
@@ -74,19 +78,21 @@ class AppointmentCard extends StatelessWidget {
                             Text(time, style: AppTextStyles.scheduleMeta),
                           ],
                         ),
-                        const SizedBox(height: AppDimensions.xs),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.medical_services_outlined,
-                              size: 15,
-                              color: AppColors.textSecondary,
-                            ),
-                            const SizedBox(width: AppDimensions.xs),
-                            Text(clinic, style: AppTextStyles.scheduleMeta),
-                          ],
-                        ),
+                        if (meta.isNotEmpty) ...[
+                          const SizedBox(height: AppDimensions.xs),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                metaIcon,
+                                size: 15,
+                                color: AppColors.textSecondary,
+                              ),
+                              const SizedBox(width: AppDimensions.xs),
+                              Text(meta, style: AppTextStyles.scheduleMeta),
+                            ],
+                          ),
+                        ],
                       ],
                     ),
                   ),

@@ -18,10 +18,10 @@ class TodayAppointmentsCubit extends Cubit<TodayAppointmentsState> {
           errorMessage: failure.message,
         ),
       ),
-      (appointments) => emit(
+      (schedule) => emit(
         state.copyWith(
           status: TodayAppointmentsStatus.loaded,
-          appointments: appointments,
+          schedule: schedule,
         ),
       ),
     );

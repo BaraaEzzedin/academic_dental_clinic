@@ -1,24 +1,28 @@
 import '../../domain/entities/today_appointment_entity.dart';
 import '../mapper/clinical_appointment_status_mapper.dart';
 
-class TodayAppointmentModel extends TodayAppointmentEntity {
-  const TodayAppointmentModel({
+class AppointmentModel extends AppointmentEntity {
+  const AppointmentModel({
     required super.id,
+    required super.clinicalCaseId,
     required super.patientName,
-    required super.subject,
-    required super.clinic,
+    required super.supervisorName,
+    required super.date,
     required super.start,
+    required super.end,
     required super.status,
   });
 
-  factory TodayAppointmentModel.fromJson(Map<String, dynamic> json) {
-    return TodayAppointmentModel(
-      id: (json['appointmentId'] as num).toInt(),
-      patientName: json['patient'] as String? ?? '',
-      subject: json['subject'] as String? ?? '',
-      clinic: json['clinic'] as String? ?? '',
-      start: json['start'] as String? ?? '',
-      status: clinicalAppointmentStatusFromApi(json['displayStatus'] as String?),
+  factory AppointmentModel.fromJson(Map<String, dynamic> json) {
+    return AppointmentModel(
+      id: (json['appointmentId'] as num?)?.toInt() ?? 0,
+      clinicalCaseId: (json['clinicalCaseId'] as num?)?.toInt() ?? 0,
+      patientName: json['patientName'] as String? ?? '',
+      supervisorName: json['supervisorName'] as String? ?? '',
+      date: DateTime.tryParse(json['appointmentDate'] as String? ?? ''),
+      start: json['appointmentStart'] as String? ?? '',
+      end: json['appointmentEnd'] as String? ?? '',
+      status: clinicalAppointmentStatusFromApi(json['status'] as String?),
     );
   }
 }
