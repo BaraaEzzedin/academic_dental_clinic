@@ -1,0 +1,58 @@
+import 'dart:developer' as developer;
+import 'package:dio/dio.dart';
+import '../../../../core/network/api_client.dart';
+import '../../../../core/network/api_constants.dart';
+import '../../../../core/network/network_exception_mapper.dart';
+import '../models/auth_response_model.dart';
+
+
+abstract class StaffAuthRemoteDataSource {
+  Future<AuthResponseModel> login({
+    required String email,
+    required String password,
+  });
+
+  Future<void> logout();
+}
+
+class StaffAuthRemoteDataSourceImpl implements StaffAuthRemoteDataSource {
+  const StaffAuthRemoteDataSourceImpl(this.apiClient);
+
+  final ApiClient apiClient;
+
+  @override
+  Future<AuthResponseModel> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await apiClient.post<Map<String, dynamic>>(
+        ApiConstants.staffLogin,
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
+      developer.log(
+        'Staff login status code: ${response.statusCode}',
+        name: 'AUTH',
+      );
+      return AuthResponseModel.fromJson(response.data!);
+    } on DioException catch (e) {
+      developer.log(
+        'Staff login error status code: ${e.response?.statusCode}',
+        name: 'AUTH',
+      );
+      throw mapDioException(e);
+    }
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      await apiClient.post<Map<String, dynamic>>(ApiConstants.logout);
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+}
