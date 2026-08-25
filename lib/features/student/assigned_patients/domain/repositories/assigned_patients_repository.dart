@@ -8,4 +8,7 @@ abstract class AssignedPatientsRepository {
   Future<Either<Failure, AssignedPatientDetailsEntity>> getAssignedPatientDetails(
     int caseId,
   );
+
+  /// Releases the assigned case [caseId] back to open/unassigned.
+  Future<Either<Failure, Unit>> cancelAssignedCase(int caseId);
 }

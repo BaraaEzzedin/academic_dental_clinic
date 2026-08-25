@@ -1,3 +1,4 @@
+import 'package:academic_dental_clinic/core/navigation/app_route_observer.dart';
 import 'package:academic_dental_clinic/core/notifications/push_notification_service.dart';
 import 'package:academic_dental_clinic/core/service_locator/auth_service.dart';
 import 'package:academic_dental_clinic/features/auth/presentation/screens/select_role.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: rootNavigatorKey,
+      navigatorObservers: [appRouteObserver],
       home: SelectRole(),
     );
   }

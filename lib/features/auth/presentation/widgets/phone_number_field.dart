@@ -19,7 +19,7 @@ class PhoneNumberField extends StatelessWidget {
     return AppTextField(
       label: 'Phone Number',
       controller: controller,
-      hintText: '+963938304093',
+      hintText: '963938304093',
       prefixIcon: Icons.phone,
       keyboardType: TextInputType.phone,
       textInputAction: TextInputAction.next,

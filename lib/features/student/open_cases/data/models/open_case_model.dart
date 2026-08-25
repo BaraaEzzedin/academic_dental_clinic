@@ -22,7 +22,7 @@ class OpenCaseModel extends OpenCaseEntity {
       subject: subject?['name'] as String? ?? '',
       patientName: json['patient'] as String? ?? '',
       chiefComplaint: json['chiefComplaint'] as String? ?? '',
-      coordinatorName: json['coordinator'] as String?,
+    coordinatorName: json['coordinator'] as String? ,
       department: clinic?['name'] as String?,
     );
   }

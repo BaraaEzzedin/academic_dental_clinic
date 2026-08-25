@@ -51,8 +51,14 @@ class AssignedPatientsScreen extends StatelessWidget {
                     }
                     return AssignedPatientsListView(
                       patients: state.patients,
-                      onViewDetails: (patient) =>
-                          openAssignedPatientCase(context, patient),
+                      onViewDetails: (patient) async {
+                        final cubit = context.read<AssignedPatientsCubit>();
+                        final cancelled =
+                            await openAssignedPatientCase(context, patient);
+                        if (cancelled == true) {
+                          await cubit.loadAssignedPatients();
+                        }
+                      },
                     );
                   },
                 ),

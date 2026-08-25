@@ -7,12 +7,15 @@ import '../screens/assigned_patient_details_screen.dart';
 /// Shared by the home-page preview card and the full Assigned Patients screen so
 /// "View Details" behaves identically in both places. From there the student can
 /// review the case and submit a case-acceptance request to the supervisor.
-void openAssignedPatientCase(
+///
+/// Resolves to `true` when the student cancelled the assignment on the details
+/// screen, signalling the caller to reload its assigned-patients list.
+Future<bool?> openAssignedPatientCase(
   BuildContext context,
   AssignedPatientEntity patient,
 ) {
-  Navigator.of(context).push(
-    MaterialPageRoute<void>(
+  return Navigator.of(context).push<bool>(
+    MaterialPageRoute<bool>(
       builder: (_) => AssignedPatientDetailsScreen(patient: patient),
     ),
   );

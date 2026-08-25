@@ -18,7 +18,7 @@ import 'patient_home.dart';
 class OtpVerification extends StatefulWidget {
   const OtpVerification({
     super.key,
-    this.phoneNumber = '09XXXXXXXX',
+    this.phoneNumber = '963XXXXXXXXX',
     this.codeLength = 6,
   });
 

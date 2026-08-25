@@ -8,6 +8,9 @@ import '../models/assigned_patient_model.dart';
 abstract class AssignedPatientsRemoteDataSource {
   Future<List<AssignedPatientModel>> getAssignedPatients();
   Future<AssignedPatientDetailsModel> getAssignedPatientDetails(int caseId);
+
+  /// Releases the assigned case [caseId] back to open/unassigned.
+  Future<void> cancelAssignedCase(int caseId);
 }
 
 class AssignedPatientsRemoteDataSourceImpl
@@ -42,6 +45,17 @@ class AssignedPatientsRemoteDataSourceImpl
       );
       final data = response.data?['data'] as Map<String, dynamic>? ?? const {};
       return AssignedPatientDetailsModel.fromJson(data);
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  @override
+  Future<void> cancelAssignedCase(int caseId) async {
+    try {
+      await apiClient.patch<Map<String, dynamic>>(
+        ApiConstants.cancelAssignedCase(caseId),
+      );
     } on DioException catch (e) {
       throw mapDioException(e);
     }

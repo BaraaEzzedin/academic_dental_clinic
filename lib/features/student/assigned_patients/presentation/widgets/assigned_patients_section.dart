@@ -94,7 +94,14 @@ class _SectionContent extends StatelessWidget {
           final patient = patients[index];
           return AssignedPatientCard(
             patient: patient,
-            onViewDetails: () => openAssignedPatientCase(context, patient),
+            onViewDetails: () async {
+              final cubit = context.read<AssignedPatientsCubit>();
+              final cancelled =
+                  await openAssignedPatientCase(context, patient);
+              if (cancelled == true) {
+                await cubit.loadAssignedPatients();
+              }
+            },
           );
         },
       ),

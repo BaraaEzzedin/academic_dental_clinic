@@ -15,6 +15,7 @@ import '../manager/subject_details/subject_details_state.dart';
 import '../widgets/overall_progress_card.dart';
 import '../widgets/procedure_progress_card.dart';
 import '../widgets/subject_case_card.dart';
+import '../widgets/subject_details_shimmer.dart';
 import '../widgets/subject_header_card.dart';
 
 /// Subject Details: progress across the subject's procedures and its related
@@ -47,11 +48,7 @@ class SubjectDetailsScreen extends StatelessWidget {
                 child: BlocBuilder<SubjectDetailsCubit, SubjectDetailsState>(
                   builder: (context, state) {
                     if (state.isLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
-                        ),
-                      );
+                      return const SubjectDetailsShimmer();
                     }
                     if (state.hasError || state.details == null) {
                       return ErrorRetryView(

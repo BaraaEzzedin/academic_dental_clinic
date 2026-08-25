@@ -14,6 +14,7 @@ import '../../features/auth/domain/use_cases/verify_otp_use_case.dart';
 import '../../features/student/assigned_patients/data/data_source/assigned_patients_remote_data_source.dart';
 import '../../features/student/assigned_patients/data/repositories/assigned_patients_repository_impl.dart';
 import '../../features/student/assigned_patients/domain/repositories/assigned_patients_repository.dart';
+import '../../features/student/assigned_patients/domain/use_cases/cancel_assigned_case_use_case.dart';
 import '../../features/student/assigned_patients/domain/use_cases/get_assigned_case_details_use_case.dart';
 import '../../features/student/assigned_patients/domain/use_cases/get_assigned_cases_use_case.dart';
 import '../../features/student/add_patient/data/data_source/add_patient_remote_data_source.dart';
@@ -308,6 +309,9 @@ void configureDependencies() {
   );
   sl.registerFactory<GetAssignedCaseDetailsUseCase>(
     () => GetAssignedCaseDetailsUseCase(sl<AssignedPatientsRepository>()),
+  );
+  sl.registerFactory<CancelAssignedCaseUseCase>(
+    () => CancelAssignedCaseUseCase(sl<AssignedPatientsRepository>()),
   );
   sl.registerFactory<GetCaseDetailsUseCase>(
     () => GetCaseDetailsUseCase(sl<CaseDetailsRepository>()),

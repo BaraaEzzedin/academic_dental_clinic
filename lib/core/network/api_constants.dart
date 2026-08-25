@@ -19,6 +19,8 @@ class ApiConstants {
   static const String assignedCases = '/clinical-cases/assigned';
   static String assignedCaseDetails(int id) => '/clinical-cases/my/$id/assigned';
   static String myCaseDetails(int id) => '/clinical-cases/my/$id';
+  // Releases an assigned case back to open/unassigned (PATCH).
+  static String cancelAssignedCase(int id) => '/clinical-cases/my/$id/cancel';
   static String caseMedia(int id) => '/clinical-cases/$id/media';
 
   // Treatment sessions — student (query param: clinicalCaseId)

@@ -17,6 +17,8 @@ class Step3Appointment extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<AddPatientCubit>();
     return ListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(
         AppDimensions.screenHorizontalPadding,
         AppDimensions.lg,

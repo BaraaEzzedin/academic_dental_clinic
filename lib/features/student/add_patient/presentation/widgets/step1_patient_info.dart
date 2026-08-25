@@ -86,6 +86,8 @@ class _Step1PatientInfoState extends State<Step1PatientInfo> {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(
         AppDimensions.screenHorizontalPadding,
         AppDimensions.lg,
@@ -107,7 +109,7 @@ class _Step1PatientInfoState extends State<Step1PatientInfo> {
         AppTextField(
           label: 'Phone',
           controller: _phone,
-          hintText: 'e.g. 0933673475',
+          hintText: 'e.g. 963933673475',
           prefixIcon: Icons.phone_outlined,
           keyboardType: TextInputType.phone,
           textInputAction: TextInputAction.next,

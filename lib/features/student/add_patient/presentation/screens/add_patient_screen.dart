@@ -100,23 +100,34 @@ class _AddPatientView extends StatelessWidget {
           builder: (context, state) {
             return Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    AppDimensions.screenHorizontalPadding,
-                    AppDimensions.lg,
-                    AppDimensions.screenHorizontalPadding,
-                    AppDimensions.lg,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(
+                            AppDimensions.screenHorizontalPadding,
+                            AppDimensions.lg,
+                            AppDimensions.screenHorizontalPadding,
+                            AppDimensions.lg,
+                          ),
+                          child: CaseDetailsTopBar(title: 'Add Patient'),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppDimensions.screenHorizontalPadding,
+                            vertical: AppDimensions.sm,
+                          ),
+                          child: AppStepper(
+                            currentStep: state.currentStep,
+                            titles: steps,
+                          ),
+                        ),
+                        _StepBody(step: state.currentStep),
+                      ],
+                    ),
                   ),
-                  child: CaseDetailsTopBar(title: 'Add Patient'),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.screenHorizontalPadding,
-                    vertical: AppDimensions.sm,
-                  ),
-                  child: AppStepper(currentStep: state.currentStep, titles: steps),
-                ),
-                Expanded(child: _StepBody(step: state.currentStep)),
                 _Footer(state: state),
               ],
             );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/utils/date_formatter.dart';
@@ -41,19 +41,20 @@ Date: ${DateFormatter.toMediumDate(result.date)}
 Time: ${result.time}''';
 
   Future<void> _share(BuildContext context) async {
-    // TODO(share): swap for a native share sheet (e.g. share_plus) once the
-    // dependency is added. For now the summary is copied to the clipboard.
-    await Clipboard.setData(ClipboardData(text: _shareText));
+    // Opens the native share sheet so the summary can be sent to WhatsApp,
+    // Telegram, or any other installed app.
+    final box = context.findRenderObject() as RenderBox?;
+    await SharePlus.instance.share(
+      ShareParams(
+        text: _shareText,
+        subject: '${result.title} Appointment',
+        // Required for the iPad popover; harmless elsewhere.
+        sharePositionOrigin:
+            box != null ? box.localToGlobal(Offset.zero) & box.size : null,
+      ),
+    );
     if (!context.mounted) return;
     Navigator.of(context).pop();
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text('Appointment summary copied — ready to share.'),
-        ),
-      );
   }
 
   @override

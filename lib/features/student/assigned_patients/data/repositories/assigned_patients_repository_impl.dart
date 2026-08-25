@@ -33,4 +33,14 @@ class AssignedPatientsRepositoryImpl implements AssignedPatientsRepository {
       return Left(mapExceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> cancelAssignedCase(int caseId) async {
+    try {
+      await remote.cancelAssignedCase(caseId);
+      return const Right(unit);
+    } on AppException catch (e) {
+      return Left(mapExceptionToFailure(e));
+    }
+  }
 }

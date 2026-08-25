@@ -39,16 +39,17 @@ class AppValidator {
       return 'Phone number is required';
     }
 
-    if (!value.startsWith("+963")) {
-      return "Phone number must start with +963";
-    }
-
-    if (value.length != 13 ) {
-      return "Phone number must be +963 followed by 9 digits";
+    if (!isValidSyrianPhone(value)) {
+      return 'Phone number must be 963 followed by 9 digits';
     }
 
     return null;
   }
+
+  /// Whether [value] is a Syrian mobile number in the canonical wire format:
+  /// `963` followed by exactly 9 digits (e.g. `963938304093`).
+  static bool isValidSyrianPhone(String? value) =>
+      RegExp(r'^963\d{9}$').hasMatch((value ?? '').trim());
 
   static String? validateOtp(
       String? value,

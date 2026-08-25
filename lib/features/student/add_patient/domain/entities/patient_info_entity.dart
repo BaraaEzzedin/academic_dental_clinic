@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../../core/utils/app_validator.dart';
+
 /// Step 1 data — the patient's personal/medical details plus the case-level
 /// symptoms and chief complaint. Maps to the `patient` object of the walk-in
 /// request (`patientInfo` + `symptoms` + `chiefComplaint`).
@@ -32,7 +34,7 @@ class PatientInfoEntity extends Equatable {
   /// The minimum required to move past Step 1.
   bool get isComplete =>
       fullName.trim().isNotEmpty &&
-      phone.trim().isNotEmpty &&
+      AppValidator.isValidSyrianPhone(phone) &&
       dateOfBirth.trim().isNotEmpty &&
       gender.trim().isNotEmpty &&
       chiefComplaint.trim().isNotEmpty;
